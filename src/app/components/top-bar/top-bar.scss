@@ -2,14 +2,6 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
-    padding: 18px 20px;
-    border-bottom: 3px solid var(--primary-color);
-    position: fixed;
-    top: 0;
-    left: 250px; /* width of the side menu */
-    right: 0;
-    z-index: 1000;
-    height: 60px;
 }
 
 .top-bar__left {
