@@ -1,0 +1,27 @@
+<div class="settings-container">
+
+  <h2>Settings</h2>
+
+  <div class="tabs">
+    <button (click)="activeTab = 'profile'">Profile</button>
+    <button (click)="activeTab = 'account'">Account</button>
+  </div>
+
+  <div *ngIf="activeTab === 'profile'" class="tab-content">
+    <label>Name</label>
+    <input type="text" />
+
+    <label>Email</label>
+    <input type="email" />
+
+    <button>Update Profile</button>
+  </div>
+
+  <div *ngIf="activeTab === 'account'" class="tab-content">
+    <label>Password</label>
+    <input type="password" />
+
+    <button>Change Password</button>
+  </div>
+
+</div>

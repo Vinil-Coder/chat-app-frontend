@@ -1,0 +1,28 @@
+.settings-container {
+  padding: 20px;
+
+  .tabs {
+    margin-bottom: 20px;
+
+    button {
+      margin-right: 10px;
+    }
+  }
+
+  .tab-content {
+    display: flex;
+    flex-direction: column;
+    max-width: 400px;
+
+    input {
+      margin-bottom: 10px;
+      padding: 8px;
+    }
+
+    button {
+      background: #5454ff;
+      color: white;
+      padding: 10px;
+    }
+  }
+}

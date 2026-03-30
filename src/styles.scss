@@ -1,1 +1,33 @@
 /* You can add global styles to this file, and also import other style files */
+* {
+  box-sizing: border-box;
+}
+
+:root {
+    --primary-color: #5454ff;
+    --primary-color-dark: #3f3fff;
+    --primary-color-light: #edeeff;
+    --secondary-color: #9ca3af;
+
+    --background-color: #f5f7fb;
+    --white: #ffffff;
+    --divider: #f0f0f0;
+    --border: #e5e7eb;
+
+    --primary-text-color: #1f2937;
+    --secondary-text-color: #6b7280;
+    --placeholder-color: #9ca3af;
+
+    --status-success: #6ae68e;
+    --status-error: #f13f3f;
+    --online-indicator: #22c55e;
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background: var(--background-color);
+    color: var(--primary-text-color);
+    height: 100vh;
+    padding: 0;
+    margin: 0;
+}

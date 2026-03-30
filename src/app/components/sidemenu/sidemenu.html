@@ -1,0 +1,42 @@
+<div class="sidenav">
+  <div class="sidenav__logo">
+    <h2>Tech Hub</h2>
+  </div>
+
+  <div class="sidenav__menu">
+    <div class="menu">
+      <div class="menu__item" routerLink="/dashboard/chats" routerLinkActive="active">
+        <span class="menu__icon"><img src="assets/chats.png" alt="Chats"></span>
+        <span class="menu__label">Chats</span>
+      </div>
+
+      <div class="menu__item" routerLink="/dashboard/groups" routerLinkActive="active">
+        <span class="menu__icon"><img src="assets/users.svg" alt="Users"></span>
+        <span class="menu__label">Groups</span>
+      </div>
+
+      <div class="menu__item" routerLink="/dashboard/settings" routerLinkActive="active">
+        <span class="menu__icon"><img src="assets/settings.svg" alt="Settings"></span>
+        <span class="menu__label">Settings</span>
+      </div>
+
+      <div class="menu__item" routerLink="/dashboard/workspaces" routerLinkActive="active">
+        <span class="menu__icon"><img src="assets/workspace.png" alt="Workspaces"></span>
+        <span class="menu__label">Workspaces</span>
+      </div>
+    </div>
+
+    <div class="custom-select workspace" #projectDropdown>
+      <div class="select-box">
+        {{ selectedWorkspace ?? 'Select Workspace' }}
+        <span class="arrow"></span>
+      </div>
+
+      <ul class="dropdown" *ngIf="workspaceDropdownOpen">
+        <li>Workspace 1</li>
+        <li>Workspace 2</li>
+      </ul>
+
+    </div>
+  </div>
+</div>

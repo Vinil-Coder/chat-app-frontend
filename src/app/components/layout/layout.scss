@@ -1,0 +1,19 @@
+.layout-container {
+    display: flex;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    background-color: var(--white);
+    height: 100vh;
+    position: relative;
+}
+
+.main-content {
+    flex: 1;
+    margin-top: 60px; /* height of the top bar */
+    overflow-y: auto;
+    padding: 18px;
+}

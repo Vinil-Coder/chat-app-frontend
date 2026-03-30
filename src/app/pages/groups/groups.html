@@ -1,0 +1,12 @@
+<div class="groups-container">
+  <h2>Groups</h2>
+
+  <button class="create-btn">+ Create Group</button>
+
+  <div class="group-list">
+    <div class="group-card" *ngFor="let group of groups">
+      <h3>{{ group.name }}</h3>
+      <p>{{ group.members }} members</p>
+    </div>
+  </div>
+</div>
