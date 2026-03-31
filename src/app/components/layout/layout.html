@@ -1,12 +1,21 @@
 <div class="layout-container">
 
-    <!--Side Menu-->
-    <app-sidemenu id="side-menu"></app-sidemenu>
+  <!-- LEFT SIDEBAR -->
+  <aside class="left-panel">
+    <app-sidemenu class="side-menu"></app-sidemenu>
+  </aside>
 
-    <!--Top Bar-->
-    <app-top-bar id="top-bar"></app-top-bar>
+  <!-- RIGHT SECTION -->
+  <div class="right-panel">
 
-    <div class="main-content">
-        <router-outlet></router-outlet>
-    </div>
+    <!-- TOP BAR -->
+    <app-top-bar class="top-bar"></app-top-bar>
+
+    <!-- MAIN CONTENT -->
+    <main class="main-content">
+      <router-outlet></router-outlet>
+    </main>
+
+  </div>
+
 </div>

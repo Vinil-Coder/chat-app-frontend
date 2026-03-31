@@ -1,28 +1,196 @@
-.settings-container {
+.settings-page {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+  overflow: hidden;
+  font-family: system-ui, Arial, sans-serif;
+}
+
+.page-title {
+  font-size: 22px;
+  font-weight: 500;
+  color: #2b2b2b;
+  margin: 5px;
+  letter-spacing: 0.2px;
+  position: relative;
+}
+
+.page-title::after {
+  content: "";
+  display: block;
+  width: 60px;
+  height: 2px;
+  margin-top: 8px;
+  border-radius: 2px;
+}
+
+.page-content {
+  display: flex;
+  background: var(--white);
   padding: 20px;
+  height: 100vh;
+  border-radius: 10px;
+}
 
-  .tabs {
-    margin-bottom: 20px;
+/* SIDEBAR */
+.sidebar {
+  width: 220px;
+  background: #fff;
 
-    button {
-      margin-right: 10px;
-    }
-  }
+  button {
+    width: 100%;
+    text-align: left;
+    padding: 12px;
+    margin-bottom: 10px;
+    border: none;
+    border-radius: 8px;
+    background: var(--primary-color-light);
+    cursor: pointer;
 
-  .tab-content {
-    display: flex;
-    flex-direction: column;
-    max-width: 400px;
-
-    input {
-      margin-bottom: 10px;
-      padding: 8px;
-    }
-
-    button {
-      background: #5454ff;
+    &.active {
+      background: var(--primary-color);
       color: white;
-      padding: 10px;
     }
   }
+}
+
+/* CONTENT AREA */
+.content {
+  flex: 1;
+  margin-left: 20px;
+}
+
+/* CARD */
+.card {
+  background: white;
+  border-radius: 14px;
+}
+
+h3 {
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+
+/* FIELD */
+.field {
+  display: flex;
+  flex-direction: column;
+
+  label {
+    font-size: 13px;
+    margin-bottom: 6px;
+    color: #555;
+  }
+
+  input,
+  select,
+  textarea {
+    padding: 18px 22px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+
+    &:focus {
+      border-color: #5454ff;
+      outline: none;
+    }
+  }
+
+  textarea {
+    min-height: 80px;
+  }
+
+  &.full {
+    grid-column: span 2;
+  }
+}
+
+/* SECTIONS (important for spacing) */
+.section {
+  margin-top: 25px;
+
+  h4 {
+    margin-bottom: 10px;
+  }
+
+  ul {
+    padding-left: 18px;
+    color: #555;
+  }
+}
+
+/* BUTTON */
+.primary-btn {
+  margin-top: 20px;
+  background: #5454ff;
+  color: white;
+  border: none;
+  padding: 12px 16px;
+  border-radius: 10px;
+  cursor: pointer;
+
+  &:hover {
+    background: #3f3fff;
+  }
+}
+
+/* DANGER */
+.danger-box {
+  margin-top: 25px;
+  display: flex;
+  justify-content: space-between;
+  padding: 16px;
+  border-radius: 12px;
+  background: #fff5f5;
+  border: 1px solid #ffcccc;
+}
+
+.danger-btn {
+  background: red;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* CHECKBOX */
+.checkbox {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 10px;
+}
+
+input {
+  padding: 18px 22px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+
+  &:focus {
+    border-color: #5454ff;
+    outline: none;
+  }
+}
+
+.social-links {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+}
+
+h4 {
+  margin-bottom: 10px;
+  margin-top: 0;
+}
+
+p {
+  margin: 0;
 }

@@ -1,17 +1,31 @@
-<div class="top-bar">
-    <div class="top-bar__left" (click)="toggleSidemenu()">
-        <img src="assets/menu.svg" alt="Toggle Icon" class="toggle-icon">
-    </div>
-    <div class="top-bar__right">
-        <div class="user-info">
-            <img src="assets/avatar.svg" alt="User Avatar" class="user-avatar">
-        </div>
-        <div class="notifications">
-            <img src="assets/bell.svg" alt="Notifications">
-            <span class="notification-count">10</span>
-        </div>
-        <div class="logout">
-            <img src="assets/logout.svg" alt="Logout">  
-        </div>
-    </div>
-</div>
+<header class="top-bar">
+
+  <!-- LEFT: Hamburger -->
+  <div class="top-bar__left">
+    <button class="icon-btn" (click)="toggleSidemenu()">
+      <img src="assets/menu.svg" alt="Menu">
+    </button>
+  </div>
+
+  <!-- RIGHT: Actions -->
+  <div class="top-bar__right">
+
+    <!-- Notifications -->
+    <button class="icon-btn notification-btn">
+      <img src="assets/bell.svg" alt="Notifications">
+      <span class="badge">10</span>
+    </button>
+
+    <!-- Profile -->
+    <button class="icon-btn" routerLink="/dashboard/profile">
+      <img src="assets/avatar.svg" alt="Profile">
+    </button>
+
+    <!-- Logout -->
+    <button class="icon-btn">
+      <img src="assets/logout.svg" alt="Logout">
+    </button>
+
+  </div>
+
+</header>

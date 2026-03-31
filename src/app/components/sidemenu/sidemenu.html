@@ -27,17 +27,22 @@
       </div>
     </div>
 
-    <!-- <div class="custom-select workspace" #projectDropdown>
-      <div class="select-box">
-        {{ selectedWorkspace ?? 'Select Workspace' }}
-        <span class="arrow"></span>
+    <div class="workspace-switcher">
+
+      <div class="select-box" (click)="toggleWorkspaceDropdown()">
+        <span>{{ selectedWorkspace || 'Select Workspace' }}</span>
+        <span class="arrow"><img src="assets/chevron-down.svg" alt="Chevron Down"></span>
+
+        @if(workspaceDropdownOpen) {
+        <div class="dropdown">
+          @for (workspace of workspaces; track workspace.id) {
+          <div class="dropdown-item" (click)="selectWorkspace(workspace, $event)">
+            {{ workspace.name }}
+          </div>
+          }
+        </div>
+        }
       </div>
-
-      <ul class="dropdown" *ngIf="workspaceDropdownOpen">
-        <li>Workspace 1</li>
-        <li>Workspace 2</li>
-      </ul>
-
-    </div> -->
+    </div>
   </div>
 </div>

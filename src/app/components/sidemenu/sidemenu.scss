@@ -1,6 +1,7 @@
 .sidenav {
     display: flex;
     flex-direction: column;
+    height: 100vh;
 }
 
 /* LOGO */
@@ -13,6 +14,7 @@
     font-weight: 600;
     color: var(--primary-color);
     border-bottom: 2px solid var(--divider);
+    height: 60px;
 
     h2 {
         margin: 0;
@@ -35,6 +37,7 @@
     justify-content: space-between;
     flex: 1;
     padding: 20px 0;
+    margin: 0 10px;
 }
 
 /* MENU ITEMS */
@@ -49,7 +52,6 @@
     align-items: center;
     gap: 12px;
     padding: 12px 18px;
-    margin: 0 10px;
     cursor: pointer;
     border-radius: 8px;
     font-size: 1rem;
@@ -91,16 +93,59 @@
 }
 
 /* WORKSPACE SWITCHER */
-.workspace {
-    padding: 15px 20px;
-    border-top: 2px solid var(--divider);
+.workspace-switcher {
+    position: relative;
 }
 
-.workspace select {
-    width: 100%;
-    padding: 16px;
-    border-radius: 6px;
-    border: none;
-    background: #1e293b;
-    color: #e2e8f0;
+.select-box {
+    border: 1px solid var(--divider);
+    padding: 12px 18px;
+    border-radius: 10px;
+    position: relative;
+    background: var(--white);
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    justify-content: space-between;
+
+    .arrow {
+        position: absolute;
+        right: 12px;
+        top: 50%;
+        transform: translateY(-50%) rotate(-360deg);
+    }
+
+    .arrow.rotate {
+        transform: translateY(-50%) rotate(-180deg);
+    }
 }
+
+.dropdown {
+    position: absolute;
+    bottom: 3rem;
+    left: 0;
+    width: 100%;
+    max-height: 300px;
+    overflow-y: auto;
+    background: var(--white);
+    border: 1px solid var(--divider);
+    border-radius: 10px;
+    margin-top: 8px;
+    z-index: 10;
+    display: flex;
+    flex-direction: column;
+
+    &::-webkit-scrollbar {
+        display: none;
+    }
+
+    .dropdown-item {
+        padding: 12px 18px;
+        cursor: pointer;
+        transition: background 0.2s ease;
+
+        &:hover {
+            background: var(--primary-color-light);
+        }
+    }
+}   

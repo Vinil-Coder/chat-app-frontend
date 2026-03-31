@@ -1,208 +1,215 @@
 <div class="page-container">
-  <h1 class="page-title">Workspace</h1>
-
   <div class="chat-container">
-    <!-- Chat List -->
-    <div class="chat-list">
-      <input type="search" placeholder="Search chats..." class="search-chat">
 
-      <div class="chat-items">
-        @for (chat of chats; track chat.id) {
-        <div class="chat-item" (click)="selectChat(chat)" [class.selected]="selectedChat?.id === chat.id">
+    @if(chats.length === 0) {
+    <div class="no-chat-selected">
+      <h2>Selected Workspace has no chats</h2>
+      <p>Invite members and start chatting!</p>
+      <button class="invite-members-button">Invite Members</button>
+    </div>
+    } @else {
+      <!-- Chat List -->
+      <div class="chat-list">
+        <input type="search" placeholder="Search chats..." class="search-chat">
+
+        <div class="chat-items">
+          @for (chat of chats; track chat['id']) {
+          <div class="chat-item" (click)="selectChat(chat)" [class.selected]="selectedChat?.['id'] === chat?.['id']">
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+              <span class="status-indicator"></span>
+            </div>
+
+            <div class="chat-info">
+              <div class="chat-name">{{ chat['name'] }}</div>
+              <div class="chat-last-message" [class.typing]="isTyping">
+                {{ isTyping ? 'Typing...' : chat['lastMessage'] }}
+              </div>
+            </div>
+
+            <div class="chat-info right">
+              <div class="chat-time">{{ chat['time'] }}</div>
+              <!-- Unread badge -->
+              @if (chat['unreadCount'] > 0) {
+              <span class="unread-badge">{{ chat['unreadCount'] }}</span>
+              }
+            </div>
+          </div>
+          }
+        </div>
+      </div>
+
+      <!-- Chat Window -->
+      <div class="chat-window">
+        @if(selectedChat) {
+        <!-- Header -->
+        <div class="chat-header">
           <div class="chat-avatar">
             <img src="assets/dummy-avatar.png">
             <span class="status-indicator"></span>
           </div>
 
           <div class="chat-info">
-            <div class="chat-name">{{ chat.name }}</div>
-            <div class="chat-last-message" [class.typing]="isTyping">
-              {{ isTyping ? 'Typing...' : chat.lastMessage }}
+            <div class="chat-user">
+              <span class="chat-name">John Doe</span>
+              <span class="online-status"></span>
+            </div>
+            <!-- <span class="online-text">Online</span> -->
+          </div>
+        </div>
+
+        <!-- Messages -->
+        <div class="chat-messages">
+
+          <div class="message received">
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+            <div class="message-content">
+              Hey! 👋
+              <span class="message-time">10:02 AM</span>
             </div>
           </div>
 
-          <div class="chat-info right">
-            <div class="chat-time">{{ chat.time }}</div>
-            <!-- Unread badge -->
-            @if (chat.unreadCount > 0) {
-            <span class="unread-badge">{{ chat.unreadCount }}</span>
-            }
+          <div class="message sent">
+            <div class="message-content">
+              Hey! How’s it going?
+              <span class="sent-message-time">10:03 AM</span>
+            </div>
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
           </div>
+
+          <div class="message received">
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+            <div class="message-content">
+              Pretty good! Just working on a project.
+              <span class="message-time">10:05 AM</span>
+            </div>
+          </div>
+
+          <div class="message sent">
+            <div class="message-content">
+              Nice! What kind of project?
+              <span class="sent-message-time">10:06 AM</span>
+            </div>
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+          </div>
+
+          <div class="message received">
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+            <div class="message-content">
+              Building a chat UI in Angular 😄
+              <span class="message-time">10:07 AM</span>
+            </div>
+          </div>
+
+          <div class="message sent">
+            <div class="message-content">
+              Oh nice! That’s exactly what I’m doing too 😂
+              <span class="sent-message-time">10:08 AM</span>
+            </div>
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+          </div>
+
+          <div class="message received">
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+            <div class="message-content">
+              Haha no way! Are you handling scrolling as well?
+              <span class="message-time">10:09 AM</span>
+            </div>
+          </div>
+
+          <div class="message sent">
+            <div class="message-content">
+              Yeah, but it's giving me trouble 😅
+              <span class="sent-message-time">10:10 AM</span>
+            </div>
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+          </div>
+
+          <div class="message received">
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+            <div class="message-content">
+              Same here! CSS layouts can be tricky sometimes.
+              <span class="message-time">10:11 AM</span>
+            </div>
+          </div>
+
+          <div class="message sent">
+            <div class="message-content">
+              True! I think flexbox might be the better approach.
+              <span class="sent-message-time">10:12 AM</span>
+            </div>
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+          </div>
+
+          <div class="message received">
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+            <div class="message-content">
+              Yep! That usually fixes most layout issues 👍
+              <span class="message-time">10:13 AM</span>
+            </div>
+          </div>
+
+          <div class="message sent">
+            <div class="message-content">
+              Thanks! I’ll try that out.
+              <span class="sent-message-time">10:14 AM</span>
+            </div>
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+          </div>
+
+          <div class="message received">
+            <div class="chat-avatar">
+              <img src="assets/dummy-avatar.png">
+            </div>
+            <div class="message-content">
+              Cool, let me know how it goes!
+              <span class="message-time">10:15 AM</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Input -->
+        <div class="chat-input">
+          <div class="input-group">
+            <span class="attachment-icon"><img src="assets/attachment.svg" alt="Attachment"></span>
+            <input type="text" placeholder="Type your message..." [(ngModel)]="newMessage">
+            <span class="send-icon" (click)="onSendMessage()"><img src="assets/telegram.png" alt="Telegram"></span>
+          </div>
+          <button (click)="onSendMessage()">Send</button>
+        </div>
+        } @else {
+        <div class="no-chat-selected">
+          <h2>Select a chat to start messaging</h2>
+          <p>Click on a chat from the left to view messages and start chatting!</p>
         </div>
         }
       </div>
-    </div>
-
-    <!-- Chat Window -->
-    <div class="chat-window">
-      @if(selectedChat) {
-      <!-- Header -->
-      <div class="chat-header">
-        <div class="chat-avatar">
-          <img src="assets/dummy-avatar.png">
-          <span class="status-indicator"></span>
-        </div>
-
-        <div class="chat-info">
-          <div class="chat-user">
-            <span class="chat-name">John Doe</span>
-            <span class="online-status"></span>
-          </div>
-          <span class="online-text">Online</span>
-        </div>
-      </div>
-
-      <!-- Messages -->
-      <div class="chat-messages">
-
-        <div class="message received">
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-          <div class="message-content">
-            Hey! 👋
-            <span class="message-time">10:02 AM</span>
-          </div>
-        </div>
-
-        <div class="message sent">
-          <div class="message-content">
-            Hey! How’s it going?
-            <span class="sent-message-time">10:03 AM</span>
-          </div>
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-        </div>
-
-        <div class="message received">
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-          <div class="message-content">
-            Pretty good! Just working on a project.
-            <span class="message-time">10:05 AM</span>
-          </div>
-        </div>
-
-        <div class="message sent">
-          <div class="message-content">
-            Nice! What kind of project?
-            <span class="sent-message-time">10:06 AM</span>
-          </div>
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-        </div>
-
-        <div class="message received">
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-          <div class="message-content">
-            Building a chat UI in Angular 😄
-            <span class="message-time">10:07 AM</span>
-          </div>
-        </div>
-
-        <div class="message sent">
-          <div class="message-content">
-            Oh nice! That’s exactly what I’m doing too 😂
-            <span class="sent-message-time">10:08 AM</span>
-          </div>
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-        </div>
-
-        <div class="message received">
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-          <div class="message-content">
-            Haha no way! Are you handling scrolling as well?
-            <span class="message-time">10:09 AM</span>
-          </div>
-        </div>
-
-        <div class="message sent">
-          <div class="message-content">
-            Yeah, but it's giving me trouble 😅
-            <span class="sent-message-time">10:10 AM</span>
-          </div>
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-        </div>
-
-        <div class="message received">
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-          <div class="message-content">
-            Same here! CSS layouts can be tricky sometimes.
-            <span class="message-time">10:11 AM</span>
-          </div>
-        </div>
-
-        <div class="message sent">
-          <div class="message-content">
-            True! I think flexbox might be the better approach.
-            <span class="sent-message-time">10:12 AM</span>
-          </div>
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-        </div>
-
-        <div class="message received">
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-          <div class="message-content">
-            Yep! That usually fixes most layout issues 👍
-            <span class="message-time">10:13 AM</span>
-          </div>
-        </div>
-
-        <div class="message sent">
-          <div class="message-content">
-            Thanks! I’ll try that out.
-            <span class="sent-message-time">10:14 AM</span>
-          </div>
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-        </div>
-
-        <div class="message received">
-          <div class="chat-avatar">
-            <img src="assets/dummy-avatar.png">
-          </div>
-          <div class="message-content">
-            Cool, let me know how it goes!
-            <span class="message-time">10:15 AM</span>
-          </div>
-        </div>
-
-      </div>
-
-      <!-- Input -->
-      <div class="chat-input">
-        <div class="input-group">
-          <span class="attachment-icon"><img src="assets/attachment.svg" alt="Attachment"></span>
-          <input type="text" placeholder="Type your message..." [(ngModel)]="newMessage">
-          <span class="send-icon" (click)="onSendMessage()"><img src="assets/telegram.png" alt="Telegram"></span>
-        </div>
-        <button (click)="onSendMessage()">Send</button>
-      </div>
-      } @else {
-      <div class="no-chat-selected">
-        <h2>Select a chat to start messaging</h2>
-        <p>Click on a chat from the left to view messages and start chatting!</p>
-      </div>
-      }
-    </div>
+    }
 
   </div>
 </div>

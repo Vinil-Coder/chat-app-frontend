@@ -34,7 +34,7 @@ export class Chats {
     this.selectedChat = chat;
     console.log('Selected chat:', chat, window.innerHeight);
     this.chats = this.chats.map(c => {
-      c.unreadCount = c.id === chat.id ? 0 : c.unreadCount
+      c['unreadCount'] = c['id'] === chat['id'] ? 0 : c['unreadCount']
       return c;
     });
     // mock messages

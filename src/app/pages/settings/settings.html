@@ -1,27 +1,189 @@
-<div class="settings-container">
+<div class="settings-page">
 
-  <h2>Settings</h2>
-
-  <div class="tabs">
-    <button (click)="activeTab = 'profile'">Profile</button>
-    <button (click)="activeTab = 'account'">Account</button>
+  <div class="page-title">
+    Settings
   </div>
 
-  <div *ngIf="activeTab === 'profile'" class="tab-content">
-    <label>Name</label>
-    <input type="text" />
+  <div class="page-content">
+    <!-- LEFT SIDEBAR STYLE TABS -->
+    <div class="sidebar">
 
-    <label>Email</label>
-    <input type="email" />
+      <button (click)="activeTab='profile'" [class.active]="activeTab==='profile'">
+        Profile
+      </button>
 
-    <button>Update Profile</button>
+      <button (click)="activeTab='account'" [class.active]="activeTab==='account'">
+        Account
+      </button>
+
+      <button (click)="activeTab='appearance'" [class.active]="activeTab==='appearance'">
+        Appearance
+      </button>
+    </div>
+
+    <!-- RIGHT CONTENT -->
+    <div class="content">
+
+      <!-- PROFILE -->
+      @if (activeTab === 'profile') {
+      <div class="card">
+
+        <h3>Personal Information</h3>
+
+        <div class="grid">
+          <div class="field">
+            <label>Full Name</label>
+            <input type="text" placeholder="John Doe" />
+          </div>
+
+          <div class="field">
+            <label>Email</label>
+            <input type="email" placeholder="john@email.com" />
+          </div>
+
+          <div class="field">
+            <label>Phone</label>
+            <input type="tel" />
+          </div>
+
+          <div class="field">
+            <label>Location</label>
+            <input type="text" placeholder="City, Country" />
+          </div>
+
+          <div class="field full">
+            <label>Bio</label>
+            <textarea placeholder="Tell about yourself"></textarea>
+          </div>
+        </div>
+
+        <div class="section">
+          <h4>Social Links</h4>
+
+          <div class="social-links">
+            <input placeholder="LinkedIn URL" type="text" />
+            <input placeholder="Twitter URL" type="text" />
+            <input placeholder="GitHub URL" type="text" />
+          </div>
+        </div>
+
+        <button class="primary-btn">Save Profile</button>
+      </div>
+      }
+
+      <!-- ACCOUNT -->
+      @else if (activeTab === 'account') {
+      <div class="card">
+
+        <h3>Security</h3>
+
+        <div class="grid">
+          <div class="field">
+            <label>Current Password</label>
+            <input type="password" />
+          </div>
+
+          <div class="field">
+            <label>New Password</label>
+            <input type="password" />
+          </div>
+
+          <div class="field">
+            <label>Confirm Password</label>
+            <input type="password" />
+          </div>
+
+          <div class="field">
+            <label>Two-Factor Auth</label>
+            <select>
+              <option>Disabled</option>
+              <option>Enabled</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section">
+          <h4>Login Activity</h4>
+          <ul>
+            <li>📍 Chrome - India (Active now)</li>
+            <li>📍 Mobile App - Yesterday</li>
+            <li>📍 Firefox - 3 days ago</li>
+          </ul>
+        </div>
+
+        <div class="danger-box">
+          <div>
+            <h4>Danger Zone</h4>
+            <p>Delete account permanently</p>
+          </div>
+
+          <button class="danger-btn">Delete Account</button>
+        </div>
+      </div>
+      }
+
+      <!-- APPEARANCE -->
+      @else {
+      <div class="card">
+
+        <h3>Theme & Display</h3>
+
+        <div class="grid">
+          <div class="field">
+            <label>Theme Mode</label>
+            <select>
+              <option>Light</option>
+              <option>Dark</option>
+              <option>System</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Primary Color</label>
+            <input type="color" />
+          </div>
+
+          <div class="field">
+            <label>Font Size</label>
+            <select>
+              <option>Small</option>
+              <option>Medium</option>
+              <option>Large</option>
+            </select>
+          </div>
+
+          <div class="field">
+            <label>Layout Density</label>
+            <select>
+              <option>Comfortable</option>
+              <option>Compact</option>
+            </select>
+          </div>
+        </div>
+
+        <div class="section">
+          <h4>Preferences</h4>
+
+          <label class="checkbox">
+            <input type="checkbox" />
+            Enable compact mode
+          </label>
+
+          <label class="checkbox">
+            <input type="checkbox" />
+            Reduce motion effects
+          </label>
+
+          <label class="checkbox">
+            <input type="checkbox" />
+            Show tooltips
+          </label>
+        </div>
+
+        <button class="primary-btn">Save Settings</button>
+      </div>
+      }
+
+    </div>
   </div>
-
-  <div *ngIf="activeTab === 'account'" class="tab-content">
-    <label>Password</label>
-    <input type="password" />
-
-    <button>Change Password</button>
-  </div>
-
 </div>
