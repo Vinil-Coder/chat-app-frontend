@@ -1,30 +1,64 @@
 <header class="top-bar">
 
   <!-- LEFT: Hamburger -->
-  <div class="top-bar__left">
-    <button class="icon-btn" (click)="toggleSidemenu()">
-      <img src="assets/menu.svg" alt="Menu">
+  <div class="left">
+    <button class="icon-btn hamburger" (click)="toggleSidemenu()">
+      <span></span>
+      <span></span>
+      <span></span>
     </button>
+
+    <!-- SEARCH -->
+    <div class="search-box">
+      <input type="text" placeholder="Search..." />
+      <img src="assets/search.svg" />
+    </div>
   </div>
 
-  <!-- RIGHT: Actions -->
-  <div class="top-bar__right">
+  <!-- RIGHT -->
+  <div class="right">
 
-    <!-- Notifications -->
-    <button class="icon-btn notification-btn">
-      <img src="assets/bell.svg" alt="Notifications">
-      <span class="badge">10</span>
+    <!-- DARK MODE -->
+    <button class="icon-btn" (click)="toggleDarkMode()">
+      <img src="assets/moon.svg" />
     </button>
 
-    <!-- Profile -->
-    <button class="icon-btn" routerLink="/dashboard/profile">
-      <img src="assets/avatar.svg" alt="Profile">
-    </button>
+    <!-- NOTIFICATIONS -->
+    <div class="dropdown" (click)="toggleNotifications()">
 
-    <!-- Logout -->
-    <button class="icon-btn">
-      <img src="assets/logout.svg" alt="Logout">
-    </button>
+      <button class="icon-btn">
+        <img src="assets/bell.svg" />
+        <span class="badge">3</span>
+      </button>
+
+      @if(showNotifications) {
+        <div class="dropdown-panel">
+          <p>🔔 New message received</p>
+          <p>📢 System update available</p>
+          <p>⚡ Build deployed successfully</p>
+        </div>
+      }
+    </div>
+
+    <!-- PROFILE -->
+    <div class="dropdown" (click)="toggleProfile()">
+
+      <button class="icon-btn">
+        <img src="assets/avatar.svg" />
+      </button>
+
+      @if(showProfile) {
+      <div class="dropdown-panel profile">
+        <p routerLink="profile">My Profile</p>
+        <p routerLink="chats">Chats</p>
+        <p routerLink="groups">Groups</p>
+        <p routerLink="workspaces">Workspaces</p>
+        <p routerLink="settings">Settings</p>
+        <p (click)="logout()">Logout</p>
+      </div>
+      }
+
+    </div>
 
   </div>
 

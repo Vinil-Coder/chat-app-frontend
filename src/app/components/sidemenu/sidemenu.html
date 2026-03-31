@@ -36,7 +36,7 @@
         @if(workspaceDropdownOpen) {
         <div class="dropdown">
           @for (workspace of workspaces; track workspace.id) {
-          <div class="dropdown-item" (click)="selectWorkspace(workspace, $event)">
+          <div class="dropdown-item" (click)="selectWorkspace(workspace, $event)" [class.selected]="selectedWorkspace === workspace.name">
             {{ workspace.name }}
           </div>
           }
