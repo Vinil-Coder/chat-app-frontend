@@ -1,0 +1,15 @@
+<div class="modal-backdrop" (click)="close()"></div>
+<div class="modal">
+    <h3>{{ mode === 'edit' ? 'Edit Workspace' : mode === 'delete' ? 'Delete' : 'New Workspace' }}</h3>
+
+    @if (mode === 'delete') {
+        <p>Are you sure you want to delete <b>{{ name }}</b> workspace ?</p>
+    } @else {   
+        <input [(ngModel)]="name" placeholder="Workspace name" />
+    }
+    <div class="modal-actions">
+        <button (click)="save()" class="btn btn-primary">
+            {{ mode === 'delete' ? 'Delete' : 'Save' }}</button>
+        <button (click)="close()" class="btn btn-danger">Cancel</button>
+    </div>
+</div>

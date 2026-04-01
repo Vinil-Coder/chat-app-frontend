@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { GROUPS } from '../../constants/data.constant';
 
 @Component({
   selector: 'app-groups',
@@ -8,8 +9,9 @@ import { Component } from '@angular/core';
   styleUrl: './groups.scss',
 })
 export class Groups {
-  groups = [
-    { id: 1, name: 'Project Team', members: '5', time: '11:00 AM' },
-    { id: 2, name: 'Family', members: '3', time: '08:00 AM' }
-  ];
+  groups: any = [];
+
+  ngOnInit() {
+    this.groups = GROUPS;
+  }
 }

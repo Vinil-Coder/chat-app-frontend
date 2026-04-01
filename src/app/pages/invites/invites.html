@@ -1,0 +1,64 @@
+<div class="invites-container">
+
+  <div class="header">
+    <h2>Invitations</h2>
+    <span class="count">{{ groups.length }} pending</span>
+  </div>
+
+  <div class="invite-list">
+
+    @if (groups.length === 0) {
+      <div class="empty">
+        No pending invitations
+      </div>
+    } @else {
+
+      @for (group of groups; track group.id) {
+
+        <div class="invite-card">
+
+          <!-- LEFT INFO -->
+          <div class="invite-info">
+            <div class="title">{{ group.name }}</div>
+
+            <div class="meta">
+              {{ group.members }} members • Invited by {{ group.invitedBy }}
+            </div>
+
+            <div class="type">{{ group.type }}</div>
+          </div>
+
+          <!-- RIGHT ACTION -->
+          <div class="invite-action">
+
+            @if (group.status === 'Pending') {
+
+              <button class="btn accept">
+                Accept
+              </button>
+
+              <button class="btn reject">
+                Decline
+              </button>
+
+            } @else if (group.status === 'Accepted') {
+
+              <span class="status accepted">Joined</span>
+
+            } @else {
+
+              <span class="status rejected">Declined</span>
+
+            }
+
+          </div>
+
+        </div>
+
+      }
+
+    }
+
+  </div>
+
+</div>

@@ -30,6 +30,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/groups/groups').then(c => c.Groups)
             },
             {
+                path: 'invites',
+                loadComponent: () => import('./pages/invites/invites').then(c => c.Invites)
+            },
+            {
                 path: 'settings',
                 loadComponent: () => import('./pages/settings/settings').then(c => c.Settings)
             },

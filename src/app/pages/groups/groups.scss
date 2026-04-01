@@ -1,23 +1,171 @@
 .groups-container {
-  padding: 20px;
+
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    margin: 0;
+  }
 
   .create-btn {
     background: #5454ff;
     color: white;
-    padding: 10px;
-    margin-bottom: 20px;
-  }
+    border: none;
+    padding: 10px 14px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 13px;
 
-  .group-list {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 15px;
-
-    .group-card {
-      padding: 20px;
-      background: white;
-      border-radius: 10px;
-      box-shadow: 0 2px 5px rgba(0,0,0,0.05);
+    &:hover {
+      background: #3f3fff;
     }
   }
+}
+
+/* TABLE WRAPPER */
+.table-wrapper {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  flex: 1;
+}
+
+/* TABLE */
+.groups-table {
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+
+  th,
+  td {
+    padding: 14px 16px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+    font-size: 14px;
+  }
+
+  th {
+    background: #fafafa;
+    font-weight: 600;
+    color: #6b7280;
+  }
+
+  tbody tr {
+    transition: 0.2s;
+
+    &:hover {
+      background: #f9f9ff;
+    }
+  }
+}
+
+/* sticky header */
+.groups-table thead th {
+  position: sticky;
+  top: 0;
+  background: #fafafa;
+  z-index: 2;
+}
+
+/* scroll container */
+.table-body-wrapper {
+  overflow-y: auto;
+  height: 100%;
+  border-bottom: 1px solid #eee;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 10px;
+  }
+}
+
+/* GROUP NAME CELL */
+.group-name {
+  .name {
+    font-weight: 500;
+  }
+
+  .sub {
+    font-size: 12px;
+    color: #9ca3af;
+  }
+}
+
+/* STATUS BADGES */
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 500;
+}
+
+.pending {
+  background: #fff7e6;
+  color: #d48806;
+}
+
+.accepted {
+  background: #e6fffb;
+  color: #08979c;
+}
+
+.rejected {
+  background: #fff1f0;
+  color: #cf1322;
+}
+
+/* ACTIONS */
+.actions {
+  display: flex;
+  gap: 8px;
+
+  .btn {
+    padding: 6px 10px;
+    border-radius: 8px;
+    border: none;
+    font-size: 12px;
+    cursor: pointer;
+  }
+
+  .accept {
+    background: #22c55e;
+    color: white;
+
+    &:hover {
+      background: #16a34a;
+    }
+  }
+
+  .reject {
+    background: #f3f4f6;
+
+    &:hover {
+      background: #e5e7eb;
+    }
+  }
+}
+
+/* STATES */
+.joined {
+  color: #16a34a;
+  font-weight: 500;
+  font-size: 13px;
+}
+
+.rejected-text {
+  color: #cf1322;
+  font-size: 13px;
 }

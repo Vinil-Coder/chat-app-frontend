@@ -1,70 +1,76 @@
 .settings-page {
   display: flex;
-  flex-direction: column;
   height: 100%;
-  width: 100%;
-  overflow: hidden;
+  background: #f6f7fb;
   font-family: system-ui, Arial, sans-serif;
 }
 
-.page-title {
-  font-size: 22px;
-  font-weight: 500;
-  color: #2b2b2b;
-  margin: 5px;
-  letter-spacing: 0.2px;
-  position: relative;
-}
-
-.page-title::after {
-  content: "";
-  display: block;
-  width: 60px;
-  height: 2px;
-  margin-top: 8px;
-  border-radius: 2px;
-}
-
-.page-content {
-  display: flex;
-  background: var(--white);
-  padding: 20px;
-  height: 100vh;
-  border-radius: 10px;
-}
-
-/* SIDEBAR */
-.sidebar {
-  width: 220px;
+/* LEFT SIDEBAR */
+.settings-sidebar {
+  width: 280px;
   background: #fff;
+  border-radius: 10px;
+  border-right: 1px solid #eee;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+}
 
-  button {
-    width: 100%;
-    text-align: left;
-    padding: 12px;
-    margin-bottom: 10px;
-    border: none;
-    border-radius: 8px;
-    background: var(--primary-color-light);
-    cursor: pointer;
+.settings-sidebar h2 {
+  font-size: 18px;
+  margin-bottom: 12px;
+}
 
-    &.active {
-      background: var(--primary-color);
-      color: white;
-    }
+.settings-list {
+  flex: 1;
+  overflow-y: auto;
+}
+
+.settings-item {
+  padding: 10px 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  margin-bottom: 8px;
+  display: flex;
+  justify-content: space-between;
+  transition: 0.2s;
+
+  &:hover {
+    background: #f3f3ff;
+  }
+
+  &.active {
+    background: #5454ff;
+    color: white;
   }
 }
 
-/* CONTENT AREA */
-.content {
+/* RIGHT PANEL */
+.settings-content {
   flex: 1;
-  margin-left: 20px;
+  padding: 20px;
+  overflow-y: auto;
+}
+
+/* HEADER */
+.settings-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+}
+
+.settings-title {
+  font-size: 22px;
+  font-weight: 600;
 }
 
 /* CARD */
 .card {
   background: white;
-  border-radius: 14px;
+  padding: 16px;
+  border-radius: 12px;
+  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
 }
 
 h3 {

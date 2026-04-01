@@ -16,14 +16,19 @@
         <span class="menu__label">Groups</span>
       </div>
 
-      <div class="menu__item" routerLink="/dashboard/settings" routerLinkActive="active">
-        <span class="menu__icon"><img src="assets/settings.svg" alt="Settings"></span>
-        <span class="menu__label">Settings</span>
+      <div class="menu__item" routerLink="/dashboard/invites" routerLinkActive="active">
+        <span class="menu__icon"><img src="assets/invitation.png" alt="Users"></span>
+        <span class="menu__label">Invites</span>
       </div>
 
       <div class="menu__item" routerLink="/dashboard/workspaces" routerLinkActive="active">
         <span class="menu__icon"><img src="assets/workspace.png" alt="Workspaces"></span>
         <span class="menu__label">Workspaces</span>
+      </div>
+
+      <div class="menu__item" routerLink="/dashboard/settings" routerLinkActive="active">
+        <span class="menu__icon"><img src="assets/settings.svg" alt="Settings"></span>
+        <span class="menu__label">Settings</span>
       </div>
     </div>
 
@@ -36,7 +41,8 @@
         @if(workspaceDropdownOpen) {
         <div class="dropdown">
           @for (workspace of workspaces; track workspace.id) {
-          <div class="dropdown-item" (click)="selectWorkspace(workspace, $event)" [class.selected]="selectedWorkspace === workspace.name">
+          <div class="dropdown-item" (click)="selectWorkspace(workspace, $event)"
+            [class.selected]="selectedWorkspace === workspace.name">
             {{ workspace.name }}
           </div>
           }

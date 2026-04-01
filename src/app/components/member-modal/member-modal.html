@@ -1,0 +1,28 @@
+<div class="modal-backdrop" (click)="close()"></div>
+<div class="modal">
+    <h3>{{ mode === 'edit' ? 
+    'Edit Member' : 
+    mode === 'remove' ? 
+    'Delete Member' : 
+    'Invite Member' }}</h3>
+
+    @if(mode === 'remove') {
+        <p>Are you sure you want to remove <b>{{ name }}</b> from the workspace?</p>
+    } @else {
+        <input [(ngModel)]="name" placeholder="Name" />
+        <input [(ngModel)]="email" placeholder="Email" />
+        <input [(ngModel)]="contact" placeholder="Contact" />
+
+        <select [(ngModel)]="role">
+            <option value="Admin">Admin</option>
+            <option value="Member">Member</option>
+        </select>
+    }
+    <div class="modal-actions">
+        <button class="btn btn-primary" (click)="save()">
+            {{ mode === 'remove' ? 'Remove'
+            : mode === 'edit' ? 'Save' : 'Invite' }}
+        </button>
+        <button class="btn btn-danger" (click)="close()">Cancel</button>
+    </div>
+</div>

@@ -1,0 +1,67 @@
+.modal {
+  width: 420px;
+  padding: 22px;
+  animation: scaleIn 0.18s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+/* BUTTONS */
+.btn {
+  padding: 10px 14px;
+  border-radius: 10px;
+  font-size: 13px;
+  border: none;
+  cursor: pointer;
+  transition: 0.2s ease;
+}
+
+.btn-primary {
+  background: #5454ff;
+  color: white;
+
+  &:hover {
+    background: #3f3fff;
+    transform: translateY(-1px);
+  }
+}
+
+.btn-danger {
+  background: #f3f4f6;
+  color: #111827;
+
+  &:hover {
+    background: #e5e7eb;
+  }
+}
+
+p {
+  margin: 0;
+}
+
+h3 {
+  margin: 0;
+  margin-bottom: 10px;
+}
+
+/* ANIMATIONS */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: translate(-50%, -48%) scale(0.96);
+    opacity: 0;
+  }
+  to {
+    transform: translate(-50%, -50%) scale(1);
+    opacity: 1;
+  }
+}

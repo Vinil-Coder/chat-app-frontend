@@ -1,189 +1,197 @@
 <div class="settings-page">
 
-  <div class="page-title">
-    Settings
-  </div>
+  <!-- LEFT SIDEBAR -->
+  <aside class="settings-sidebar">
 
-  <div class="page-content">
-    <!-- LEFT SIDEBAR STYLE TABS -->
-    <div class="sidebar">
+    <h2>Settings</h2>
 
-      <button (click)="activeTab='profile'" [class.active]="activeTab==='profile'">
+    <div class="settings-list">
+
+      <div class="settings-item active" (click)="activeTab='Profile'" [class.active]="activeTab === 'Profile'">
         Profile
-      </button>
+        <span>👑</span>
+      </div>
 
-      <button (click)="activeTab='account'" [class.active]="activeTab==='account'">
+      <div class="settings-item" (click)="activeTab='Account'" [class.active]="activeTab === 'Account'">
         Account
-      </button>
+      </div>
 
-      <button (click)="activeTab='appearance'" [class.active]="activeTab==='appearance'">
+      <div class="settings-item" (click)="activeTab='Appearance'" [class.active]="activeTab === 'Appearance'">
         Appearance
-      </button>
+      </div>
+
     </div>
 
-    <!-- RIGHT CONTENT -->
-    <div class="content">
+  </aside>
 
-      <!-- PROFILE -->
-      @if (activeTab === 'profile') {
-      <div class="card">
+  <!-- RIGHT CONTENT -->
+  <main class="settings-content">
 
-        <h3>Personal Information</h3>
+     <!-- HEADER -->
+    <div class="settings-header">
 
-        <div class="grid">
-          <div class="field">
-            <label>Full Name</label>
-            <input type="text" placeholder="John Doe" />
-          </div>
-
-          <div class="field">
-            <label>Email</label>
-            <input type="email" placeholder="john@email.com" />
-          </div>
-
-          <div class="field">
-            <label>Phone</label>
-            <input type="tel" />
-          </div>
-
-          <div class="field">
-            <label>Location</label>
-            <input type="text" placeholder="City, Country" />
-          </div>
-
-          <div class="field full">
-            <label>Bio</label>
-            <textarea placeholder="Tell about yourself"></textarea>
-          </div>
-        </div>
-
-        <div class="section">
-          <h4>Social Links</h4>
-
-          <div class="social-links">
-            <input placeholder="LinkedIn URL" type="text" />
-            <input placeholder="Twitter URL" type="text" />
-            <input placeholder="GitHub URL" type="text" />
-          </div>
-        </div>
-
-        <button class="primary-btn">Save Profile</button>
-      </div>
-      }
-
-      <!-- ACCOUNT -->
-      @else if (activeTab === 'account') {
-      <div class="card">
-
-        <h3>Security</h3>
-
-        <div class="grid">
-          <div class="field">
-            <label>Current Password</label>
-            <input type="password" />
-          </div>
-
-          <div class="field">
-            <label>New Password</label>
-            <input type="password" />
-          </div>
-
-          <div class="field">
-            <label>Confirm Password</label>
-            <input type="password" />
-          </div>
-
-          <div class="field">
-            <label>Two-Factor Auth</label>
-            <select>
-              <option>Disabled</option>
-              <option>Enabled</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="section">
-          <h4>Login Activity</h4>
-          <ul>
-            <li>📍 Chrome - India (Active now)</li>
-            <li>📍 Mobile App - Yesterday</li>
-            <li>📍 Firefox - 3 days ago</li>
-          </ul>
-        </div>
-
-        <div class="danger-box">
-          <div>
-            <h4>Danger Zone</h4>
-            <p>Delete account permanently</p>
-          </div>
-
-          <button class="danger-btn">Delete Account</button>
-        </div>
-      </div>
-      }
-
-      <!-- APPEARANCE -->
-      @else {
-      <div class="card">
-
-        <h3>Theme & Display</h3>
-
-        <div class="grid">
-          <div class="field">
-            <label>Theme Mode</label>
-            <select>
-              <option>Light</option>
-              <option>Dark</option>
-              <option>System</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Primary Color</label>
-            <input type="color" />
-          </div>
-
-          <div class="field">
-            <label>Font Size</label>
-            <select>
-              <option>Small</option>
-              <option>Medium</option>
-              <option>Large</option>
-            </select>
-          </div>
-
-          <div class="field">
-            <label>Layout Density</label>
-            <select>
-              <option>Comfortable</option>
-              <option>Compact</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="section">
-          <h4>Preferences</h4>
-
-          <label class="checkbox">
-            <input type="checkbox" />
-            Enable compact mode
-          </label>
-
-          <label class="checkbox">
-            <input type="checkbox" />
-            Reduce motion effects
-          </label>
-
-          <label class="checkbox">
-            <input type="checkbox" />
-            Show tooltips
-          </label>
-        </div>
-
-        <button class="primary-btn">Save Settings</button>
-      </div>
-      }
+      <div class="settings-title">{{ activeTab }}</div>
 
     </div>
-  </div>
+
+    <!-- PROFILE -->
+    @if (activeTab === 'profile') {
+    <div class="card">
+
+      <h3>Personal Information</h3>
+
+      <div class="grid">
+        <div class="field">
+          <label>Full Name</label>
+          <input type="text" placeholder="John Doe" />
+        </div>
+
+        <div class="field">
+          <label>Email</label>
+          <input type="email" placeholder="john@email.com" />
+        </div>
+
+        <div class="field">
+          <label>Phone</label>
+          <input type="tel" />
+        </div>
+
+        <div class="field">
+          <label>Location</label>
+          <input type="text" placeholder="City, Country" />
+        </div>
+
+        <div class="field full">
+          <label>Bio</label>
+          <textarea placeholder="Tell about yourself"></textarea>
+        </div>
+      </div>
+
+      <div class="section">
+        <h4>Social Links</h4>
+
+        <div class="social-links">
+          <input placeholder="LinkedIn URL" type="text" />
+          <input placeholder="Twitter URL" type="text" />
+          <input placeholder="GitHub URL" type="text" />
+        </div>
+      </div>
+
+      <button class="primary-btn">Save Profile</button>
+    </div>
+    }
+
+    <!-- ACCOUNT -->
+    @else if (activeTab === 'account') {
+    <div class="card">
+
+      <h3>Security</h3>
+
+      <div class="grid">
+        <div class="field">
+          <label>Current Password</label>
+          <input type="password" />
+        </div>
+
+        <div class="field">
+          <label>New Password</label>
+          <input type="password" />
+        </div>
+
+        <div class="field">
+          <label>Confirm Password</label>
+          <input type="password" />
+        </div>
+
+        <div class="field">
+          <label>Two-Factor Auth</label>
+          <select>
+            <option>Disabled</option>
+            <option>Enabled</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section">
+        <h4>Login Activity</h4>
+        <ul>
+          <li>📍 Chrome - India (Active now)</li>
+          <li>📍 Mobile App - Yesterday</li>
+          <li>📍 Firefox - 3 days ago</li>
+        </ul>
+      </div>
+
+      <div class="danger-box">
+        <div>
+          <h4>Danger Zone</h4>
+          <p>Delete account permanently</p>
+        </div>
+
+        <button class="danger-btn">Delete Account</button>
+      </div>
+    </div>
+    }
+
+    <!-- APPEARANCE -->
+    @else {
+    <div class="card">
+
+      <h3>Theme & Display</h3>
+
+      <div class="grid">
+        <div class="field">
+          <label>Theme Mode</label>
+          <select>
+            <option>Light</option>
+            <option>Dark</option>
+            <option>System</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Primary Color</label>
+          <input type="color" />
+        </div>
+
+        <div class="field">
+          <label>Font Size</label>
+          <select>
+            <option>Small</option>
+            <option>Medium</option>
+            <option>Large</option>
+          </select>
+        </div>
+
+        <div class="field">
+          <label>Layout Density</label>
+          <select>
+            <option>Comfortable</option>
+            <option>Compact</option>
+          </select>
+        </div>
+      </div>
+
+      <div class="section">
+        <h4>Preferences</h4>
+
+        <label class="checkbox">
+          <input type="checkbox" />
+          Enable compact mode
+        </label>
+
+        <label class="checkbox">
+          <input type="checkbox" />
+          Reduce motion effects
+        </label>
+
+        <label class="checkbox">
+          <input type="checkbox" />
+          Show tooltips
+        </label>
+      </div>
+
+      <button class="primary-btn">Save Settings</button>
+    </div>
+    }
+  </main>
 </div>

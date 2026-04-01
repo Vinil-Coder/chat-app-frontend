@@ -1,12 +1,48 @@
 <div class="groups-container">
-  <h2>Groups</h2>
 
-  <button class="create-btn">+ Create Group</button>
+  <div class="header">
+    <h2>Groups</h2>
+  </div>
 
-  <div class="group-list">
-    <div class="group-card" *ngFor="let group of groups">
-      <h3>{{ group.name }}</h3>
-      <p>{{ group.members }} members</p>
+  <div class="table-wrapper">
+
+    <table class="groups-table">
+      <thead>
+        <tr>
+          <th>Group</th>
+          <th>Invited By</th>
+          <th>Type</th>
+          <th>Members</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+    </table>
+  
+    <div class="table-body-wrapper">
+      <table class="groups-table">
+        <tbody>
+          @if (groups.length === 0) {
+            <tr>
+              <td colspan="5">No groups found</td>
+            </tr>
+          } @else {
+            @for (group of groups; track group.id) {
+              <tr>
+                <td>{{ group.name }}</td>
+                <td>{{ group.invitedBy }}</td>
+                <td>{{ group.type }}</td>
+                <td>{{ group.members }}</td>
+                <td>
+                  <span class="status-badge" [ngClass]="group.status.toLowerCase()">
+                    {{ group.status }}
+                  </span>
+                </td>
+              </tr>
+            }
+          }
+        </tbody>
+      </table>
     </div>
   </div>
+
 </div>
