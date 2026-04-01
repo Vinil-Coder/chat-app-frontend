@@ -42,6 +42,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/workspaces/workspaces').then(c => c.Workspaces)
             },
             {
+                path: 'profile',
+                loadComponent: () => import('./pages/profile/profile').then(c => c.Profile)
+            },
+            {
                 path: '',
                 pathMatch: 'full',
                 redirectTo: 'chats'
