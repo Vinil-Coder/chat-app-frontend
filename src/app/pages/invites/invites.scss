@@ -30,6 +30,16 @@
   grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
   gap: 16px;
   overflow-y: auto;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+    display: none;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: #ddd;
+    border-radius: 10px;
+  }
 }
 
 /* CARD */
@@ -40,7 +50,7 @@
   padding: 16px;
   border-radius: 12px;
   background: white;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 25px rgba(0,0,0,0.06);
   transition: 0.2s;
 
   &:hover {

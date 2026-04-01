@@ -184,6 +184,48 @@ export const GROUPS = [
     members: 5,
     invitedBy: 'Mike',
     status: 'Rejected'
+  },
+   {
+    name: 'Dev Core',
+    type: 'Workspace',
+    members: 5,
+    invitedBy: 'Mike',
+    status: 'Rejected'
+  },
+   {
+    name: 'Dev Core',
+    type: 'Workspace',
+    members: 5,
+    invitedBy: 'Mike',
+    status: 'Rejected'
+  },
+   {
+    name: 'Dev Core',
+    type: 'Workspace',
+    members: 5,
+    invitedBy: 'Mike',
+    status: 'Rejected'
+  },
+   {
+    name: 'Dev Core',
+    type: 'Workspace',
+    members: 5,
+    invitedBy: 'Mike',
+    status: 'Rejected'
+  },
+   {
+    name: 'Dev Core',
+    type: 'Workspace',
+    members: 5,
+    invitedBy: 'Mike',
+    status: 'Rejected'
+  },
+   {
+    name: 'Dev Core',
+    type: 'Workspace',
+    members: 5,
+    invitedBy: 'Mike',
+    status: 'Rejected'
   }
 
 ];

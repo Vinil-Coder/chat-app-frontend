@@ -1,197 +1,115 @@
 <div class="settings-page">
 
-  <!-- LEFT SIDEBAR -->
-  <aside class="settings-sidebar">
-
+  <!-- HEADER -->
+  <div class="settings-header">
     <h2>Settings</h2>
+  </div>
 
-    <div class="settings-list">
-
-      <div class="settings-item active" (click)="activeTab='Profile'" [class.active]="activeTab === 'Profile'">
-        Profile
-        <span>👑</span>
-      </div>
-
-      <div class="settings-item" (click)="activeTab='Account'" [class.active]="activeTab === 'Account'">
-        Account
-      </div>
-
-      <div class="settings-item" (click)="activeTab='Appearance'" [class.active]="activeTab === 'Appearance'">
-        Appearance
-      </div>
-
+  <!-- TABS -->
+  <div class="tabs">
+    <div class="tab"
+         [class.active]="activeTab === 'profile'"
+         (click)="activeTab='profile'">
+      Profile
     </div>
 
-  </aside>
-
-  <!-- RIGHT CONTENT -->
-  <main class="settings-content">
-
-     <!-- HEADER -->
-    <div class="settings-header">
-
-      <div class="settings-title">{{ activeTab }}</div>
-
+    <div class="tab"
+         [class.active]="activeTab === 'account'"
+         (click)="activeTab='account'">
+      Account
     </div>
+
+    <div class="tab"
+         [class.active]="activeTab === 'appearance'"
+         (click)="activeTab='appearance'">
+      Appearance
+    </div>
+  </div>
+
+  <!-- CONTENT -->
+  <div class="tab-content">
 
     <!-- PROFILE -->
     @if (activeTab === 'profile') {
-    <div class="card">
+      <div class="card">
 
-      <h3>Personal Information</h3>
+        <h3>Personal Info</h3>
 
-      <div class="grid">
-        <div class="field">
-          <label>Full Name</label>
-          <input type="text" placeholder="John Doe" />
+        <div class="grid">
+          <input placeholder="Full Name">
+          <input placeholder="Email">
+          <input placeholder="Phone">
+          <input placeholder="Location">
+          <textarea placeholder="Bio" class="full"></textarea>
         </div>
 
-        <div class="field">
-          <label>Email</label>
-          <input type="email" placeholder="john@email.com" />
+        <h3>Social Links</h3>
+
+        <div class="grid">
+          <input placeholder="LinkedIn">
+          <input placeholder="Twitter">
+          <input placeholder="GitHub">
         </div>
 
-        <div class="field">
-          <label>Phone</label>
-          <input type="tel" />
-        </div>
-
-        <div class="field">
-          <label>Location</label>
-          <input type="text" placeholder="City, Country" />
-        </div>
-
-        <div class="field full">
-          <label>Bio</label>
-          <textarea placeholder="Tell about yourself"></textarea>
-        </div>
+        <button class="primary-btn">Save Changes</button>
       </div>
+    } @else if (activeTab === 'account') {
+      <!-- ACCOUNT -->
+      <div class="card">
 
-      <div class="section">
-        <h4>Social Links</h4>
+        <h3>Password</h3>
 
-        <div class="social-links">
-          <input placeholder="LinkedIn URL" type="text" />
-          <input placeholder="Twitter URL" type="text" />
-          <input placeholder="GitHub URL" type="text" />
-        </div>
-      </div>
-
-      <button class="primary-btn">Save Profile</button>
-    </div>
-    }
-
-    <!-- ACCOUNT -->
-    @else if (activeTab === 'account') {
-    <div class="card">
-
-      <h3>Security</h3>
-
-      <div class="grid">
-        <div class="field">
-          <label>Current Password</label>
-          <input type="password" />
+        <div class="grid">
+          <input type="password" placeholder="Current Password">
+          <input type="password" placeholder="New Password">
+          <input type="password" placeholder="Confirm Password">
         </div>
 
-        <div class="field">
-          <label>New Password</label>
-          <input type="password" />
-        </div>
+        <h3>Security</h3>
 
-        <div class="field">
-          <label>Confirm Password</label>
-          <input type="password" />
-        </div>
-
-        <div class="field">
-          <label>Two-Factor Auth</label>
+        <div class="grid">
           <select>
-            <option>Disabled</option>
-            <option>Enabled</option>
+            <option>2FA Disabled</option>
+            <option>2FA Enabled</option>
           </select>
         </div>
-      </div>
 
-      <div class="section">
-        <h4>Login Activity</h4>
-        <ul>
-          <li>📍 Chrome - India (Active now)</li>
-          <li>📍 Mobile App - Yesterday</li>
-          <li>📍 Firefox - 3 days ago</li>
-        </ul>
-      </div>
-
-      <div class="danger-box">
-        <div>
-          <h4>Danger Zone</h4>
-          <p>Delete account permanently</p>
+        <div class="danger-box">
+          <div>
+            <h4>Delete Account</h4>
+            <p>This action is permanent</p>
+          </div>
+          <button class="danger-btn">Delete</button>
         </div>
 
-        <button class="danger-btn">Delete Account</button>
+        <button class="primary-btn">Update Security</button>
       </div>
-    </div>
-    }
+    } @else {
+      <!-- APPEARANCE -->
+      <div class="card">
 
-    <!-- APPEARANCE -->
-    @else {
-    <div class="card">
+        <h3>Theme</h3>
 
-      <h3>Theme & Display</h3>
-
-      <div class="grid">
-        <div class="field">
-          <label>Theme Mode</label>
+        <div class="grid">
           <select>
             <option>Light</option>
             <option>Dark</option>
-            <option>System</option>
           </select>
+
+          <input type="color">
         </div>
 
-        <div class="field">
-          <label>Primary Color</label>
-          <input type="color" />
+        <h3>Preferences</h3>
+
+        <div class="checkbox-group">
+          <label><input type="checkbox"> Compact Mode</label>
+          <label><input type="checkbox"> Reduce Motion</label>
+          <label><input type="checkbox"> Show Tooltips</label>
         </div>
 
-        <div class="field">
-          <label>Font Size</label>
-          <select>
-            <option>Small</option>
-            <option>Medium</option>
-            <option>Large</option>
-          </select>
-        </div>
-
-        <div class="field">
-          <label>Layout Density</label>
-          <select>
-            <option>Comfortable</option>
-            <option>Compact</option>
-          </select>
-        </div>
+        <button class="primary-btn">Save Preferences</button>
       </div>
-
-      <div class="section">
-        <h4>Preferences</h4>
-
-        <label class="checkbox">
-          <input type="checkbox" />
-          Enable compact mode
-        </label>
-
-        <label class="checkbox">
-          <input type="checkbox" />
-          Reduce motion effects
-        </label>
-
-        <label class="checkbox">
-          <input type="checkbox" />
-          Show tooltips
-        </label>
-      </div>
-
-      <button class="primary-btn">Save Settings</button>
-    </div>
     }
-  </main>
+
+  </div>
 </div>

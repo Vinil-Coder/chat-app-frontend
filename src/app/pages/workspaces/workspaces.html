@@ -1,119 +1,92 @@
 <div class="workspace-page">
 
-  <!-- PAGE HEADER -->
-  <div class="header">
-    <h2>Workspaces</h2>
-  </div>
+  <!-- LEFT -->
+  <aside class="workspace-sidebar">
 
-  <div class="page-content">
+    <div class="sidebar-header">
+      <h3>Workspaces</h3>
+      <button class="add-btn" (click)="createWorkspace()">+</button>
+    </div>
 
-    <!-- LEFT SIDEBAR -->
-    <aside class="workspace-sidebar">
+    <div class="workspace-list">
+      @for (workspace of workspaces; track workspace.workspace_id) {
+        <div class="workspace-item"
+             (click)="selectWorkspace(workspace)"
+             [class.active]="selectedWorkSpace.workspace_id === workspace.workspace_id">
 
-      <button class="add-workspace" (click)="createWorkspace()">
-        <img src="assets/plus.svg">
-        <span>New Workspace</span>
-      </button>
-
-      <div class="workspace-list">
-        @for (workspace of workspaces; track workspace.workspace_id) {
-        <div class="workspace-item" (click)="selectWorkspace(workspace)"
-          [class.active]="selectedWorkSpace.workspace_id === workspace.workspace_id">
           <span>{{ workspace.name }}</span>
-          <div class="workspace-actions actions-cell">
-            <button class="icon-btn edit-btn" (click)="editWorkspace($event, workspace)">
-              <img src="assets/edit.svg">
-            </button>
-            <button class="icon-btn trash-btn" (click)="deleteWorkspace($event, workspace)">
-              <img src="assets/trash.svg">
-            </button>
+
+          <div class="actions">
+            <button (click)="editWorkspace($event, workspace)">✏️</button>
+            <button (click)="deleteWorkspace($event, workspace)">🗑</button>
           </div>
+
         </div>
+      }
+    </div>
+
+  </aside>
+
+  <!-- RIGHT -->
+  <main class="workspace-content">
+
+    <!-- HEADER -->
+    <div class="content-header">
+      <div>
+        <h2>{{ selectedWorkSpace.name }}</h2>
+        <p>{{ selectedWorkSpaceMembers.length }} members</p>
+      </div>
+
+      <button class="invite-btn" (click)="inviteMember()">
+        + Invite Member
+      </button>
+    </div>
+
+    <!-- MEMBERS -->
+    <div class="members-grid">
+
+      @if (selectedWorkSpaceMembers.length === 0) {
+        <div class="empty">No members yet Invite one now!</div>
+      } @else {
+
+        @for (member of selectedWorkSpaceMembers; track member.user_id) {
+
+          <div class="member-card">
+
+            <div class="avatar">
+              {{ member.name[0] }}
+            </div>
+
+            <div class="info">
+              <div class="name">{{ member.name }}</div>
+              <div class="email">{{ member.email }}</div>
+            </div>
+
+            <div class="meta">
+              <span class="role"
+                [ngClass]="member.role.toLowerCase()">
+                {{ member.role }}
+              </span>
+
+              <span class="status"
+                [ngClass]="member.status.toLowerCase()">
+                {{ member.status }}
+              </span>
+            </div>
+
+            <div class="card-actions">
+              <button (click)="editMember(member)">✏️</button>
+              <button (click)="removeMember(member)">🗑</button>
+            </div>
+
+          </div>
+
         }
-      </div>
 
-    </aside>
+      }
 
-    <!-- RIGHT CONTENT -->
-    <main class="workspace-content">
+    </div>
 
-      <!-- WORKSPACE HEADER -->
-      <div class="workspace-header">
-        <div class="workspace-title">Members</div>
-
-        <div class="workspace-actions">
-          <button class="btn btn-primary" (click)="inviteMember()">Invite Member</button>
-        </div>
-      </div>
-
-      <!-- MEMBERS TABLE -->
-      <div class="card">
-
-        <table class="members-table">
-          <thead>
-            <tr>
-              <th>Name</th>
-              <th>Email</th>
-              <th>Contact</th>
-              <th>Role</th>
-              <th>Status</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-        </table>
-
-        <div class="table-body-wrapper">
-          <table class="members-table">
-            <tbody>
-
-              @if (selectedWorkSpaceMembers.length === 0) {
-              <tr>
-                <td colspan="6" class="no-members">No Members</td>
-              </tr>
-              } @else {
-
-              @for (member of selectedWorkSpaceMembers; track member.user_id) {
-              <tr>
-                <td>{{ member.name }}</td>
-                <td>{{ member.email }}</td>
-                <td>{{ member.contact }}</td>
-
-                <td>
-                  <span class="role-badge" [ngClass]="{
-                          'role-admin': member.role === 'Admin',
-                          'role-member': member.role === 'Member'
-                        }">
-                    {{ member.role }}
-                  </span>
-                </td>
-
-                <td>
-                  <span class="role-badge" [ngClass]="member.status.toLowerCase()">
-                    {{ member.status }}
-                  </span>
-                </td>
-
-                <td class="actions-cell">
-                  <button class="icon-btn edit-btn" (click)="editMember(member)">
-                    <img src="assets/edit.svg">
-                  </button>
-                  <button class="icon-btn trash-btn" (click)="removeMember(member)">
-                    <img src="assets/trash.svg">
-                  </button>
-                </td>
-              </tr>
-              }
-
-              }
-
-            </tbody>
-          </table>
-        </div>
-
-      </div>
-
-    </main>
-
-  </div>
+  </main>
 
 </div>
