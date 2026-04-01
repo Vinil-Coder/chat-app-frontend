@@ -61,6 +61,7 @@
 
   tbody tr {
     transition: 0.2s;
+    cursor: pointer;
 
     &:hover {
       background: #f9f9ff;
@@ -126,37 +127,6 @@
 .rejected {
   background: #fff1f0;
   color: #cf1322;
-}
-
-/* ACTIONS */
-.actions {
-  display: flex;
-  gap: 8px;
-
-  .btn {
-    padding: 6px 10px;
-    border-radius: 8px;
-    border: none;
-    font-size: 12px;
-    cursor: pointer;
-  }
-
-  .accept {
-    background: #22c55e;
-    color: white;
-
-    &:hover {
-      background: #16a34a;
-    }
-  }
-
-  .reject {
-    background: #f3f4f6;
-
-    &:hover {
-      background: #e5e7eb;
-    }
-  }
 }
 
 /* STATES */

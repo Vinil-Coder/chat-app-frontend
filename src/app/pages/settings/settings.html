@@ -8,12 +8,6 @@
   <!-- TABS -->
   <div class="tabs">
     <div class="tab"
-         [class.active]="activeTab === 'profile'"
-         (click)="activeTab='profile'">
-      Profile
-    </div>
-
-    <div class="tab"
          [class.active]="activeTab === 'account'"
          (click)="activeTab='account'">
       Account
@@ -30,30 +24,7 @@
   <div class="tab-content">
 
     <!-- PROFILE -->
-    @if (activeTab === 'profile') {
-      <div class="card">
-
-        <h3>Personal Info</h3>
-
-        <div class="grid">
-          <input placeholder="Full Name">
-          <input placeholder="Email">
-          <input placeholder="Phone">
-          <input placeholder="Location">
-          <textarea placeholder="Bio" class="full"></textarea>
-        </div>
-
-        <h3>Social Links</h3>
-
-        <div class="grid">
-          <input placeholder="LinkedIn">
-          <input placeholder="Twitter">
-          <input placeholder="GitHub">
-        </div>
-
-        <button class="primary-btn">Save Changes</button>
-      </div>
-    } @else if (activeTab === 'account') {
+    @if (activeTab === 'account') {
       <!-- ACCOUNT -->
       <div class="card">
 
