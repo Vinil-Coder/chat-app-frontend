@@ -1,7 +1,6 @@
 .sidenav {
     display: flex;
     flex-direction: column;
-    height: 100vh;
 }
 
 /* LOGO */
@@ -21,12 +20,12 @@
     }
 
     .close-icon {
-        display: none;
+        visibility: hidden;
         cursor: pointer;
     }
 
-    .close-icon.show {
-        display: block;
+    .show {
+        visibility: visible;
     }
 }
 

@@ -1,99 +1,52 @@
 .layout-container {
-    display: flex;
-    height: 100vh;
     width: 100%;
-    overflow: hidden;
-    font-family: system-ui, Arial, sans-serif;
-    background: var(--white);
-}
-
-/* LEFT SIDEBAR */
-.left-panel {
-    width: 260px;
-    flex-shrink: 0;
+    height: 100%;
     display: flex;
-    flex-direction: column;
-    overflow-y: auto;
-    margin-left: 0;
-    transition: all .3s ease-in-out
 }
 
-.left-panel.sidebar-collapsed {
-    margin-left: -260px;
-}
-
-/* RIGHT SIDE */
-.right-panel {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    overflow: hidden;
+/* Sidebar */
+app-sidemenu {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 250px;
     background: var(--white);
+    transition: left 0.3s ease-in-out;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
-/* TOP BAR */
-.top-bar {
-    height: 60px;
-    display: block;
+app-sidemenu.hide {
+    left: -250px;
 }
 
-/* MAIN CONTENT */
-.main-content {
-    flex: 1;
+/* Header */
+app-top-bar {
+    position: fixed;
+    top: 0;
+    left: 250px;
+    right: 0;
+    z-index: 1000;
+    background: #fff;
+    background: var(--primary-color);
+    transition: left 0.3s ease-in-out;;
+}
+
+app-top-bar.full-screen {
+    left: 0px;
+}
+
+/* Main router content area */
+main {
+    position: absolute;
+    top: 60px;
+    left: 250px;
+    right: 0;
+    bottom: 0;
     padding: 20px;
     overflow-y: auto;
-    background: var(--background-color);
 }
 
-/* ---------------------------
-   RESPONSIVE DESIGN
----------------------------- */
-
-@media (max-width: 1024px) {
-    .left-panel {
-        width: 220px;
-    }
-}
-
-/* TABLET / MOBILE */
-@media (max-width: 768px) {
-
-    .layout-container {
-        flex-direction: column;
-    }
-
-    /* Sidebar becomes top drawer */
-    .left-panel {
-        width: 100%;
-        height: auto;
-        flex-direction: row;
-        overflow-x: auto;
-    }
-
-    .right-panel {
-        flex: 1;
-        height: calc(100vh - 120px);
-    }
-
-    .top-bar {
-        position: sticky;
-        top: 0;
-        z-index: 10;
-    }
-
-    .main-content {
-        padding: 12px;
-    }
-}
-
-/* SMALL MOBILE */
-@media (max-width: 480px) {
-
-    .left-panel {
-        flex-direction: column;
-    }
-
-    .main-content {
-        padding: 10px;
-    }
+main.full-screen {
+    left: 0px;
 }

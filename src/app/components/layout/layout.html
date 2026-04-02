@@ -1,22 +1,14 @@
 <div class="layout-container">
 
-  <!-- LEFT SIDEBAR -->
-  <aside class="left-panel">
-    <app-sidemenu class="side-menu"></app-sidemenu>
-  </aside>
+  <app-sidemenu id="side-bar" [class.hide]="isSidebarHidden" (toggleSidebar)="toggleSidebar()">
+  </app-sidemenu>
 
-  <!-- RIGHT SECTION -->
-  <div class="right-panel">
+  <app-top-bar id="top-bar" (toggleSidebar)="toggleSidebar()" [class.full-screen]="isContentFull">
+  </app-top-bar>
 
-    <!-- TOP BAR -->
-    <app-top-bar class="top-bar"></app-top-bar>
-
-    <!-- MAIN CONTENT -->
-    <main class="main-content">
-      <router-outlet></router-outlet>
-      <app-modal-host></app-modal-host>
-    </main>
-
-  </div>
+  <main id="main" [class.full-screen]="isContentFull">
+    <router-outlet></router-outlet>
+    <app-modal-host></app-modal-host>
+  </main>
 
 </div>

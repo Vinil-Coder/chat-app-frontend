@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { Sidemenu } from '../sidemenu/sidemenu';
 import { TopBar } from '../top-bar/top-bar';
 import { RouterModule, RouterOutlet } from '@angular/router';
@@ -12,4 +12,37 @@ import { ModalHost } from '../modal-host/modal-host';
 })
 export class Layout {
 
+  isSidebarHidden = false;
+  isContentFull = false;
+  isMobile = false;
+
+  ngOnInit() {
+    this.checkScreen();
+  }
+
+  @HostListener('window:resize')
+  onResize() {
+    this.checkScreen();
+  }
+
+  checkScreen() {
+    this.isMobile = window.innerWidth <= 1024;
+
+    if (this.isMobile) {
+      this.isSidebarHidden = true;
+      this.isContentFull = true;
+      const sideBar = document.getElementById('side-bar');
+      if (sideBar) {
+        sideBar.style.zIndex = '9999';
+        sideBar.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.05)'
+      }
+    } else {
+      this.isSidebarHidden = false;
+      this.isContentFull = false;
+    }
+  }
+
+  toggleSidebar() {
+    this.isSidebarHidden = !this.isSidebarHidden;
+  }
 }

@@ -1,17 +1,12 @@
 .top-bar {
-    height: 60px;
-    background: #fff;
-    border-bottom: 1px solid #eee;
-
     display: flex;
-    justify-content: space-between;
     align-items: center;
+    justify-content: space-between;
+    padding: 20px;
+    height: 60px;
+    background-color: #fff;
+    border: none;
     border-bottom: 3px solid var(--primary-color);
-
-    padding: 0 14px;
-    position: sticky;
-    top: 0;
-    z-index: 100;
 }
 
 /* LEFT SIDE */

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { RouterModule } from "@angular/router";
 
 @Component({
@@ -15,6 +15,12 @@ export class TopBar {
   showSettings: boolean = false;
   darkMode: boolean = false;
 
+  @Output() toggleSidebar = new EventEmitter<void>();
+
+  toggleSidemenu() {
+    this.toggleSidebar.emit();
+  }
+
   toggleNotifications() {
     this.showNotifications = !this.showNotifications;
     this.showProfile = false;
@@ -23,10 +29,6 @@ export class TopBar {
   toggleProfile() {
     this.showProfile = !this.showProfile;
     this.showNotifications = false;
-  }
-
-  toggleSidemenu() {
-    document.querySelector('.left-panel')?.classList.toggle('sidebar-collapsed');
   }
 
   toggleDarkMode() {

@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
+import { Component, EventEmitter, Output } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
@@ -12,7 +12,17 @@ export class Sidemenu {
 
   workspaceDropdownOpen = false;
   selectedWorkspace = 'Select Workspace';
+  isMobile: boolean = window.innerWidth <= 1024;
+  
+  @Output() toggleSidebar = new EventEmitter<void>();
 
+  constructor() {
+    window.addEventListener('resize', () => {
+      this.isMobile = window.innerWidth <= 1024;
+    });
+    console.log(this.isMobile);
+  }
+ 
   workspaces = [
     { name: 'Workspace 1', id: 1 },
     { name: 'Workspace 2', id: 2 },
@@ -35,5 +45,9 @@ export class Sidemenu {
     event.stopPropagation();
     this.selectedWorkspace = workspace.name;
     this.toggleWorkspaceDropdown();
+  }
+
+  closeSidenav() {
+    this.toggleSidebar.emit();
   }
 }
