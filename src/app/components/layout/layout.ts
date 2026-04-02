@@ -44,5 +44,6 @@ export class Layout {
 
   toggleSidebar() {
     this.isSidebarHidden = !this.isSidebarHidden;
+    this.isContentFull = !this.isContentFull;
   }
 }

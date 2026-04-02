@@ -9,7 +9,9 @@
     }
     <div class="modal-actions">
         <button (click)="save()" class="btn btn-primary">
-            {{ mode === 'delete' ? 'Delete' : 'Save' }}</button>
-        <button (click)="close()" class="btn btn-danger">Cancel</button>
+            {{ mode === 'delete' ? 'Yes' : mode === 'edit' ? 'Save' : 'Create'}}</button>
+        <button (click)="close()" class="btn btn-danger">
+            No
+        </button>
     </div>
 </div>

@@ -7,7 +7,7 @@
     'Invite Member' }}</h3>
 
     @if(mode === 'remove') {
-        <p>Are you sure you want to remove <b>{{ name }}</b> from the workspace?</p>
+        <p>Are you sure you want to remove <b>{{ name }}</b> from this workspace?</p>
     } @else {
         <input [(ngModel)]="name" placeholder="Name" />
         <input [(ngModel)]="email" placeholder="Email" />
@@ -20,9 +20,9 @@
     }
     <div class="modal-actions">
         <button class="btn btn-primary" (click)="save()">
-            {{ mode === 'remove' ? 'Remove'
+            {{ mode === 'remove' ? 'Yes'
             : mode === 'edit' ? 'Save' : 'Invite' }}
         </button>
-        <button class="btn btn-danger" (click)="close()">Cancel</button>
+        <button class="btn btn-danger" (click)="close()">No</button>
     </div>
 </div>

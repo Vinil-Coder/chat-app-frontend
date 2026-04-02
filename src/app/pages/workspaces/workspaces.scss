@@ -35,6 +35,15 @@
   }
 }
 
+.workspace-list {
+  flex: 1;
+  overflow-y: scroll;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
+}
+
 /* WORKSPACE ITEM */
 .workspace-item {
   padding: 10px;
@@ -42,10 +51,11 @@
   display: flex;
   justify-content: space-between;
   cursor: pointer;
+  margin-top: 5px;
 
   .actions {
     display: none;
-    
+
     button {
       border: none;
       background: transparent;
@@ -72,7 +82,11 @@
 .workspace-content {
   flex: 1;
   padding: 20px;
-  overflow: auto;
+}
+
+/* PAGE */
+.workspace-page {
+  display: flex;
 }
 
 /* HEADER */
@@ -107,6 +121,11 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 16px;
+  overflow: auto;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 }
 
 /* CARD */
@@ -117,7 +136,7 @@
   display: flex;
   flex-direction: column;
   gap: 10px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.06);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   transition: 0.2s;
 
   &:hover {

@@ -15,7 +15,7 @@
 
       @for (group of groups; track group.id) {
 
-        <div class="invite-card">
+        <div class="invite-card" (click)="viewMembers(group)">
 
           <!-- LEFT INFO -->
           <div class="invite-info">
@@ -33,11 +33,11 @@
 
             @if (group.status === 'Pending') {
 
-              <button class="btn accept">
+              <button class="btn accept" (click)="acceptInvitation(group)">
                 Accept
               </button>
 
-              <button class="btn reject">
+              <button class="btn reject" (click)="rejectInvitation(group)">
                 Decline
               </button>
 

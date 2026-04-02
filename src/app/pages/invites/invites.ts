@@ -10,9 +10,21 @@ import { CommonModule } from '@angular/common';
 })
 export class Invites {
 
-   groups: any = [];
-  
-    ngOnInit() {
-      this.groups = GROUPS;
-    }
+  groups: any = [];
+
+  ngOnInit() {
+    this.groups = GROUPS;
+  }
+
+  viewMembers(group: any) {
+
+  }
+
+  acceptInvitation(group: any) {
+
+  }
+
+  rejectInvitation(group: any) {
+
+  }
 }
