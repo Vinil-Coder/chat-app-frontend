@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-signup',
@@ -13,9 +14,9 @@ export class Signup {
 
   form!: FormGroup;
 
-  constructor(private router: Router) {
+  constructor(private router: Router, private authService: AuthService) {
     this.form = new FormGroup({
-      username: new FormControl('', [Validators.required]),
+      name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
     })
@@ -25,9 +26,15 @@ export class Signup {
     return this.form.controls;
   }
 
-  onFormSubmit() {
+  async onFormSubmit() {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
-    this.router.navigate(['/dashboard']);
+    console.log(this.form.value);
+    try {
+      await this.authService.registerUser(this.form.value);
+      this.router.navigate(['/login']);
+    } catch(error) {
+      console.log(error);
+    }
   }
 }

@@ -5,10 +5,10 @@
     <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
       <div class="form-field">
         <label for="email">Email</label>
-        <input type="email" id="email" name="email" placeholder="Email" formControlName="username">
-        <div *ngIf="fc['username']?.dirty || fc['username']?.touched" class="validation-error-message">
-          <span *ngIf="fc['username']?.errors?.['required']">Email is required</span>
-          <span *ngIf="fc['username']?.errors?.['email']">Invalid email format</span>
+        <input type="email" id="email" name="email" placeholder="Email" formControlName="email">
+        <div *ngIf="fc['email']?.dirty || fc['email']?.touched" class="validation-error-message">
+          <span *ngIf="fc['email']?.errors?.['required']">Email is required</span>
+          <span *ngIf="fc['email']?.errors?.['email']">Invalid email format</span>
         </div>
       </div>
 
@@ -24,7 +24,7 @@
         <label class="remember">
           <input type="checkbox"> Remember me
         </label>
-        <a routerLink="/forgot-password">Forgot password?</a>
+        <a routerLink="/resetpassword">Forgot password?</a>
       </div>
 
       <button type="submit" class="primary-btn">Log In</button>

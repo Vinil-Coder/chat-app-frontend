@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
-import { RouterModule } from "@angular/router";
+import { Router, RouterModule } from "@angular/router";
+import { AuthService } from '../../services/auth.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -16,6 +17,8 @@ export class TopBar {
   darkMode: boolean = false;
 
   @Output() toggleSidebar = new EventEmitter<void>();
+
+  constructor(private authService: AuthService, private router: Router) {}
 
   toggleSidemenu() {
     this.toggleSidebar.emit();
@@ -36,7 +39,12 @@ export class TopBar {
     document.body.classList.toggle('dark-mode', this.darkMode);
   }
 
-  logout() {
-    console.log('logout');
+  async logout() {
+    try {
+      await this.authService.logoutUser(localStorage.getItem('userId') as string);
+      this.router.navigate(['/landing']);
+    } catch (error) {
+      console.log(error);
+    }
   }
 }
