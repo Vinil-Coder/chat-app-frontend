@@ -27,8 +27,7 @@ app-top-bar {
     left: 250px;
     right: 0;
     z-index: 1000;
-    background: #fff;
-    background: var(--primary-color);
+    background: var(--white);
     transition: left 0.3s ease-in-out;;
 }
 

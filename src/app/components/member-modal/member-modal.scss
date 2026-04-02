@@ -18,17 +18,17 @@
 }
 
 .btn-primary {
-  background: #5454ff;
+  background: var(--primary-color);
   color: white;
 
   &:hover {
-    background: #3f3fff;
+    background: var(--primary-color-dark);
     transform: translateY(-1px);
   }
 }
 
 .btn-danger {
-  background: #f3f4f6;
+  background: var(--white);
   color: #111827;
 
   &:hover {
