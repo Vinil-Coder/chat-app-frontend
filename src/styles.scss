@@ -59,18 +59,36 @@ body {
   text-align: center;
 }
 
+h3 {
+  margin: 0;
+}
+
+.create {
+  color: #1f2937;
+}
+
+.edit {
+  color: #1d4ed8; // subtle blue
+}
+
+.delete {
+  color: #dc2626; // soft red (danger)
+}
+
 .modal input,
 .modal select {
   padding: 10px;
   border: 1px solid #ddd;
   border-radius: 8px;
+  font-size: 14px;
+  width: 100%;
 }
 
 .modal-actions {
   display: flex;
   justify-content: flex-end;
   gap: 10px;
-  margin-top: 10px;
+  margin-top: 3rem;
 }
 
 .hidden {

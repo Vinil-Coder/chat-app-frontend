@@ -230,6 +230,25 @@
   text-align: center;
 }
 
+.empty-workspace {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: #6b7280;
+  text-align: center;
+  width: 100%;
+
+  h2 {
+    margin-bottom: 8px;
+  }
+
+  p {
+    margin-bottom: 16px;
+  }
+}
+
 /* RESPONSIVE */
 @media (max-width: 768px) {
 

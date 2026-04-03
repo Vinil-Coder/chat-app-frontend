@@ -36,16 +36,20 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/invites/invites').then(c => c.Invites)
             },
             {
-                path: 'settings',
-                loadComponent: () => import('./pages/settings/settings').then(c => c.Settings)
-            },
-            {
                 path: 'workspaces',
                 loadComponent: () => import('./pages/workspaces/workspaces').then(c => c.Workspaces)
             },
             {
+                path: 'members',
+                loadComponent: () => import('./pages/members/members').then(c => c.Members)
+            },
+            {
                 path: 'profile',
                 loadComponent: () => import('./pages/profile/profile').then(c => c.Profile)
+            },
+            {
+                path: 'settings',
+                loadComponent: () => import('./pages/settings/settings').then(c => c.Settings)
             },
             {
                 path: '',

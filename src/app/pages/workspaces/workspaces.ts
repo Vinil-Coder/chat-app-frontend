@@ -1,9 +1,10 @@
-import { Component } from '@angular/core';
+import { Component, signal } from '@angular/core';
 import { ModalService } from '../../services/modal.service';
 import { WorkspaceModalComponent } from '../../components/workspace-modal/workspace-modal';
 import { MemberModal } from '../../components/member-modal/member-modal';
-import { MEMBERS, WORK_SPACES } from '../../constants/data.constant';
 import { CommonModule } from '@angular/common';
+import { WorkSpaceService } from '../../services/workspace.service';
+import { Workspace } from '../../interfaces/workspace.interface';
 
 @Component({
   selector: 'app-workspaces',
@@ -13,24 +14,40 @@ import { CommonModule } from '@angular/common';
 })
 export class Workspaces {
 
-  workspaces: any = [];
-  members: any = [];
+  workspaces = signal<Workspace[]>([]);
+  members = signal([]);
 
-  selectedWorkSpace: any = {};
-  selectedWorkSpaceMembers: any = [];
+  selectedWorkspace = signal<Workspace>({
+    _id: '',
+    userID: '',
+    name: '',
+    createdAt: '',
+    updatedAt: '',
+    __v: 0
+  });
+  selectedWorkspaceMembers = signal([]);
 
-  constructor(private modal: ModalService) { }
+  constructor(
+    private modal: ModalService, 
+    private workspaceService: WorkSpaceService
+  ) { }
 
   ngOnInit() {
-    this.workspaces = WORK_SPACES;
-    this.members = MEMBERS;
-    this.selectWorkspace(this.workspaces[0]);
+    this.getWorkSpaces();
+  }
+
+  async getWorkSpaces() {
+    try {
+      this.workspaces.set((await this.workspaceService.getWorkspaces()).workspaces);
+      this.selectWorkspace(this.workspaces()?.[0] || {});
+    } catch (error) {
+      console.log(error);
+    }
   }
 
   selectWorkspace(workspace: any) {
-    this.selectedWorkSpace = workspace;
-    this.selectedWorkSpaceMembers = this.members.find((member: any) => member.workspace_id === workspace.workspace_id)?.users || [];
-    console.log('workspace selected', this.selectedWorkSpace, this.selectedWorkSpaceMembers)
+    this.selectedWorkspace.set(workspace);
+    this.selectedWorkspaceMembers.set(this.members().find((member: any) => member.workspace_id === workspace._id) || []);
   }
 
   async createWorkspace() {
@@ -39,8 +56,9 @@ export class Workspaces {
     });
 
     if (result) {
-      this.workspaces.push({ workspace_id: this.workspaces.length + 1, user_id: 1, name: result.name })
-      console.log(result);
+      const res = await this.workspaceService.createWorkspace({ name: result.name });
+      this.workspaces.set([...this.workspaces(), res.workspace]);
+      this.selectWorkspace(res.workspace);
     }
   }
 
@@ -52,8 +70,8 @@ export class Workspaces {
     });
 
     if (result) {
-      this.workspaces.find((workspace: any) => workspace.workspace_id === workspace.workspace_id).name = result.name;
-      console.log(result);
+      await this.workspaceService.updateWorkspace({ id: workspace._id, name: result.name });
+      this.workspaces.set([...this.workspaces(), this.workspaces()[this.workspaces().indexOf(workspace)].name = result.name]);
     }
   }
 
@@ -65,28 +83,28 @@ export class Workspaces {
     });
 
     if (result) {
-      this.workspaces.splice(this.workspaces.indexOf(workspace), 1);
-      this.selectWorkspace(this.workspaces[0]);
+      await this.workspaceService.deleteWorkspace(workspace._id);
+      this.workspaces.set(this.workspaces().slice(0, this.workspaces().indexOf(workspace)));
       console.log(result);
     }
   }
 
   async inviteMember() {
-    const result = await this.modal.open(MemberModal, {
-      mode: 'invite'
-    });
+    // const result = await this.modal.open(MemberModal, {
+    //   mode: 'invite'
+    // });
 
-    if (result) {
-      this.selectedWorkSpaceMembers.push({ 
-        user_id: this.selectedWorkSpaceMembers.length + 1, 
-        name: result.name, 
-        email: result.email,
-        role: result.role,
-        status: 'Invited',
-        contact: result.contact
-      })
-      console.log(result);
-    }
+    // if (result) {
+    //   this.selectedWorkspaceMembers.push({ 
+    //     user_id: this.selectedWorkspace.length + 1, 
+    //     name: result.name, 
+    //     email: result.email,
+    //     role: result.role,
+    //     status: 'Invited',
+    //     contact: result.contact
+    //   })
+    //   console.log(result);
+    // }
   }
 
   async editMember(member: any) {
@@ -110,9 +128,9 @@ export class Workspaces {
     });
 
     if (result) {
-      console.log(this.selectedWorkSpaceMembers);
-      this.selectedWorkSpaceMembers.splice(this.selectedWorkSpaceMembers.indexOf(member), 1);
-      console.log(result);
+      // console.log(this.selectedWorkspace);
+      // this.sele.splice(this.selectedWorkspace.indexOf(member), 1);
+      // console.log(result);
     }
   }
 }

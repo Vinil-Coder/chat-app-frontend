@@ -28,6 +28,11 @@
         <span class="menu__label">Workspaces</span>
       </div>
 
+      <div class="menu__item" routerLink="/members" routerLinkActive="active" (click)="isMobile ? closeSidenav() : null">
+        <span class="menu__icon"><img src="assets/members.png" alt="Users"></span>
+        <span class="menu__label">Members</span>
+      </div>
+
       <div class="menu__item" routerLink="/profile" routerLinkActive="active" (click)="isMobile ? closeSidenav() : null">
         <span class="menu__icon"><img src="assets/avatar.svg" alt="Workspaces"></span>
         <span class="menu__label">Profile</span>

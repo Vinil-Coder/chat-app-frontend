@@ -1,0 +1,136 @@
+.members-page {
+  padding: 20px;
+  background: #f6f7fb;
+  height: 100%;
+}
+
+/* HEADER */
+.members-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 20px;
+
+  h2 {
+    margin: 0;
+    color: #1f2937;
+  }
+
+  p {
+    margin: 0;
+    font-size: 13px;
+    color: #6b7280;
+  }
+}
+
+.invite-btn {
+  background: #5454ff;
+  color: white;
+  border: none;
+  padding: 10px 14px;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+/* GRID */
+.members-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+}
+
+/* CARD */
+.member-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: 0.2s;
+
+  &:hover {
+    transform: translateY(-4px);
+  }
+}
+
+/* TOP */
+.top {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* AVATAR */
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #5454ff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* NAME */
+.name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* ROLE */
+.role {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  width: fit-content;
+  margin-top: 2px;
+}
+
+.admin {
+  background: #ffe7e7;
+  color: #d10000;
+}
+
+.member {
+  background: #e8f0ff;
+  color: #1a4fff;
+}
+
+/* DETAILS */
+.details {
+  font-size: 12px;
+  color: #4b5563;
+  line-height: 1.6;
+}
+
+/* STATUS */
+.bottom {
+  display: flex;
+  justify-content: flex-end;
+}
+
+.status {
+  font-size: 11px;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+/* STATUS COLORS */
+.accepted {
+  background: #e6fffb;
+  color: #08979c;
+}
+
+.invited {
+  background: #fff7e6;
+  color: #d48806;
+}
+
+.rejected {
+  background: #fff1f0;
+  color: #cf1322;
+}

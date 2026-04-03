@@ -1,17 +1,22 @@
 <div class="modal-backdrop" (click)="close()"></div>
 <div class="modal">
-    <h3>{{ mode === 'edit' ? 'Edit Workspace' : mode === 'delete' ? 'Delete' : 'New Workspace' }}</h3>
+    <form [formGroup]="form" (ngSubmit)="save()">
+        <h3 [ngClass]="mode">{{ mode === 'edit' ? 'Edit Workspace' : mode === 'delete' ? 'Delete' : 'New Workspace' }}</h3>
 
-    @if (mode === 'delete') {
-        <p>Are you sure you want to delete <b>{{ name }}</b> workspace ?</p>
-    } @else {   
-        <input [(ngModel)]="name" placeholder="Workspace name" />
-    }
-    <div class="modal-actions">
-        <button (click)="save()" class="btn btn-primary">
-            {{ mode === 'delete' ? 'Yes' : mode === 'edit' ? 'Save' : 'Create'}}</button>
-        <button (click)="close()" class="btn btn-danger">
-            No
-        </button>
-    </div>
+        @if (mode === 'delete') {
+            <p>Are you sure you want to delete <b>{{ name }}</b> workspace ?</p>
+        } @else {
+            <input placeholder="Workspace name" formControlName="name" type="text"/>
+            <div *ngIf="fc['name']?.dirty || fc['name']?.touched" class="validation-error-message">
+                <span *ngIf="fc['name']?.errors?.['required']">Name is required</span>
+            </div>
+        }
+        <div class="modal-actions">
+            <button (click)="save()" class="btn btn-primary" type="button">
+                {{ mode === 'delete' ? 'Yes' : mode === 'edit' ? 'Save' : 'Create'}}</button>
+            <button (click)="close()" class="btn btn-danger" type="button">
+                No
+            </button>
+        </div>
+    </form>
 </div>

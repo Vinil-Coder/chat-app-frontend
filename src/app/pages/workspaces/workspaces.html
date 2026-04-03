@@ -1,5 +1,6 @@
 <div class="workspace-page">
 
+  @if(workspaces().length) {
   <!-- LEFT -->
   <aside class="workspace-sidebar">
 
@@ -9,32 +10,38 @@
     </div>
 
     <div class="workspace-list">
-      @for (workspace of workspaces; track workspace.workspace_id) {
-        <div class="workspace-item"
-             (click)="selectWorkspace(workspace)"
-             [class.active]="selectedWorkSpace.workspace_id === workspace.workspace_id">
+      @for (workspace of workspaces(); track workspace._id) {
+      <div class="workspace-item" (click)="selectWorkspace(workspace)"
+        [class.active]="selectedWorkspace()._id === workspace?._id">
 
-          <span>{{ workspace.name }}</span>
+        <span>{{ workspace.name }}</span>
 
-          <div class="actions">
-            <button (click)="editWorkspace($event, workspace)">✏️</button>
-            <button (click)="deleteWorkspace($event, workspace)">🗑</button>
-          </div>
-
+        <div class="actions">
+          <button (click)="editWorkspace($event, workspace)">✏️</button>
+          <button (click)="deleteWorkspace($event, workspace)">🗑</button>
         </div>
+
+      </div>
       }
     </div>
-
   </aside>
 
   <!-- RIGHT -->
   <main class="workspace-content">
-
+    @if (selectedWorkspaceMembers().length === 0) {
+    <div class="empty-workspace">
+      <h3>No members in this workspace</h3>
+      <p>Invite your team to start collaborating</p>
+      <button (click)="inviteMember()" class="invite-btn">
+        + Invite Members
+      </button>
+    </div>
+    } @else {
     <!-- HEADER -->
     <div class="content-header">
       <div>
-        <h2>{{ selectedWorkSpace.name }}</h2>
-        <p>{{ selectedWorkSpaceMembers.length }} members</p>
+        <h2>{{ selectedWorkspace().name }}</h2>
+        <p>{{ selectedWorkspaceMembers().length }} members</p>
       </div>
 
       <button class="invite-btn" (click)="inviteMember()">
@@ -44,49 +51,47 @@
 
     <!-- MEMBERS -->
     <div class="members-grid">
+      <!-- @for (member of selectedWorkspaceMembers(); track member.user_id) {
 
-      @if (selectedWorkSpaceMembers.length === 0) {
-        <div class="empty">No members yet Invite one now!</div>
-      } @else {
+      <div class="member-card">
 
-        @for (member of selectedWorkSpaceMembers; track member.user_id) {
+        <div class="avatar">
+          {{ member.name[0] }}
+        </div>
 
-          <div class="member-card">
+        <div class="info">
+          <div class="name">{{ member.name }}</div>
+          <div class="email">{{ member.email }}</div>
+        </div>
 
-            <div class="avatar">
-              {{ member.name[0] }}
-            </div>
+        <div class="meta">
+          <span class="role" [ngClass]="member.role.toLowerCase()">
+            {{ member.role }}
+          </span>
 
-            <div class="info">
-              <div class="name">{{ member.name }}</div>
-              <div class="email">{{ member.email }}</div>
-            </div>
+          <span class="status" [ngClass]="member.status.toLowerCase()">
+            {{ member.status }}
+          </span>
+        </div>
 
-            <div class="meta">
-              <span class="role"
-                [ngClass]="member.role.toLowerCase()">
-                {{ member.role }}
-              </span>
+        <div class="card-actions">
+          <button (click)="editMember(member)">✏️</button>
+          <button (click)="removeMember(member)">🗑</button>
+        </div>
 
-              <span class="status"
-                [ngClass]="member.status.toLowerCase()">
-                {{ member.status }}
-              </span>
-            </div>
+      </div>
 
-            <div class="card-actions">
-              <button (click)="editMember(member)">✏️</button>
-              <button (click)="removeMember(member)">🗑</button>
-            </div>
-
-          </div>
-
-        }
-
-      }
-
+      } -->
     </div>
-
+    }
   </main>
-
+  } @else {
+  <div class="empty-workspace">
+    <h2>Create your first workspace</h2>
+    <p>Workspaces help you organize members and collaborate efficiently.</p>
+    <button (click)="createWorkspace()" class="invite-btn">
+      + Create Workspace
+    </button>
+  </div>
+  }
 </div>
