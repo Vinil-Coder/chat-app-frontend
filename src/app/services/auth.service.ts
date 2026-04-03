@@ -7,8 +7,9 @@ import { Injectable } from "@angular/core";
 export class AuthService {
 
     private readonly AuthApi = 'http://localhost:5000/api/auth';
+    private readonly SessionApi = 'http://localhost:5000/api/session';
 
-    constructor(private http: HttpClient) {}
+    constructor(private http: HttpClient) { }
 
     registerUser(payload: any): Promise<any> {
         return new Promise((resolve, reject) => {
@@ -33,6 +34,7 @@ export class AuthService {
                         localStorage.setItem('token', res.token);
                         localStorage.setItem('refreshToken', res.refreshToken);
                         localStorage.setItem('userId', res.user._id);
+                        localStorage.setItem('sessionId', res.sessionId);
                         resolve(res);
                     },
                     error: (err: any) => {
@@ -43,9 +45,10 @@ export class AuthService {
         })
     }
 
-    logoutUser(userId: string): Promise<any> {
+    logoutUser(logoutAll: boolean, sessionID?: string): Promise<any> {
+        const payload = logoutAll ? { logoutAll } : { logoutAll, sessionID };
         return new Promise((resolve, reject) => {
-            this.http.post(this.AuthApi + '/logout', { id: userId }).subscribe(
+            this.http.put(this.AuthApi + '/logout', payload).subscribe(
                 {
                     next: (res: any) => {
                         resolve(res);
@@ -58,7 +61,26 @@ export class AuthService {
         })
     }
 
-     changePassword(payload: { email: string, password: string }): Promise<any> {
+    userSessions(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.http.get(this.SessionApi + '/').subscribe(
+                {
+                    next: (res: any) => {
+                        const sessions = res.sessions.map((s: any) => ({
+                            ...s,
+                            isCurrent: s._id === localStorage.getItem('sessionId')
+                        }));
+                        resolve(sessions);
+                    },
+                    error: (err: any) => {
+                        reject(err);
+                    }
+                }
+            )
+        })
+    }
+
+    changePassword(payload: { email: string, password: string }): Promise<any> {
         return new Promise((resolve, reject) => {
             this.http.put(this.AuthApi + '/change-password', payload).subscribe(
                 {
@@ -71,5 +93,9 @@ export class AuthService {
                 }
             )
         })
+    }
+
+    getSessionId(): string {
+        return localStorage.getItem('sessionId') || '';
     }
 }

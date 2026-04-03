@@ -1,0 +1,8 @@
+
+@if(appUistate.toastr().show) {
+    <div class="toast-container">
+        <div class="toastr {{ appUistate.toastr().type | lowercase }}">
+            <span>{{ appUistate.toastr().message }}</span>
+        </div>
+    </div>
+}

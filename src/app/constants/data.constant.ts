@@ -227,5 +227,63 @@ export const GROUPS = [
     invitedBy: 'Mike',
     status: 'Rejected'
   }
+];
 
+export const SESSIONS = [
+  {
+    _id: '1',
+    device: 'Chrome on Windows',
+    ipAddress: '192.168.1.10',
+    lastActiveAt: new Date(),
+    isCurrent: true
+  },
+  {
+    _id: '2',
+    device: 'Safari on iPhone',
+    ipAddress: '172.16.0.5',
+    lastActiveAt: new Date(Date.now() - 1000 * 60 * 10),
+    isCurrent: false
+  },
+  {
+    _id: '3',
+    device: 'Edge on Windows',
+    ipAddress: '10.0.0.2',
+    lastActiveAt: new Date(Date.now() - 1000 * 60 * 60 * 2),
+    isCurrent: false
+  },
+  {
+    _id: '4',
+    device: 'Chrome on Android',
+    ipAddress: '203.45.67.89',
+    lastActiveAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
+    isCurrent: false
+  },
+  {
+    _id: '5',
+    device: 'Chrome on Android',
+    ipAddress: '203.45.67.89',
+    lastActiveAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
+    isCurrent: false
+  },
+  {
+    _id: '6',
+    device: 'Chrome on Android',
+    ipAddress: '203.45.67.89',
+    lastActiveAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
+    isCurrent: false
+  },
+  {
+    _id: '7',
+    device: 'Chrome on Android',
+    ipAddress: '203.45.67.89',
+    lastActiveAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
+    isCurrent: false
+  },
+  {
+    _id: '8',
+    device: 'Chrome on Android',
+    ipAddress: '203.45.67.89',
+    lastActiveAt: new Date(Date.now() - 1000 * 60 * 60 * 24),
+    isCurrent: false
+  }
 ];

@@ -38,13 +38,4 @@ export class TopBar {
     this.darkMode = !this.darkMode;
     document.body.classList.toggle('dark-mode', this.darkMode);
   }
-
-  async logout() {
-    try {
-      await this.authService.logoutUser(localStorage.getItem('userId') as string);
-      this.router.navigate(['/landing']);
-    } catch (error) {
-      console.log(error);
-    }
-  }
 }

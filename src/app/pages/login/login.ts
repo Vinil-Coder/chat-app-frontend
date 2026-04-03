@@ -3,6 +3,7 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
+import { AppUiStateService } from '../../services/ui-state.service';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +15,11 @@ export class Login {
 
   form!: FormGroup;
 
-  constructor(private router: Router, private authService: AuthService) {
+  constructor(
+    private router: Router, 
+    private authService: AuthService,
+    private appUiStateService: AppUiStateService,
+  ) {
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
@@ -30,6 +35,7 @@ export class Login {
     if (this.form.invalid) return;
     try {
       await this.authService.loginUser(this.form.value);
+      this.appUiStateService.showToastr('Login successful')
       this.router.navigate(['']);
     } catch(error) {
       console.log(error);

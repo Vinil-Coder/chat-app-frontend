@@ -7,15 +7,15 @@
 
   <!-- TABS -->
   <div class="tabs">
-    <div class="tab"
-         [class.active]="activeTab === 'account'"
-         (click)="activeTab='account'">
+    <div class="tab" [class.active]="activeTab === 'sessions'" (click)="activeTab='sessions'">
+      Devices
+    </div>
+
+    <div class="tab" [class.active]="activeTab === 'account'" (click)="activeTab='account'">
       Account
     </div>
 
-    <div class="tab"
-         [class.active]="activeTab === 'appearance'"
-         (click)="activeTab='appearance'">
+    <div class="tab" [class.active]="activeTab === 'appearance'" (click)="activeTab='appearance'">
       Appearance
     </div>
   </div>
@@ -23,8 +23,48 @@
   <!-- CONTENT -->
   <div class="tab-content">
 
-    <!-- PROFILE -->
-    @if (activeTab === 'account') {
+    @if (activeTab === 'sessions') {
+      <!-- SESSIONS -->
+      <div class="card">
+
+        <div class="card-header">
+          <h3>Active Sessions</h3>
+          <button class="logout-all" (click)="logoutAll()">Logout All</button>
+        </div>
+
+        <div class="sessions-list">
+
+          @for (session of sessions(); track session._id) {
+            <div class="session">
+
+              <div class="session-left">
+                <div class="icon">💻</div>
+
+                <div class="session-info">
+                  <div class="device">
+                    {{ session.device || 'Unknown Device' }}
+                    <span *ngIf="session.isCurrent" class="badge">This device</span>
+                  </div>
+
+                  <div class="meta">
+                    <span>Last Used: </span>
+                    <span>{{ session.lastActiveAt | date:'dd MMM yyyy, hh:mm a' }}</span>
+                  </div>
+                </div>
+              </div>
+
+              <div class="actions">
+                <button class="btn danger" (click)="logoutSession(session._id)">
+                  Logout
+                </button>
+              </div>
+
+            </div>
+          }
+        </div>
+
+      </div>
+    } @else if (activeTab === 'account') {
       <!-- ACCOUNT -->
       <div class="card">
 
