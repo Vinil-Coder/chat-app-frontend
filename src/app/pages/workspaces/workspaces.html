@@ -1,97 +1,76 @@
 <div class="workspace-page">
 
-  @if(workspaces().length) {
-  <!-- LEFT -->
-  <aside class="workspace-sidebar">
-
-    <div class="sidebar-header">
-      <h3>Workspaces</h3>
-      <button class="add-btn" (click)="createWorkspace()">+</button>
+  <!-- HEADER -->
+  <div class="header">
+    <div class="header-left">
+      <h2>Workspaces</h2>
     </div>
 
-    <div class="workspace-list">
-      @for (workspace of workspaces(); track workspace._id) {
-      <div class="workspace-item" (click)="selectWorkspace(workspace)"
-        [class.active]="selectedWorkspace()._id === workspace?._id">
+    @if(workspaces().length > 0) {
+    <button class="btn primary" (click)="createWorkspace()">
+      New Workspace
+    </button>
+    }
+  </div>
 
-        <span>{{ workspace.name }}</span>
+  <div class="content">
+    <!-- MAIN CONTENT -->
+    @if (workspaces().length === 0) {
 
-        <div class="actions">
-          <button (click)="editWorkspace($event, workspace)">✏️</button>
-          <button (click)="deleteWorkspace($event, workspace)">🗑</button>
-        </div>
+      <div class="empty-state">
+        <h3>No workspaces yet</h3>
+        <p>Start building your team by creating a workspace and inviting members to collaborate with you.</p>
+
+        <button class="btn primary" (click)="createWorkspace()">
+          Create your first workspace
+        </button>
 
       </div>
+
+      } @else {
+
+      <!-- GRID -->
+      <div class="workspace-grid">
+
+        @for (workspace of workspaces(); track workspace._id) {
+
+        <div class="workspace-card">
+
+          <div class="card-top">
+            <div class="avatar">
+              {{ workspace.name[0] }}
+            </div>
+
+            @if(workspace.createdBy === appUiStateService.currentUser()._id) {
+              <div class="card-actions">
+                <button (click)="editWorkspace(workspace)">✏️</button>
+                <button (click)="deleteWorkspace(workspace)">🗑</button>
+              </div>
+            } @else {
+              <div class="badge member">Member</div>
+            }
+          </div>
+
+          <div class="card-body">
+            <div class="name">{{ workspace.name }}</div>
+
+            <!-- FUTURE FIELDS -->
+            <div class="meta">
+              <span>📅 Created {{ workspace.createdAt | date: "MMM d, yyyy" }}</span>
+            </div>
+
+            <div class="desc">
+              {{ workspace.description || "No description"}}
+            </div>
+          </div>
+
+        </div>
+
+        }
+
+      </div>
+
       }
     </div>
-  </aside>
 
-  <!-- RIGHT -->
-  <main class="workspace-content">
-    @if (selectedWorkspaceMembers().length === 0) {
-    <div class="empty-workspace">
-      <h3>No members in this workspace</h3>
-      <p>Invite your team to start collaborating</p>
-      <button (click)="inviteMember()" class="invite-btn">
-        + Invite Members
-      </button>
-    </div>
-    } @else {
-    <!-- HEADER -->
-    <div class="content-header">
-      <div>
-        <h2>{{ selectedWorkspace().name }}</h2>
-        <p>{{ selectedWorkspaceMembers().length }} members</p>
-      </div>
-
-      <button class="invite-btn" (click)="inviteMember()">
-        + Invite Member
-      </button>
-    </div>
-
-    <!-- MEMBERS -->
-    <div class="members-grid">
-      <!-- @for (member of selectedWorkspaceMembers(); track member.user_id) {
-
-      <div class="member-card">
-
-        <div class="avatar">
-          {{ member.name[0] }}
-        </div>
-
-        <div class="info">
-          <div class="name">{{ member.name }}</div>
-          <div class="email">{{ member.email }}</div>
-        </div>
-
-        <div class="meta">
-          <span class="role" [ngClass]="member.role.toLowerCase()">
-            {{ member.role }}
-          </span>
-
-          <span class="status" [ngClass]="member.status.toLowerCase()">
-            {{ member.status }}
-          </span>
-        </div>
-
-        <div class="card-actions">
-          <button (click)="editMember(member)">✏️</button>
-          <button (click)="removeMember(member)">🗑</button>
-        </div>
-
-      </div>
-
-      } -->
-    </div>
-    }
-  </main>
-  } @else {
-  <div class="empty-workspace">
-    <h2>Create your first workspace</h2>
-    <p>Workspaces help you organize members and collaborate efficiently.</p>
-    <button (click)="createWorkspace()" class="invite-btn">
-      + Create Workspace
-    </button>
-  </div>
-  }
 </div>

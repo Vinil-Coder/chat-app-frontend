@@ -9,9 +9,10 @@
       </div>
 
       <div class="user-info">
-        <h2>John Doe</h2>
-        <p class="email">john@email.com</p>
-        <span class="role">Admin</span>
+        <h2>{{ user().name }}</h2>
+        <p class="email">{{ user().email }}</p>
+        <p class="email">{{ user().contact }}</p>
+        <span class="role">{{ user().accountId.role}}</span>
       </div>
     </div>
 
@@ -30,8 +31,7 @@
       <div class="card">
         <h3>About</h3>
         <p>
-          Passionate developer working on real-time chat applications.
-          Loves clean UI and scalable architecture.
+          {{ user().profileId.bio || 'No bio available'}}
         </p>
       </div>
 

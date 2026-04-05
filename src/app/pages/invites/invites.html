@@ -1,64 +1,192 @@
 <div class="invites-container">
 
+  <!-- HEADER -->
   <div class="header">
-    <h2>Invitations</h2>
-    <span class="count">{{ groups.length }} pending</span>
+    <div class="header-left">
+      <h2>Invites</h2>
+    </div>
+
+    @if(workspaces().length > 0) {
+    <button class="btn primary" (click)="inviteMember()">
+      Invite Member
+    </button>
+    }
   </div>
 
-  <div class="invite-list">
+  <!-- TABS -->
+  <div class="tabs">
 
-    @if (groups.length === 0) {
-      <div class="empty">
-        No pending invitations
-      </div>
+    <div class="tab" [class.active]="activeTab === 'sent'" (click)="activeTab = 'sent'">
+      Sent ({{ sentInvites().length }})
+    </div>
+
+    <div class="tab" [class.active]="activeTab === 'received'" (click)="activeTab = 'received'">
+      Received ({{ receivedInvites().length }})
+    </div>
+  </div>
+
+  <div class="content">
+
+    <!--Received Invites -->
+    @if (activeTab === 'received') {
+    @if (receivedInvites().length === 0) {
+    <div class="empty-state">
+      <p>No invitations yet.</p>
+    </div>
     } @else {
+    <div class="invite-list">
 
-      @for (group of groups; track group.id) {
+      @for (invite of receivedInvites(); track invite._id) {
 
-        <div class="invite-card" (click)="viewMembers(group)">
+      <div class="invite-card">
 
-          <!-- LEFT INFO -->
-          <div class="invite-info">
-            <div class="title">{{ group.name }}</div>
+        <!-- LEFT SECTION -->
+        <div class="invite-left">
 
-            <div class="meta">
-              {{ group.members }} members • Invited by {{ group.invitedBy }}
+          <div class="invite-header">
+            <div class="workspace-icon">
+              {{ invite.workspaceId.name.charAt(0) }}
             </div>
 
-            <div class="type">{{ group.type }}</div>
+            <div>
+              <div class="workspace-name">
+                {{ invite.workspaceId.name }}
+              </div>
+              <div class="invite-type">Workspace Invite</div>
+            </div>
           </div>
 
-          <!-- RIGHT ACTION -->
-          <div class="invite-action">
+          <div class="invite-body">
+            <div class="info-row">
+              <span class="label">Invited by: </span>
+              <span class="value">{{ invite.invitedBy.name }}</span>
+            </div>
 
-            @if (group.status === 'Pending') {
+            <div class="info-row">
+              <span class="label">Email: </span>
+              <span class="value">{{ invite.invitedBy.email }}</span>
+            </div>
 
-              <button class="btn accept" (click)="acceptInvitation(group)">
-                Accept
-              </button>
-
-              <button class="btn reject" (click)="rejectInvitation(group)">
-                Decline
-              </button>
-
-            } @else if (group.status === 'Accepted') {
-
-              <span class="status accepted">Joined</span>
-
-            } @else {
-
-              <span class="status rejected">Declined</span>
-
-            }
-
+            <div class="info-row">
+              <span class="label">Contact: </span>
+              <span class="value">{{ invite.contact }}</span>
+            </div>
           </div>
 
         </div>
 
-      }
+        <!-- RIGHT SECTION -->
+        <div class="invite-action" (click)="$event.stopPropagation()">
 
+          @if (invite.status === 'pending') {
+
+          <button class="btn accept" (click)="updateInviteStatus(invite._id, 'accepted')">
+            Accept
+          </button>
+
+          <button class="btn reject" (click)="updateInviteStatus(invite._id, 'rejected')">
+            Decline
+          </button>
+
+          } @else if (invite.status === 'accepted') {
+
+          <span class="status accepted">Accepted</span>
+
+          } @else {
+
+          <span class="status rejected">Declined</span>
+
+          }
+
+        </div>
+
+      </div>
+
+      }
+    </div>
+    }
+    }
+
+    <!--Sent Invites -->
+    @if (activeTab === 'sent') {
+    @if (sentInvites().length === 0) {
+    <div class="empty-state">
+      <h3>No invitations yet</h3>
+      <p>Start building your team by inviting members to collaborate with you.</p>
+
+      <button class="btn primary" (click)="workspaces().length ? inviteMember() : createWorkspace()">
+        {{ workspaces().length ? 'Invite your first member' : 'Create your first workspace' }}
+      </button>
+
+    </div>
+    } @else {
+    <div class="invite-list">
+      @for (invite of sentInvites(); track invite._id) {
+
+      <div class="invite-card">
+
+        <!-- LEFT SECTION -->
+        <div class="invite-left">
+
+          <div class="invite-header">
+            <div class="workspace-icon">
+              {{ invite.workspaceId.name.charAt(0) }}
+            </div>
+
+            <div>
+              <div class="workspace-name">
+                {{ invite.workspaceId.name }}
+              </div>
+              <div class="invite-type">Workspace Invite</div>
+            </div>
+          </div>
+
+          <div class="invite-body">
+            <div class="info-row">
+              <span class="label">To: </span>
+              <span class="value">{{ invite.email }}</span>
+            </div>
+            <div class="info-row">
+              <span class="label">Contact: </span>
+              <span class="value">{{ invite.contact }}</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- RIGHT SECTION -->
+        <div class="invite-action" (click)="$event.stopPropagation()">
+
+          @if (invite.status === 'pending') {
+
+          <button class="btn accept" (click)="updateInviteStatus(invite._id, 'accepted')">
+            Resend
+          </button>
+
+          <button class="btn reject" (click)="updateInviteStatus(invite._id, 'rejected')">
+            Cancel
+          </button>
+
+          } @else if (invite.status === 'accepted') {
+
+          <span class="status accepted">Accepted</span>
+
+          } @else if (invite.status === 'rejected') {
+
+          <span class="status rejected">Declined</span>
+
+          } @else {
+            <span class="status rejected">Expired</span>
+          }
+
+        </div>
+
+      </div>
+
+      }
+    </div>
+    }
     }
 
   </div>
-
 </div>

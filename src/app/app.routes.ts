@@ -15,6 +15,10 @@ export const routes: Routes = [
         loadComponent: () => import('./pages/signup/signup').then(c => c.Signup)
     },
     {
+        path: 'invite/:token',
+        loadComponent: () => import('./pages/invite/invite').then(c => c.Invite)
+    },
+    {
         path: 'resetpassword',
         loadComponent: () => import('./pages/resetpassword/resetpassword').then(c => c.Resetpassword)
     },

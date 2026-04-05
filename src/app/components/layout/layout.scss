@@ -44,6 +44,9 @@ main {
     bottom: 0;
     padding: 25px;
     overflow-y: auto;
+    &::-webkit-scrollbar {
+        display: none;
+    }
 }
 
 main.full-screen {

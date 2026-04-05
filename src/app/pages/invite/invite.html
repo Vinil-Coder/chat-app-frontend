@@ -1,0 +1,38 @@
+<div class="invite-container">
+
+  <!-- Invite Content -->
+  <div class="invite-card">
+
+    <h2>🎉 You're Invited!</h2>
+
+    <p>
+      You’ve been invited to join
+    </p>
+
+    <!-- Logged In -->
+    @if(isLoggedIn) {
+    <div class="actions">
+      <button class="btn primary" (click)="acceptInvite()">
+        Accept & Join
+      </button>
+    </div>
+    }
+
+    <!-- Not Logged In -->
+    @if(!isLoggedIn) {
+    <div class="actions">
+      <div class="actions">
+        <button class="btn primary" (click)="goToSignup()">
+          Sign Up & Join
+        </button>
+
+        <button class="btn secondary" (click)="goToLogin()">
+          Login to Accept
+        </button>
+      </div>
+    </div>
+    }
+
+  </div>
+
+</div>

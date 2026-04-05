@@ -2,6 +2,7 @@ import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, Validators, ReactiveFormsModule } from '@angular/forms';
 import { ModalRef } from '../../services/modal-ref.service';
 import { CommonModule } from '@angular/common';
+import { Workspace } from '../../interfaces/workspace.interface';
 
 @Component({
   selector: 'app-workspace-modal',
@@ -13,7 +14,7 @@ import { CommonModule } from '@angular/common';
 export class WorkspaceModalComponent implements OnChanges, OnInit {
 
   @Input() mode: 'create' | 'edit' | 'delete' = 'create';
-  @Input() name = '';
+  @Input() formData: Workspace = {} as Workspace;
 
   modalRef!: ModalRef;
 
@@ -23,16 +24,13 @@ export class WorkspaceModalComponent implements OnChanges, OnInit {
 
   ngOnInit() {
     this.createForm();
-    this.form.patchValue({
-      name: this.name
-    });
+    console.log(this.formData);
+    this.form.patchValue(this.formData)
   }
 
   ngOnChanges() {
     if (this.form) {
-      this.form.patchValue({
-        name: this.name
-      });
+      this.form.patchValue(this.formData)
     }
   }
 
@@ -43,10 +41,7 @@ export class WorkspaceModalComponent implements OnChanges, OnInit {
   save() {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
-    this.modalRef.close({
-      name: this.form.value.name,
-      mode: this.mode
-    });
+    this.modalRef.close(this.form.value);
   }
 
   close() {
@@ -57,6 +52,7 @@ export class WorkspaceModalComponent implements OnChanges, OnInit {
   createForm() {
     this.form = new FormGroup({
       name: new FormControl('', [Validators.required]),
+      description: new FormControl(''),
     });
   }
 }

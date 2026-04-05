@@ -1,102 +1,43 @@
 <div class="members-page">
 
-  <!-- HEADER -->
-  <div class="members-header">
-    <div>
-      <h2>Workspace Members</h2>
-      <p>Manage and invite people to collaborate</p>
-    </div>
-
-    <button class="invite-btn">+ Invite Member</button>
-  </div>
-
-  <!-- GRID -->
-  <div class="members-grid">
-
-    <!-- MEMBER CARD -->
-    <div class="member-card">
-      <div class="top">
-        <div class="avatar">A</div>
-        <div>
-          <div class="name">Arjun Reddy</div>
-          <div class="role admin">Admin</div>
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-left">
+            <h2>Members</h2>
         </div>
-      </div>
-
-      <div class="details">
-        <div>Email: arjun@gmail.com</div>
-        <div>Mobile: 9876543210</div>
-        <div>Gender: Male</div>
-      </div>
-
-      <div class="bottom">
-        <span class="status accepted">Accepted</span>
-      </div>
     </div>
 
-    <!-- MEMBER -->
-    <div class="member-card">
-      <div class="top">
-        <div class="avatar">S</div>
-        <div>
-          <div class="name">Sneha Patel</div>
-          <div class="role member">Member</div>
+    <div class="content">
+        @if(members().length === 0) {
+        <div class="empty-state">
+            <h3>No Members yet</h3>
+            <p>Start building your team by inviting members to collaborate with you.</p>
+
+            <button class="btn primary" (click)="workspaces().length ? inviteMember() : createWorkspace()">
+                {{ workspaces().length ? 'Invite your first member' : 'Create your first workspace' }}
+            </button>
+
         </div>
-      </div>
+        } @else {
+        <!-- GRID -->
+        <div class="members-grid">
+            @for (member of members(); track member._id) {
+            <!-- MEMBER CARD -->
+            <div class="member-card">
+                <div class="top">
+                    <div class="avatar">{{ member.userId.name.charAt(0) }}</div>
+                    <div class="name">{{ member.userId.name }}</div>
+                </div>
 
-      <div class="details">
-        <div>Email: sneha@gmail.com</div>
-        <div>Mobile: 9123456780</div>
-        <div>Gender: Female</div>
-      </div>
+                <div class="details">
+                    <div>Email: {{ member.userId.email }}</div>
+                    <div>Mobile: {{ member.userId.contact }}</div>
+                </div>
+            </div>
 
-      <div class="bottom">
-        <span class="status invited">Invited</span>
-      </div>
-    </div>
-
-    <!-- MEMBER -->
-    <div class="member-card">
-      <div class="top">
-        <div class="avatar">R</div>
-        <div>
-          <div class="name">Rahul Sharma</div>
-          <div class="role member">Member</div>
+            }
         </div>
-      </div>
-
-      <div class="details">
-        <div>Email: rahul@gmail.com</div>
-        <div>Mobile: 9012345678</div>
-        <div>Gender: Male</div>
-      </div>
-
-      <div class="bottom">
-        <span class="status rejected">Rejected</span>
-      </div>
+        }
     </div>
-
-    <!-- MEMBER -->
-    <div class="member-card">
-      <div class="top">
-        <div class="avatar">N</div>
-        <div>
-          <div class="name">Neha Gupta</div>
-          <div class="role member">Member</div>
-        </div>
-      </div>
-
-      <div class="details">
-        <div>Email: neha@gmail.com</div>
-        <div>Mobile: 9988776655</div>
-        <div>Gender: Female</div>
-      </div>
-
-      <div class="bottom">
-        <span class="status accepted">Accepted</span>
-      </div>
-    </div>
-
-  </div>
 
 </div>

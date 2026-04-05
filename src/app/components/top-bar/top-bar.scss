@@ -122,8 +122,16 @@
     border-radius: 50%;
 }
 
+.profile-info {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    cursor: pointer;
+}
+
 /* DROPDOWNS */
-.dropdown {
+.icon-dropdown {
     position: relative;
 }
 

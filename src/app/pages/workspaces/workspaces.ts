@@ -5,6 +5,8 @@ import { MemberModal } from '../../components/member-modal/member-modal';
 import { CommonModule } from '@angular/common';
 import { WorkSpaceService } from '../../services/workspace.service';
 import { Workspace } from '../../interfaces/workspace.interface';
+import { AppUiStateService, ToastrType } from '../../services/ui-state.service';
+import { User } from '../../interfaces/user.interface';
 
 @Component({
   selector: 'app-workspaces',
@@ -17,19 +19,13 @@ export class Workspaces {
   workspaces = signal<Workspace[]>([]);
   members = signal([]);
 
-  selectedWorkspace = signal<Workspace>({
-    _id: '',
-    userID: '',
-    name: '',
-    createdAt: '',
-    updatedAt: '',
-    __v: 0
-  });
+  selectedWorkspace = signal<Workspace>({} as Workspace);
   selectedWorkspaceMembers = signal([]);
 
   constructor(
-    private modal: ModalService, 
-    private workspaceService: WorkSpaceService
+    private modal: ModalService,
+    private workspaceService: WorkSpaceService,
+    public appUiStateService: AppUiStateService
   ) { }
 
   ngOnInit() {
@@ -38,99 +34,115 @@ export class Workspaces {
 
   async getWorkSpaces() {
     try {
-      this.workspaces.set((await this.workspaceService.getWorkspaces()).workspaces);
-      this.selectWorkspace(this.workspaces()?.[0] || {});
-    } catch (error) {
-      console.log(error);
-    }
-  }
+      this.appUiStateService.startLoader();
 
-  selectWorkspace(workspace: any) {
-    this.selectedWorkspace.set(workspace);
-    this.selectedWorkspaceMembers.set(this.members().find((member: any) => member.workspace_id === workspace._id) || []);
+      const res = await this.workspaceService.getWorkspaces();
+
+      this.workspaces.set(res.workspaces || []);
+
+    } catch (err: any) {
+      this.appUiStateService.showToastr(
+        err.error?.message || 'Failed to get workspaces',
+        ToastrType.ERROR
+      );
+    } finally {
+      this.appUiStateService.stopLoader();
+    }
   }
 
   async createWorkspace() {
-    const result = await this.modal.open(WorkspaceModalComponent, {
-      mode: 'create'
-    });
+    try {
+      const result = await this.modal.open(WorkspaceModalComponent, {
+        mode: 'create'
+      });
 
-    if (result) {
-      const res = await this.workspaceService.createWorkspace({ name: result.name });
-      this.workspaces.set([...this.workspaces(), res.workspace]);
-      this.selectWorkspace(res.workspace);
+      if (result) {
+        this.appUiStateService.startLoader();
+
+        const res = await this.workspaceService.createWorkspace(result);
+
+        this.workspaces.set([
+          ...this.workspaces(),
+          res.workspace
+        ]);
+
+         this.appUiStateService.showToastr(
+          res.message || 'Workspace created successfully',
+          ToastrType.SUCCESS
+        );
+
+      }
+    } catch (err: any) {
+      this.appUiStateService.showToastr(
+        err.error?.message || 'Failed to create workspace',
+        ToastrType.ERROR
+      );
+    } finally {
+      this.appUiStateService.stopLoader();
     }
   }
 
-  async editWorkspace(event: Event, workspace: any) {
-    event.stopPropagation();
-    const result = await this.modal.open(WorkspaceModalComponent, {
-      mode: 'edit',
-      name: workspace.name
-    });
+  async editWorkspace(workspace: Workspace) {
+    try {
 
-    if (result) {
-      await this.workspaceService.updateWorkspace({ id: workspace._id, name: result.name });
-      this.workspaces.set([...this.workspaces(), this.workspaces()[this.workspaces().indexOf(workspace)].name = result.name]);
+      const result = await this.modal.open(WorkspaceModalComponent, {
+        mode: 'edit',
+        formData: workspace
+      });
+
+      if (!result) return;
+
+      this.appUiStateService.startLoader();
+
+      const res = await this.workspaceService.updateWorkspace(workspace._id, result);
+
+      this.getWorkSpaces();
+
+      this.appUiStateService.showToastr(
+        res.message || 'Workspace updated successfully',
+        ToastrType.SUCCESS
+      );
+
+    } catch (err: any) {
+      this.appUiStateService.showToastr(
+        err.error?.message || 'Failed to update workspace',
+        ToastrType.ERROR
+      );
+    } finally {
+      this.appUiStateService.stopLoader();
     }
   }
 
-  async deleteWorkspace(event: Event, workspace: any) {
-    event.stopPropagation();
-    const result = await this.modal.open(WorkspaceModalComponent, {
-      mode: 'delete',
-      name: workspace.name
-    });
+  async deleteWorkspace(workspace: Workspace) {
+    try {
 
-    if (result) {
-      await this.workspaceService.deleteWorkspace(workspace._id);
-      this.workspaces.set(this.workspaces().slice(0, this.workspaces().indexOf(workspace)));
-      console.log(result);
-    }
-  }
+      const result = await this.modal.open(WorkspaceModalComponent, {
+        mode: 'delete',
+        formData: workspace
+      });
 
-  async inviteMember() {
-    // const result = await this.modal.open(MemberModal, {
-    //   mode: 'invite'
-    // });
+      if (!result) return;
 
-    // if (result) {
-    //   this.selectedWorkspaceMembers.push({ 
-    //     user_id: this.selectedWorkspace.length + 1, 
-    //     name: result.name, 
-    //     email: result.email,
-    //     role: result.role,
-    //     status: 'Invited',
-    //     contact: result.contact
-    //   })
-    //   console.log(result);
-    // }
-  }
+      this.appUiStateService.startLoader();
 
-  async editMember(member: any) {
-    const result = await this.modal.open(MemberModal, {
-      mode: 'edit',
-      name: member.name,
-      email: member.email,
-      contact: member.contact,
-      role: member.role
-    });
+      const res = await this.workspaceService.deleteWorkspace(workspace._id);
 
-    if (result) {
-      console.log(result);
-    }
-  }
+      this.workspaces.set(
+        this.workspaces().filter(w => w._id !== workspace._id)
+      );
 
-  async removeMember(member: any) {
-    const result = await this.modal.open(MemberModal, {
-      mode: 'remove',
-      name: member.name
-    });
+       this.appUiStateService.showToastr(
+        res.message || 'Workspace deleted successfully',
+        ToastrType.SUCCESS
+      );
 
-    if (result) {
-      // console.log(this.selectedWorkspace);
-      // this.sele.splice(this.selectedWorkspace.indexOf(member), 1);
-      // console.log(result);
+    } catch (err: any) {
+      this.appUiStateService.showToastr(
+        err.error?.message || 'Failed to delete workspace',
+        ToastrType.ERROR
+      );
+    } finally {
+      this.appUiStateService.stopLoader();
     }
   }
 }

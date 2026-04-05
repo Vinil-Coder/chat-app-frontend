@@ -10,12 +10,21 @@
                     <span *ngIf="fc['name']?.errors?.['required']">Name is required</span>
                 </div>
             </div>
+
             <div class="form-field">
                 <label for="email">Email</label>
                 <input type="email" id="email" name="email" placeholder="Email" formControlName="email">
                 <div *ngIf="fc['email']?.dirty || fc['email']?.touched" class="validation-error-message">
                     <span *ngIf="fc['email']?.errors?.['required']">Email is required</span>
                     <span *ngIf="fc['email']?.errors?.['email']">Invalid email format</span>
+                </div>
+            </div>
+
+            <div class="form-field">
+                <label for="contact">Contact</label>
+                <input type="text" id="contact" name="contact" placeholder="Contact" formControlName="contact">
+                <div *ngIf="fc['contact']?.dirty || fc['contact']?.touched" class="validation-error-message">
+                    <span *ngIf="fc['contact']?.errors?.['required']">Contact is required</span>
                 </div>
             </div>
 

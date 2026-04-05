@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Output } from '@angular/core';
+import { Component, EventEmitter, Output, signal } from '@angular/core';
 import { Router, RouterModule } from "@angular/router";
-import { AuthService } from '../../services/auth.service';
+import { AppUiStateService } from '../../services/ui-state.service';
 
 @Component({
   selector: 'app-top-bar',
@@ -16,9 +16,13 @@ export class TopBar {
   showSettings: boolean = false;
   darkMode: boolean = false;
 
+  userName = signal<String>(sessionStorage.getItem('name') || '');
+
   @Output() toggleSidebar = new EventEmitter<void>();
 
-  constructor(private authService: AuthService, private router: Router) {}
+  constructor(
+    private router: Router
+  ) {}
 
   toggleSidemenu() {
     this.toggleSidebar.emit();

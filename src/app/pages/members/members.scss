@@ -1,35 +1,91 @@
 .members-page {
-  padding: 20px;
-  background: #f6f7fb;
   height: 100%;
+  display: flex;
+  flex-direction: column;
 }
 
 /* HEADER */
-.members-header {
+.header {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 
-  h2 {
-    margin: 0;
-    color: #1f2937;
-  }
+  .header-left {
+    h2 {
+      margin: 0;
+    }
 
-  p {
-    margin: 0;
-    font-size: 13px;
-    color: #6b7280;
+    p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: #6b7280;
+    }
   }
 }
 
-.invite-btn {
-  background: #5454ff;
-  color: white;
-  border: none;
-  padding: 10px 14px;
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
   border-radius: 10px;
+  background: var(--white);
+}
+
+.tab {
+  padding: 15px 22px;
   cursor: pointer;
+  font-weight: 500;
+  color: #6b7280;
+  position: relative;
+
+  &.active {
+    color: #4f46e5;
+  }
+
+  &.active::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: #4f46e5;
+  }
+}
+
+/* CONTENT */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+/* EMPTY STATE */
+.empty-state {
+  margin: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+  }
+
+  p {
+    color: #6b7280;
+    margin-bottom: 16px;
+  }
 }
 
 /* GRID */
@@ -113,24 +169,25 @@
   justify-content: flex-end;
 }
 
-.status {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 20px;
+/* BUTTONS */
+.btn {
+  padding: 6px 14px;
+  border-radius: 8px;
+  border: none;
+  font-size: 12px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: 0.2s;
 }
 
-/* STATUS COLORS */
-.accepted {
-  background: #e6fffb;
-  color: #08979c;
+.primary {
+  background: #4f46e5;
+  color: white;
+  padding: 12px 16px;
+  font-size: 14px;
+
+  &:hover {
+    background: #4338ca;
+  }
 }
 
-.invited {
-  background: #fff7e6;
-  color: #d48806;
-}
-
-.rejected {
-  background: #fff1f0;
-  color: #cf1322;
-}

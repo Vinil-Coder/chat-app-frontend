@@ -44,7 +44,7 @@ export class Settings {
   }
 
   onUserLogout() {
-    localStorage.clear();
+    sessionStorage.clear();
     this.router.navigate(['/landing']);
   }
 }

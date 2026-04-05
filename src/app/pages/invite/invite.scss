@@ -1,0 +1,57 @@
+.invite-container {
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.invite-card {
+  background: #fff;
+  padding: 40px;
+  border-radius: 16px;
+  width: 400px;
+  text-align: center;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+
+  h2 {
+    margin-bottom: 10px;
+  }
+
+  p {
+    margin: 10px 0;
+    color: #555;
+  }
+
+  .email {
+    font-size: 14px;
+    color: #888;
+  }
+
+  &.error {
+    color: red;
+  }
+}
+
+.actions {
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.btn {
+  padding: 10px;
+  border-radius: 8px;
+  border: none;
+  cursor: pointer;
+  font-weight: 500;
+
+  &.primary {
+    background: #4f46e5;
+    color: white;
+  }
+
+  &.secondary {
+    background: #e5e7eb;
+  }
+}

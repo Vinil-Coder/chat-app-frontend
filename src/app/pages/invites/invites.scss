@@ -7,131 +7,234 @@
 /* HEADER */
 .header {
   display: flex;
+  justify-content: space-between;
   align-items: center;
-  gap: 10px;
-  margin-bottom: 20px;
+  margin-bottom: 16px;
 
-  h2 {
-    margin: 0;
-  }
+  .header-left {
+    h2 {
+      margin: 0;
+    }
 
-  .count {
-    background: #fff7e6;
-    color: #d48806;
-    padding: 4px 10px;
-    border-radius: 20px;
-    font-size: 12px;
+    p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: #6b7280;
+    }
   }
 }
 
-/* LIST */
+/* TABS */
+.tabs {
+  display: flex;
+  gap: 24px;
+  margin-bottom: 20px;
+  border-radius: 10px;
+  background: var(--white);
+}
+
+.tab {
+  padding: 15px 22px;
+  cursor: pointer;
+  font-weight: 500;
+  color: #6b7280;
+  position: relative;
+
+  &.active {
+    color: #4f46e5;
+  }
+
+  &.active::after {
+    content: "";
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    width: 100%;
+    background: #4f46e5;
+  }
+}
+
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
+}
+
+/* EMPTY STATE */
+.empty-state {
+  margin: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+  }
+
+  p {
+    color: #6b7280;
+    margin-bottom: 16px;
+  }
+}
+
+/* INVITES LIST */
 .invite-list {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 16px;
+  justify-content: start;
   overflow-y: auto;
-
   &::-webkit-scrollbar {
-    width: 8px;
     display: none;
-  }
-
-  &::-webkit-scrollbar-thumb {
-    background: #ddd;
-    border-radius: 10px;
   }
 }
 
-/* CARD */
 .invite-card {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 16px;
+  padding: 16px 20px;
   border-radius: 12px;
-  background: white;
-  box-shadow: 0 4px 25px rgba(0,0,0,0.06);
-  transition: 0.2s;
+  background: #ffffff;
+  border: 1px solid #eee;
+  transition: all 0.2s ease;
   cursor: pointer;
 
   &:hover {
+    box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
     transform: translateY(-2px);
-    box-shadow: 0 8px 22px rgba(0,0,0,0.1);
   }
 }
 
-/* LEFT */
-.invite-info {
+/* LEFT SECTION */
+.invite-left {
   display: flex;
   flex-direction: column;
-  gap: 4px;
-
-  .title {
-    font-weight: 600;
-    font-size: 15px;
-  }
-
-  .meta {
-    font-size: 12px;
-    color: #6b7280;
-  }
-
-  .type {
-    font-size: 11px;
-    color: #9ca3af;
-  }
+  gap: 10px;
 }
 
-/* RIGHT */
+.invite-header {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.workspace-icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 10px;
+  background: var(--primary-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.workspace-name {
+  font-size: 15px;
+  font-weight: 600;
+  color: #222;
+}
+
+.invite-type {
+  font-size: 12px;
+  color: #888;
+  margin-top: 5px;
+}
+
+/* BODY */
+.invite-body {
+  font-size: 13px;
+  color: #555;
+}
+
+.info-row {
+  display: flex;
+  gap: 6px;
+}
+
+.label {
+  font-weight: 500;
+  color: #777;
+}
+
+.value {
+  color: #222;
+}
+
+/* RIGHT SECTION */
 .invite-action {
   display: flex;
   align-items: center;
-  gap: 10px;
+  gap: 8px;
 }
 
 /* BUTTONS */
 .btn {
   padding: 6px 12px;
   border-radius: 8px;
+  font-size: 13px;
   border: none;
-  font-size: 13px;
   cursor: pointer;
+  transition: all 0.2s ease;
 }
 
-.accept {
-  background: #22c55e;
-  color: white;
+.btn.primary {
+  background: var(--primary-color);
+  color: var(--white);
+  padding: 12px 18px;
+}
+
+.btn.accept {
+  background: #eef7ff;
+  color: #007bff;
 
   &:hover {
-    background: #16a34a;
+    background: #dceeff;
   }
 }
 
-.reject {
-  background: #f3f4f6;
+.btn.reject {
+  background: #ffecec;
+  color: #e53935;
 
   &:hover {
-    background: #e5e7eb;
+    background: #ffd6d6;
   }
 }
 
-/* STATUS */
+/* STATUS BADGES */
 .status {
-  font-size: 13px;
+  padding: 5px 10px;
+  border-radius: 20px;
+  font-size: 12px;
   font-weight: 500;
 }
 
 .status.accepted {
-  color: #16a34a;
+  background: #e6f7ee;
+  color: #1b8f5a;
 }
 
 .status.rejected {
-  color: #cf1322;
+  background: #fdeaea;
+  color: #d32f2f;
 }
 
-/* EMPTY */
-.empty {
-  text-align: center;
-  color: #9ca3af;
-  margin-top: 40px;
+@media only screen and (max-width: 420px) {
+  .invite-action {
+    flex-direction: column;
+  }
 }

@@ -24,7 +24,7 @@
     </button>
 
     <!-- NOTIFICATIONS -->
-    <div class="dropdown" (click)="toggleNotifications()">
+    <div class="icon-dropdown" (click)="toggleNotifications()">
 
       <button class="icon-btn">
         <img src="assets/bell.svg" />
@@ -41,15 +41,16 @@
     </div>
 
     <!-- PROFILE -->
-    <div class="dropdown" (click)="toggleProfile()">
+    <div class="icon-dropdown" (click)="toggleProfile()">
 
-      <button class="icon-btn">
+      <div class="profile-info">
         <img src="assets/avatar.svg" />
-      </button>
+        <span>{{ userName() }}</span>
+      </div>
 
       @if(showProfile) {
       <div class="dropdown-panel profile">
-        <p routerLink="/profile">My Profile</p>
+        <p routerLink="/profile">View Profile</p>
         <p routerLink="/chats">Chats</p>
         <p routerLink="/groups">Groups</p>
         <p routerLink="/invites">Invites</p>

@@ -1,4 +1,5 @@
 import { Injectable, signal } from "@angular/core";
+import { User } from "../interfaces/user.interface";
 
 export enum ToastrType {
     SUCCESS = 'success',
@@ -19,32 +20,74 @@ export interface Toastr {
 })
 export class AppUiStateService {
 
+    currentUser = signal<User>(JSON.parse(sessionStorage.getItem('user') || '{}'));
+
+    // LOADER STATE
     isLoading = signal(false);
+
+    // TOASTR STATE
     toastr = signal<Toastr>({
         message: '',
         type: ToastrType.SUCCESS,
         duration: 3000,
         show: false
     });
-    
-    constructor() { }
+
+    private toastrTimer: any;
+
+    constructor() {
+        console.log('AppUiStateService constructor', this.currentUser());
+     }
+
+    // =========================
+    // LOADER METHODS
+    // =========================
 
     startLoader(): void {
         this.isLoading.set(true);
     }
 
     stopLoader(): void {
-        this.isLoading.set(false);
+        setTimeout(() => {
+            this.isLoading.set(false);
+        }, 800);
     }
+
+    // =========================
+    // TOASTR METHODS
+    // =========================
 
     showToastr(
         message: string,
         type: ToastrType = ToastrType.SUCCESS,
-        duration: number = 2000): void {
-        this.toastr.set(this.toastr().show ? { ...this.toastr(), show: false } : this.toastr());
-        this.toastr.set({ message, type, duration, show: true });
+        duration: number = 2000
+    ): void {
+
+        // Clear previous timeout (important fix)
+        if (this.toastrTimer) {
+            clearTimeout(this.toastrTimer);
+        }
+
+        // Force reset (prevents same message not showing)
+        this.toastr.set({ ...this.toastr(), show: false });
+
         setTimeout(() => {
-            this.toastr.set({ message: '', type: ToastrType.SUCCESS, duration, show: false });
-        }, duration);
+            this.toastr.set({
+                message,
+                type,
+                duration,
+                show: true
+            });
+
+            this.toastrTimer = setTimeout(() => {
+                this.toastr.set({
+                    message: '',
+                    type: ToastrType.SUCCESS,
+                    duration,
+                    show: false
+                });
+            }, duration);
+
+        }, 50); // small delay ensures UI refresh
     }
 }

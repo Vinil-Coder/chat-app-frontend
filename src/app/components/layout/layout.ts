@@ -3,10 +3,12 @@ import { Sidemenu } from '../sidemenu/sidemenu';
 import { TopBar } from '../top-bar/top-bar';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { ModalHost } from '../modal-host/modal-host';
+import { CommonModule } from '@angular/common';
+import { AppUiStateService } from '../../services/ui-state.service';
 
 @Component({
   selector: 'app-layout',
-  imports: [Sidemenu, TopBar, RouterModule, RouterOutlet, ModalHost],
+  imports: [Sidemenu, TopBar, RouterModule, RouterOutlet, ModalHost, CommonModule],
   templateUrl: './layout.html',
   styleUrl: './layout.scss',
 })
@@ -15,6 +17,10 @@ export class Layout {
   isSidebarHidden = false;
   isContentFull = false;
   isMobile = false;
+
+  constructor(
+    public appUIStateService: AppUiStateService
+  ) {}
 
   ngOnInit() {
     this.checkScreen();
