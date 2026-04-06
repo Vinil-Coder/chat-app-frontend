@@ -29,7 +29,7 @@ export const routes: Routes = [
         children: [
             {
                 path: 'chats',
-                loadComponent: () => import('./pages/chats/chats').then(c => c.Chats)
+                loadComponent: () => import('./pages/chat/chat').then(c => c.Chat)
             },
             {
                 path: 'groups',

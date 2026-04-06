@@ -25,6 +25,7 @@
                 <input type="text" id="contact" name="contact" placeholder="Contact" formControlName="contact">
                 <div *ngIf="fc['contact']?.dirty || fc['contact']?.touched" class="validation-error-message">
                     <span *ngIf="fc['contact']?.errors?.['required']">Contact is required</span>
+                    <span *ngIf="fc['contact']?.errors?.['pattern']">Should be 10 numbers only</span>
                 </div>
             </div>
 

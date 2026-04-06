@@ -4,6 +4,8 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { InviteService } from '../../services/invite.service';
+import { AppUiStateService, ToastrType } from '../../services/ui-state.service';
+import { Toastr } from '../../components/toastr/toastr';
 
 @Component({
   selector: 'app-signup',
@@ -20,12 +22,13 @@ export class Signup {
     private router: Router, 
     private authService: AuthService,
     private inviteService: InviteService,
-    private activatedRoute: ActivatedRoute
+    private activatedRoute: ActivatedRoute,
+    private appUiStateService: AppUiStateService
   ) {
     this.form = new FormGroup({
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
-      contact: new FormControl('', [Validators.required]),
+      contact: new FormControl('', [Validators.required, Validators.pattern("^[0-9]{10}$")]),
       password: new FormControl('', [Validators.required]),
     })
   }
@@ -39,22 +42,39 @@ export class Signup {
   }
 
   async onFormSubmit() {
+
     this.form.markAllAsTouched();
+
     if (this.form.invalid) return;
-    console.log(this.form.value);
+
     try {
       if(this.token) {
-        await this.inviteService.verifyInvite(this.token);
-        await this.inviteService.registerWithInvite({
-          ...this.form.value,
-          token: this.token
-        });
+        await this.registerWithInvite();
       } else {
         await this.authService.registerUser(this.form.value);
       }
-      this.router.navigate(['/login']);
-    } catch(error) {
-      console.log(error);
+      await this.authService.loginUser(this.form.value);
+      this.router.navigate(['/']);
+    } catch(err: any) {
+      this.appUiStateService.showToastr(
+        err.message,
+        ToastrType.ERROR
+      )
+    }
+  }
+
+  async registerWithInvite() {
+    try {
+      await this.inviteService.verifyInvite(this.token);
+      await this.inviteService.registerWithInvite({
+        ...this.form.value,
+        token: this.token
+      });
+    } catch (err: any) {
+      this.appUiStateService.showToastr(
+        err.message,
+        ToastrType.ERROR
+      )
     }
   }
 }

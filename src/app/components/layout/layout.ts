@@ -20,7 +20,7 @@ export class Layout {
 
   constructor(
     public appUIStateService: AppUiStateService
-  ) {}
+  ) { }
 
   ngOnInit() {
     this.checkScreen();
@@ -39,7 +39,6 @@ export class Layout {
       this.isContentFull = true;
       const sideBar = document.getElementById('side-bar');
       if (sideBar) {
-        sideBar.style.zIndex = '9999';
         sideBar.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.05)'
       }
     } else {
@@ -50,6 +49,6 @@ export class Layout {
 
   toggleSidebar() {
     this.isSidebarHidden = !this.isSidebarHidden;
-    this.isContentFull = !this.isContentFull;
+    this.isContentFull = this.isMobile ? true : !this.isContentFull;
   }
 }

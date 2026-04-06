@@ -3,7 +3,10 @@
     <app-toastr></app-toastr>
     @if(appUIStateService.isLoading()) {
     <div class="loading-overlay">
-        <div class="loader"></div>
+        <div class="loader-container">
+            <div class="loader"></div>
+            <div class="loader-text">Loading...</div>
+        </div>
     </div>
     }
 </div>

@@ -11,6 +11,7 @@ app-sidemenu {
     left: 0;
     height: 100%;
     width: 250px;
+    z-index: 1;
     background: var(--white);
     transition: left 0.3s ease-in-out;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);

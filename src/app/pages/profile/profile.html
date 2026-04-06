@@ -12,7 +12,7 @@
         <h2>{{ user().name }}</h2>
         <p class="email">{{ user().email }}</p>
         <p class="email">{{ user().contact }}</p>
-        <span class="role">{{ user().accountId.role}}</span>
+        <span class="role">{{ user().account.role}}</span>
       </div>
     </div>
 
@@ -31,7 +31,7 @@
       <div class="card">
         <h3>About</h3>
         <p>
-          {{ user().profileId.bio || 'No bio available'}}
+          {{ user().profile.bio || 'No bio available'}}
         </p>
       </div>
 

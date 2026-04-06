@@ -8,8 +8,8 @@ export interface User {
     contact: string,
     password: string,
     status: string,
-    profileId: Profile | string,
-    accountId: Account | string,
+    profile: Profile,
+    account: Account,
     createdAt: string,
     updatedAt: string,
     __v: number
