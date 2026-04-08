@@ -9,6 +9,12 @@
   gap: 14px;
 }
 
+.buttons-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .btn {
   padding: 10px;
   border-radius: 8px;
@@ -72,41 +78,49 @@
 /* CHAT ITEM */
 .chat-item {
   display: flex;
-  align-items: center;
-  gap: 12px;
+  gap: 5px;
   padding: 12px;
   cursor: pointer;
   transition: 0.2s;
+  margin: 0 15px;
 
   &:hover {
     background: #eef2ff;
   }
 
   &.active {
-    background: #e0e7ff;
-    border-left: 3px solid #6366f1;
+    background: #eef2ff;
+    border-radius: 10px;
   }
 }
 
 /* AVATAR */
 .avatar {
-  width: 44px;
-  height: 44px;
   position: relative;
-
-  img {
-    width: 100%;
-    border-radius: 50%;
-  }
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: var(--primary-color);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 10px;
+  font-weight: 600;
 
   .status {
     position: absolute;
-    bottom: 2px;
-    right: 2px;
-    width: 10px;
-    height: 10px;
+    bottom: 0;
+    right: -2px;
+    width: 12px;
+    height: 12px;
     border-radius: 50%;
-    background: #22c55e;
+    background: gray;
+    border: 2px solid white;
+
+    &.online {
+      background: #6ae68e;
+    }
   }
 }
 
@@ -146,6 +160,11 @@
     padding: 2px 6px;
     border-radius: 12px;
   }
+}
+
+.add-chat {
+  align-self: flex-end;
+  margin: 25px;
 }
 
 /* RIGHT PANEL */
@@ -363,8 +382,14 @@ input {
   margin: auto;
   text-align: center;
   color: #9ca3af;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
+.empty-state-header {
+  margin: 0;
+}
 /* MOBILE UX */
 @media (max-width: 768px) {
 

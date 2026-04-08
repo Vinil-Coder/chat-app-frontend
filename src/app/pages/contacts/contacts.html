@@ -1,0 +1,56 @@
+<div class="members-page">
+
+    <!-- HEADER -->
+    <div class="header">
+        <div class="header-left">
+            <h2>Contacts</h2>
+        </div>
+        @if(users().length > 0) {
+        <button class="btn primary" (click)="inviteMember()">
+            Invite Member
+        </button>
+        }
+    </div>
+
+    <div class="content">
+        @if(users().length === 0) {
+        <div class="empty-state">
+            <h3>No Users yet</h3>
+            <p>Start inviting members to collaborate with you.</p>
+
+            <button class="btn primary" (click)="inviteMember()">
+                {{ 'Invite member' }}
+            </button>
+
+        </div>
+        } @else {
+        <!-- GRID -->
+        <div class="members-grid">
+            @for (user of users(); track user._id) {
+            <!-- MEMBER CARD -->
+            <div class="member-card" (click)="createConversation(user)">
+                <div class="top">
+                    <div class="top-left">
+                        <div class="avatar">{{ user.name.charAt(0) }}</div>
+                        <div class="name">{{ user.name }}</div>
+                    </div>
+                    <div class="top-right">
+                        <span class="status-badge" [class.online]="user.isOnline" [class.offline]="!user.isOnline">
+                            {{ user.isOnline ? 'Online' : 'Offline' }}
+                        </span>
+                    </div>
+                </div>
+
+                <div class="details">
+                    <div>Email: {{ user.email }}</div>
+                    <div>Mobile: {{ user.contact }}</div>
+                    <div>Status: {{ user.status }}</div>
+                </div>
+            </div>
+
+            }
+        </div>
+        }
+    </div>
+
+</div>

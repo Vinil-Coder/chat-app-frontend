@@ -1,9 +1,15 @@
-import { Component, OnInit, OnDestroy, signal, computed, effect } from "@angular/core";
-import { ChatService } from "../../services/chat.service";
-import { SocketService } from "../../services/socket.service";
-import { AppUiStateService } from "../../services/ui-state.service";
+import { Component, OnInit, signal, computed } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
+import { Router } from "@angular/router";
+
+import { ConversationService } from "../../services/chat.service";
+import { UserService } from "../../services/user.service";
+import { ModalService } from "../../services/modal.service";
+import { AppUiStateService, ToastrType } from "../../services/ui-state.service";
+
+import { ContactModal } from "../../components/contact-modal/contact-modal";
+import { User } from "../../interfaces/user.interface";
 
 @Component({
   selector: 'app-chat',
@@ -12,16 +18,18 @@ import { FormsModule } from "@angular/forms";
   templateUrl: './chat.html',
   styleUrls: ['./chat.scss']
 })
-export class Chat implements OnInit, OnDestroy {
+export class Chat implements OnInit {
 
   /* ================= STATE ================= */
 
-  chats = signal<any[]>([]);
+  conversations = signal<any[]>([]);
+  users = signal<User[]>([]);
+
   selectedChat = signal<any | null>(null);
   messages = signal<any[]>([]);
 
   newMessage = signal('');
-  isTyping = signal(false);
+  isLoadingMessages = signal(false);
 
   currentUserId = '';
 
@@ -32,194 +40,201 @@ export class Chat implements OnInit, OnDestroy {
   /* ================= INIT ================= */
 
   constructor(
-    private chatService: ChatService,
-    private socket: SocketService,
-    private appUiStateService: AppUiStateService
-  ) { }
+    private conversationService: ConversationService,
+    private userService: UserService,
+    private appUiStateService: AppUiStateService,
+    private modal: ModalService,
+    private router: Router
+  ) {}
 
   async ngOnInit() {
     this.currentUserId = this.appUiStateService.currentUser()._id;
 
-    this.socket.connect(this.currentUserId);
-
-    await this.loadChats();
-
-    this.listenSocketEvents();
+    await Promise.all([
+      this.loadUsers(),
+      this.loadConversations()
+    ]);
   }
 
-  ngOnDestroy() {
-    this.socket.disconnect();
-  }
+  /* ================= LOAD CONVERSATIONS ================= */
 
-  /* ================= LOAD CHATS ================= */
-
-  async loadChats() {
+  async loadConversations() {
     try {
-      const res = await this.chatService.getChats();
+      const res = await this.conversationService.getConversations();
 
-      const mapped = res.map((convo: any) => {
+      const mapped = res.conversations.map((c: any) => ({
+        _id: c._id,
+        name: c.type === 'group' ? c.name : this.getChatUserName(c.participants),
+        isOnline: c.type === 'group' ? c.participants?.some((p: any) => p.isOnline) : this.checkIsUserOnline(c.participants),
+        lastMessage: c.lastMessage?.content || '',
+        time: c.updatedAt
+      }));
 
-        let name = convo.name;
-
-        if (convo.type === 'direct') {
-          const otherUser = convo.members.find(
-            (m: any) => m._id !== this.currentUserId
-          );
-          name = otherUser?.name || 'Unknown';
-        }
-
-        return {
-          id: convo._id,
-          name,
-          lastMessage: convo.lastMessage?.content || 'Start conversation...',
-          unreadCount: 0,
-          time: convo.updatedAt
-        };
-      });
-
-      this.chats.set(mapped);
-      console.log('chats', this.chats());
+      this.conversations.set(mapped);
 
     } catch (err) {
-      console.error("Load chats error:", err);
+      console.error("Load conversations error:", err);
+      this.conversations.set([]);
     }
   }
 
-  /* ================= SOCKET EVENTS ================= */
+  getChatUserName(participants: any) {
+    const user = participants?.find((u: any) => u._id !== this.currentUserId);
+    return user?.name || '';
+  }
 
-  listenSocketEvents() {
+  checkIsUserOnline(participants: any[]) {
+    return participants.some((p: any) => p._id !== this.currentUserId && p.isOnline);
+  }
 
-    /* ===== RECEIVE MESSAGE ===== */
-    this.socket.receiveMessage().subscribe((msg) => {
+  /* ================= LOAD USERS ================= */
 
-      // update messages
-      if (msg.conversationId === this.selectedChat()?.id) {
-
-        this.messages.update(prev => [...prev, msg]);
-        this.scrollToBottom();
-
-        // mark as read
-        if (msg.senderId !== this.currentUserId) {
-          this.socket.markRead(msg._id, this.currentUserId);
-        }
-      }
-
-      this.updateChatPreview(msg);
-    });
-
-    /* ===== TYPING ===== */
-    this.socket.onTyping().subscribe(() => {
-
-      this.isTyping.set(true);
-
-      setTimeout(() => this.isTyping.set(false), 1500);
-    });
-
-    /* ===== READ RECEIPT ===== */
-    this.socket.onMessageRead().subscribe(({ messageId, userId }) => {
-
-      this.messages.update(prev =>
-        prev.map(msg =>
-          msg._id === messageId
-            ? { ...msg, readBy: [...(msg.readBy || []), userId] }
-            : msg
-        )
+  async loadUsers() {
+    try {
+      const res = await this.userService.getRegisteredUsers();
+      this.users.set(res.users || []);
+    } catch (err: any) {
+      this.users.set([]);
+      this.appUiStateService.showToastr(
+        err.message || 'Failed to load users',
+        ToastrType.ERROR
       );
-
-    });
+    }
   }
 
   /* ================= SELECT CHAT ================= */
 
   async selectChat(chat: any) {
 
+    if (!chat?._id) return;
+
+    // Prevent unnecessary reload
+    if (this.selectedChat()?._id === chat._id) return;
+
     this.selectedChat.set(chat);
     this.messages.set([]);
+    this.isLoadingMessages.set(true);
 
     try {
-      this.socket.joinConversation(chat.id, this.currentUserId);
+      const res = await this.conversationService.getMessages(chat._id);
 
-      const res = await this.chatService.getMessages(chat.id);
-
-      this.messages.set(res);
-
-      // mark all read
-      res.forEach((msg: any) => {
-        if (msg.senderId !== this.currentUserId) {
-          this.socket.markRead(msg._id, this.currentUserId);
-        }
-      });
-
-      this.scrollToBottom();
+      this.messages.set(res || []);
 
     } catch (err) {
       console.error("Select chat error:", err);
+      this.messages.set([]);
+    } finally {
+      this.isLoadingMessages.set(false);
+      this.scrollToBottom();
     }
   }
 
   /* ================= SEND MESSAGE ================= */
 
-  onSendMessage() {
+  async onSendMessage() {
 
-    const content = this.newMessage().trim();
-    const chat = this.selectedChat();
+    // const content = this.newMessage().trim();
+    // const chat = this.selectedChat();
 
-    if (!content || !chat) return;
+    // if (!content || !chat?._id) return;
 
-    this.socket.sendMessage({
-      conversationId: chat.id,
-      senderId: this.currentUserId,
-      content
-    });
+    // try {
+    //   const payload = {
+    //     conversationId: chat._id,
+    //     senderId: this.currentUserId,
+    //     content
+    //   };
 
-    this.scrollToBottom();
+    //   const res = await this.conversationService.sendMessage(payload);
 
-    this.newMessage.set('');
+    //   // Append message locally
+    //   this.messages.update(prev => [...prev, res.message]);
+
+    //   // Update chat preview
+    //   this.updateChatPreview(chat._id, content);
+
+    //   this.newMessage.set('');
+    //   this.scrollToBottom();
+
+    // } catch (err) {
+    //   console.error("Send message error:", err);
+    //   this.appUiStateService.showToastr(
+    //     'Failed to send message',
+    //     ToastrType.ERROR
+    //   );
+    // }
   }
 
-  /* ================= CHAT LIST UPDATE ================= */
+  /* ================= UPDATE CHAT LIST ================= */
 
-  updateChatPreview(msg: any) {
+  updateChatPreview(conversationId: string, message: string) {
 
-    this.chats.update(prev => {
+    this.conversations.update(prev => {
 
-      const index = prev.findIndex(c => c.id === msg.conversationId);
-
+      const index = prev.findIndex(c => c._id === conversationId);
       if (index === -1) return prev;
 
-      const updatedChat = {
+      const updated = {
         ...prev[index],
-        lastMessage: msg.content,
+        lastMessage: message,
         time: new Date()
       };
 
       return [
-        updatedChat,
-        ...prev.filter(c => c.id !== updatedChat.id)
+        updated,
+        ...prev.filter(c => c._id !== conversationId)
       ];
     });
   }
 
-  /* ================= TYPING ================= */
+  /* ================= OPEN CONTACTS ================= */
 
-  private typingTimeout: any;
+  async openContacts() {
 
-  onTyping() {
-    if (!this.selectedChat()) return;
-
-    this.socket.typing({
-      conversationId: this.selectedChat().id,
-      userId: this.currentUserId
-    });
-
-    clearTimeout(this.typingTimeout);
-
-    this.typingTimeout = setTimeout(() => {
-      this.socket.stopTyping({
-        conversationId: this.selectedChat().id,
-        userId: this.currentUserId
+    try {
+      const selectedUser = await this.modal.open(ContactModal, {
+        contacts: this.users()
       });
-    }, 1000);
+
+      if (!selectedUser) return;
+
+      const payload = {
+        type: 'direct',
+        receiverId: selectedUser._id,
+        name: selectedUser.name
+      };
+
+      const res = await this.conversationService.createConversation(payload);
+
+      const conversation = res.conversation;
+
+      // Add to list if not exists
+      this.addConversationIfMissing(conversation);
+
+      // Select immediately
+      await this.selectChat(conversation);
+
+    } catch (err) {
+      console.error("Open contacts error:", err);
+    }
+  }
+
+  /* ================= ADD CONVERSATION ================= */
+
+  addConversationIfMissing(convo: any) {
+
+    const exists = this.conversations().some(c => c._id === convo._id);
+
+    if (exists) return;
+
+    const mapped = {
+      _id: convo._id,
+      name: convo.name,
+      lastMessage: '',
+      time: convo.updatedAt
+    };
+
+    this.conversations.update(prev => [mapped, ...prev]);
   }
 
   /* ================= UI ================= */
@@ -231,15 +246,7 @@ export class Chat implements OnInit, OnDestroy {
     });
   }
 
-  getMessageStatus(msg: any): 'sent' | 'delivered' | 'read' | 'none' {
-
-    const isSender = msg.senderId === this.currentUserId;
-
-    if (!isSender) return 'none';
-
-    if (msg.readBy?.length > 1) return 'read';
-    if (msg.deliveredTo?.length > 1) return 'delivered';
-
-    return 'sent';
+  openCreateGroup() {
+    this.router.navigate(['/groups']);
   }
 }

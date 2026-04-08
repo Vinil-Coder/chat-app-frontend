@@ -1,27 +1,63 @@
 <div class="modal-backdrop" (click)="close()"></div>
 <div class="modal">
+
+    @if(mode !== 'details') {
+    <!-- CREATE, UPDATE AND DELETE GROUP BLOCK -->
     <form [formGroup]="form" (ngSubmit)="save()">
-        <h3 [ngClass]="mode">{{ mode === 'edit' ? 'Edit Workspace' : mode === 'delete' ? 'Delete' : 'Workspace' }}</h3>
+        <h3 [ngClass]="mode">{{ mode === 'edit' ? 'Edit Group' : mode === 'delete' ? 'Delete' : 'Group' }}</h3>
 
         @if (mode === 'delete') {
-            <p>Are you sure you want to delete this workspace ?</p>
+        <p>Are you sure you want to delete this group ?</p>
         } @else {
-            <div class="form-field">
-                <label for="name">Name</label>
-                <input placeholder="Workspace name" formControlName="name" type="text" />
-                @if(fc['name']?.dirty || fc['name']?.touched) {
-                    <div class="validation-error-message">
-                        @if(fc['name']?.errors?.['required']) {
-                            Name is required
-                        }
-                    </div>
+        <div class="form-field">
+            <label for="name">Name</label>
+            <input placeholder="Workspace name" formControlName="name" type="text" />
+            @if(fc['name']?.dirty || fc['name']?.touched) {
+            <div class="validation-error-message">
+                @if(fc['name']?.errors?.['required']) {
+                Name is required
                 }
             </div>
+            }
+        </div>
 
-            <div class="form-field">
-                <label for="description">Description</label>
-                <input placeholder="Description" formControlName="description" type="text" />
+        <div class="form-field">
+            <label for="description">Description</label>
+            <input placeholder="Description" formControlName="description" type="text" />
+        </div>
+
+        <div class="form-field">
+            <label>Members</label>
+
+            <!-- Search -->
+            <!-- <input type="text" placeholder="Search users..." name="searchText" formControlName="searchText"/> -->
+
+            <!-- Users List -->
+            <div class="members-list">
+
+                @for (user of filteredUsers(); track user._id) {
+                <div class="member-item" (click)="toggleUser(user)">
+
+                    <!-- Checkbox -->
+                    <input type="checkbox" [checked]="isSelected(user._id)" />
+
+                    <!-- Avatar -->
+                    <div class="avatar">
+                        {{ user.name.charAt(0) }}
+                        <span class="status" [class.online]="user.isOnline"></span>
+                    </div>
+
+                    <!-- Info -->
+                    <div class="info">
+                        <div class="name">{{ user.name }}</div>
+                        <div class="email">{{ user.email }}</div>
+                    </div>
+
+                </div>
+                }
+
             </div>
+        </div>
 
         }
         <div class="modal-actions">
@@ -32,4 +68,55 @@
             </button>
         </div>
     </form>
+    }
+
+    <!-- GROUP DETAILS BLOCK -->
+    @if(mode === 'details') {
+    <div class="group-details">
+
+        <!-- Header -->
+        <div class="group-header">
+            <div class="group-avatar">
+                {{ group.name.charAt(0) }}
+            </div>
+
+            <div>
+                <h2 class="group-name">{{ group.name }}</h2>
+                <div class="group-meta">
+                    Created {{ group.createdAt | date: "MMM d, yyyy" }} •
+                    {{ group.members.length }} members
+                </div>
+            </div>
+        </div>
+
+        <!-- Description -->
+        <div class="group-desc">
+            {{ group.description || "No description available" }}
+        </div>
+
+        <!-- Members -->
+        <div class="members-section">
+            <h3>Members</h3>
+
+            <div class="group-members">
+                @for (user of group.members; track user._id) {
+                <div class="member-card">
+
+                    <div class="avatar">
+                        {{ user.name.charAt(0) }}
+                    </div>
+
+                    <div class="member-info">
+                        <div class="name">{{ user.name }}</div>
+                        <div class="email">{{ user.email }}</div>
+                    </div>
+
+                </div>
+                }
+            </div>
+
+        </div>
+
+    </div>
+    }
 </div>

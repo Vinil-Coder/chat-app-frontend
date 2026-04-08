@@ -1,7 +1,7 @@
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { WorkspaceModalComponent } from './workspace-modal';
-import { Workspaces } from '../../pages/workspaces/workspaces';
+import { Workspaces } from '../../pages/groups/workspaces';
 
 describe('WorkspaceModal', () => {
   let component: WorkspaceModalComponent;

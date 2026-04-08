@@ -5,6 +5,7 @@ export interface Workspace {
     name: string,
     description: string,
     createdBy: User | string,
+    members: any,
     createdAt: string,
     updatedAt: string,
     __v: number

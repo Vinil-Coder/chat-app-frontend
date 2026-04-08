@@ -2,17 +2,7 @@
 
   <div class="chat-container">
 
-    <!-- EMPTY STATE -->
-    @if(chats().length === 0) {
-    <div class="empty-state">
-      <h2>No chats available</h2>
-      <p>Invite members and start conversations</p>
-      <button class="btn primary">Invite Members</button>
-    </div>
-    }
-
-    @else {
-
+    @if(conversations().length > 0) {
     <!-- LEFT PANEL -->
     <aside class="chat-list" [class.hide]="selectedChat() && isMobile">
 
@@ -21,29 +11,31 @@
       </div>
 
       <div class="chat-items">
-        @for (chat of chats(); track chat['id']) {
-        <div class="chat-item" (click)="selectChat(chat)" [class.active]="selectedChat()?.id === chat?.id">
+        @for (user of conversations(); track user['id']) {
+        <div class="chat-item" (click)="selectChat(user)" [class.active]="selectedChat()?._id === user?._id">
 
           <div class="avatar">
-            <img src="assets/dummy-avatar.png">
-            <span class="status online"></span>
+            {{ user.name.charAt(0) }}
+            @if(user.isOnline) {
+              <span class="status online"></span>
+            }
           </div>
 
           <div class="info">
             <div class="top">
-              <span class="name">{{ chat.name }}</span>
+              <span class="name">{{ user.name }}</span>
               <span class="time">
-                {{ chat.time | date: 'shortTime' }}
+                {{ user.time | date: 'shortTime' }}
               </span>
             </div>
 
             <div class="bottom">
               <span class="message">
-                {{ chat.lastMessage || 'Start conversation...' }}
+                {{ user.lastMessage || 'Start conversation...' }}
               </span>
 
-              @if (chat['unreadCount'] > 0) {
-              <span class="badge">{{ chat['unreadCount'] }}</span>
+              @if (user['unreadCount'] > 0) {
+              <span class="badge">{{ user['unreadCount'] }}</span>
               }
             </div>
           </div>
@@ -52,11 +44,28 @@
         }
       </div>
 
+      <div class="add-chat" (click)="openContacts()">
+        <button class="btn primary">
+          + New Chat
+        </button>
+      </div>
+
     </aside>
+    }
 
     <!-- RIGHT PANEL -->
     <section class="chat-window" [class.active]="selectedChat()">
 
+      @if(conversations().length === 0) {
+      <div class="empty-state">
+        <h2 class="empty-state-header">No conversations yet 👋</h2>
+        <p>Start chatting with people or create a group</p>
+        <div class="buttons-container">
+          <button class="btn primary" (click)="openContacts()">Start Chat</button>
+          <button class="btn secondary" (click)="openCreateGroup()">Create Group</button>
+        </div>
+      </div>
+      } @else {
       @if(selectedChat()) {
 
       <!-- HEADER -->
@@ -64,20 +73,18 @@
 
         <div class="header-info">
           <div class="avatar">
-            <img src="assets/dummy-avatar.png">
-            <span class="status online"></span>
+            {{ selectedChat().name.charAt(0) }}
+            @if(selectedChat().isOnline) {
+              <span class="status online"></span>
+            }
           </div>
 
           <div class="user-info">
             <div class="name">{{ selectedChat().name }}</div>
-            <div class="status-text">Online</div>
-            @if(isTyping()) {
-            <div class="typing">
-              <span></span>
-              <span></span>
-              <span></span>
-            </div>
+             @if(selectedChat().isOnline) {
+              <div class="status-text">Online</div>
             }
+
           </div>
         </div>
 
@@ -90,6 +97,11 @@
       <!-- MESSAGES -->
       <div class="chat-messages">
 
+        @if(messages().length === 0) {
+        <div class="empty-state">
+          Start conversation 👋
+        </div>
+        } @else {
         @for (msg of messages(); track msg._id) {
 
         <div class="message" [class.sent]="msg.senderId === currentUserId"
@@ -102,18 +114,12 @@
               <span class="msg-time">
                 {{ msg.createdAt | date:'shortTime' }}
               </span>
-
-              @if(msg.senderId === currentUserId) {
-              <span class="ticks" [ngClass]="getMessageStatus(msg)">
-                <i class="tick-icon"></i>
-                <i class="tick-icon second"></i>
-              </span>
-              }
             </div>
           </div>
 
         </div>
 
+        }
         }
 
       </div>
@@ -127,7 +133,7 @@
             <img src="assets/attachment.svg">
           </button>
 
-          <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage" (input)="onTyping()">
+          <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage">
 
           <button class="icon-btn send" (click)="onSendMessage()">
             <img src="assets/telegram.png">
@@ -139,14 +145,12 @@
 
       } @else {
       <div class="empty-state">
-        <h2>Select a chat</h2>
-        <p>Start conversation from left panel</p>
+        Select a chat to start messaging 👋
       </div>
+      }
       }
 
     </section>
-
-    }
 
   </div>
 </div>

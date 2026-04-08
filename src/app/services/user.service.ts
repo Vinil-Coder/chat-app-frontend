@@ -24,4 +24,19 @@ export class UserService {
             )
         })
     }
+
+     getRegisteredUsers(): Promise<any> {
+        return new Promise((resolve, reject) => {
+            this.http.get(`${this.UserApi}registered-users`).subscribe(
+                {
+                    next: (res: any) => {
+                        resolve(res);
+                    },
+                    error: (err: any) => {
+                        reject(err);
+                    }
+                }
+            )
+        })
+    }
 }

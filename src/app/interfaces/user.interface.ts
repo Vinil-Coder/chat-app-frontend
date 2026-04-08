@@ -8,6 +8,7 @@ export interface User {
     contact: string,
     password: string,
     status: string,
+    isOnline: boolean;
     profile: Profile,
     account: Account,
     createdAt: string,

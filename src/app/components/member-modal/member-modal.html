@@ -1,12 +1,7 @@
 <div class="modal-backdrop" (click)="close()"></div>
 <div class="modal">
     <form [formGroup]="form" (ngSubmit)="save()">
-        <h3 [ngClass]="mode">{{ mode === 'edit' ? 'Edit Member' : mode === 'delete' ? 'Delete' : 'Invite Member' }}
-        </h3>
-
-        @if (mode === 'delete') {
-        <p>Are you sure you want to remove this member from your members list?</p>
-        } @else {
+        <h3>Invite Member</h3>
 
         <div class="form-field">
             <label for="name">Email</label>
@@ -15,6 +10,9 @@
             <div class="validation-error-message">
                 @if(fc['email']?.errors?.['required']) {
                 Email is required
+                }
+                @if(fc['email']?.errors?.['pattern']) {
+                Email format is invalid
                 }
             </div>
             }
@@ -32,32 +30,9 @@
             }
         </div>
 
-        <label for="workspace" class="label">Workspace</label>
-        <div class="custom-select" (click)="toggleDropdown('workspace')">
-            <span>{{ selectedWorkspace || 'Select Workspace' }}</span>
-            <span class="arrow"><img src="assets/chevron-down.svg" alt="Chevron Down"></span>
-
-            @if(activeDropdown === 'workspace') {
-            <div class="dropdown">
-                @for (workspace of workspaces; track workspace._id) {
-                <div class="dropdown-item" (click)="selectWorkspace(workspace, $event)"
-                    [class.selected]="selectedWorkspace === workspace.name">
-                    {{ workspace.name }}
-                </div>
-                }
-            </div>
-            }
-            @if(fc['workspaceID']?.touched && fc['workspaceID']?.invalid) {
-            <div class="validation-error-message custom-error">
-                Workspace is required
-            </div>
-            }
-        </div>
-
-        }
         <div class="modal-actions">
             <button (click)="save()" class="btn btn-primary" type="button">
-                {{ mode === 'delete' ? 'Yes' : mode === 'edit' ? 'Save' : 'Create'}}</button>
+                Invite</button>
             <button (click)="close()" class="btn btn-danger" type="button">
                 No
             </button>

@@ -10,24 +10,9 @@ export class InviteService {
 
     constructor(private http: HttpClient) { }
 
-    sendInvite(payload: { email: string, workspaceId: string }): Promise<any> {
+    sendInvite(payload: { email: string, contact: string }): Promise<any> {
         return new Promise((resolve, reject) => {
             this.http.post(`${this.InviteApi}sendInvite`, payload).subscribe(
-                {
-                    next: (res: any) => {
-                        resolve(res);
-                    },
-                    error: (err: any) => {
-                        reject(err);
-                    }
-                }
-            )
-        })
-    }
-
-    updateInviteStatus(inviteId: string, status: string): Promise<any> {
-        return new Promise((resolve, reject) => {
-            this.http.get(`${this.InviteApi}${inviteId}/${status}`).subscribe(
                 {
                     next: (res: any) => {
                         resolve(res);

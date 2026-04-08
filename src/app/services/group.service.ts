@@ -5,15 +5,15 @@ import { Workspace } from "../interfaces/workspace.interface";
 @Injectable({
     providedIn: 'root'
 })
-export class WorkSpaceService {
+export class GroupService {
 
-    private readonly WorkSpaceApi = 'http://localhost:5000/api/workspace/';
+    private readonly GroupsApi = 'http://localhost:5000/api/groups/';
 
     constructor(private http: HttpClient) { }
 
-    createWorkspace(payload: { name: string }): Promise<any> {
+    createGroup(payload: { name: string }): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.http.post(`${this.WorkSpaceApi}`, payload).subscribe(
+            this.http.post(`${this.GroupsApi}`, payload).subscribe(
                 {
                     next: (res: any) => {
                         resolve(res);
@@ -26,9 +26,9 @@ export class WorkSpaceService {
         })
     }
 
-    getWorkspaces(): Promise<any> {
+    getGroups(): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.http.get(`${this.WorkSpaceApi}`).subscribe(
+            this.http.get(`${this.GroupsApi}`).subscribe(
                 {
                     next: (res: any) => {
                         resolve(res);
@@ -41,9 +41,9 @@ export class WorkSpaceService {
         })
     }
 
-    updateWorkspace(id: string, payload: Workspace): Promise<any> {
+    updateGroup(id: string, payload: Workspace): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.http.put(`${this.WorkSpaceApi}id/${id}`, payload).subscribe(
+            this.http.put(`${this.GroupsApi}id/${id}`, payload).subscribe(
                 {
                     next: (res: any) => {
                         resolve(res);
@@ -57,9 +57,9 @@ export class WorkSpaceService {
         })
     }
 
-    deleteWorkspace(id: string): Promise<any> {
+    deleteGroup(id: string): Promise<any> {
         return new Promise((resolve, reject) => {
-            this.http.delete(`${this.WorkSpaceApi}id/${id}`).subscribe(
+            this.http.delete(`${this.GroupsApi}id/${id}`).subscribe(
                 {
                     next: (res: any) => {
                         resolve(res);

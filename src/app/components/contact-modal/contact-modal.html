@@ -1,0 +1,45 @@
+<div class="modal-backdrop" (click)="close()"></div>
+
+<div class="modal">
+
+  <div class="modal-header">
+    <h3>Select Contact</h3>
+  </div>
+
+  <div class="contacts-list">
+
+    @for(user of contacts; track user._id) {
+    <div class="contact-item" [class.active]="selectedUser?._id === user._id" (click)="selectUser(user)">
+
+      <!-- Radio -->
+      <input type="radio" name="contact" [checked]="selectedUser?._id === user._id" />
+
+      <!-- Avatar -->
+      <div class="avatar">
+        {{ user.name.charAt(0) }}
+        <span class="status" [class.online]="user.isOnline"></span>
+      </div>
+
+      <!-- Info -->
+      <div class="info">
+        <div class="name">{{ user.name }}</div>
+        <div class="email">{{ user.email }}</div>
+      </div>
+
+    </div>
+    }
+
+  </div>
+
+  <!-- Footer -->
+  <div class="modal-footer">
+    <button [disabled]="!selectedUser" (click)="confirmSelection()" class="btn btn-primary" type="button">
+      Start Chat
+    </button>
+
+    <button type="button" class="btn btn-secondary" (click)="close()">
+      Cancel
+    </button>
+  </div>
+
+</div>

@@ -40,12 +40,8 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/invites/invites').then(c => c.Invites)
             },
             {
-                path: 'workspaces',
-                loadComponent: () => import('./pages/workspaces/workspaces').then(c => c.Workspaces)
-            },
-            {
-                path: 'members',
-                loadComponent: () => import('./pages/members/members').then(c => c.Members)
+                path: 'contacts',
+                loadComponent: () => import('./pages/contacts/contacts').then(c => c.Contacts)
             },
             {
                 path: 'profile',

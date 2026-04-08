@@ -1,142 +1,190 @@
-.groups-container {
-
-  height: 100%;
+.workspace-page {
   display: flex;
   flex-direction: column;
+  height: 100%;
+}
 
-  .header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
+/* HEADER */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+
+  .header-left {
+    h2 {
+      margin: 0;
+    }
+
+    p {
+      margin: 4px 0 0;
+      font-size: 13px;
+      color: #6b7280;
+    }
+  }
+}
+
+/* EMPTY STATE */
+.empty-state {
+  margin: auto;
+
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+
+  .empty-icon {
+    font-size: 48px;
+    margin-bottom: 12px;
+  }
+
+  h3 {
+    margin: 0 0 6px;
+    font-size: 18px;
+  }
+
+  p {
+    color: #6b7280;
     margin-bottom: 16px;
   }
-
-  h2 {
-    margin: 0;
-  }
-
-  .create-btn {
-    background: #5454ff;
-    color: white;
-    border: none;
-    padding: 10px 14px;
-    border-radius: 10px;
-    cursor: pointer;
-    font-size: 13px;
-
-    &:hover {
-      background: #3f3fff;
-    }
-  }
 }
 
-/* TABLE WRAPPER */
-.table-wrapper {
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
-  overflow: hidden;
-  flex: 1;
-}
-
-/* TABLE */
-.groups-table {
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-
-  th,
-  td {
-    padding: 14px 16px;
-    text-align: left;
-    border-bottom: 1px solid #eee;
-    font-size: 14px;
-  }
-
-  th {
-    background: #fafafa;
-    font-weight: 600;
-    color: #6b7280;
-  }
-
-  tbody tr {
-    transition: 0.2s;
-    cursor: pointer;
-
-    &:hover {
-      background: #f9f9ff;
-    }
-  }
-}
-
-/* sticky header */
-.groups-table thead th {
-  position: sticky;
-  top: 0;
-  background: #fafafa;
-  z-index: 2;
-}
-
-/* scroll container */
-.table-body-wrapper {
-  overflow-y: auto;
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
   height: 100%;
-  border-bottom: 1px solid #eee;
+}
+
+/* GRID */
+.workspace-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 16px;
+  overflow-y: auto;
 
   &::-webkit-scrollbar {
     width: 8px;
-    display: none;
   }
 
-  &::-webkit-scrollbar-thumb {
-    background: #ddd;
-    border-radius: 10px;
+  &::-webkit-scrollbar-track {
+    background: #f1f5f9;
   }
 }
 
-/* GROUP NAME CELL */
-.group-name {
-  .name {
-    font-weight: 500;
-  }
+/* CARD */
+.workspace-card {
+  background: white;
+  border-radius: 12px;
+  padding: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+  transition: 0.2s;
+  cursor: pointer;
 
-  .sub {
-    font-size: 12px;
-    color: #9ca3af;
+  &:hover {
+    transform: translateY(-4px);
   }
 }
 
-/* STATUS BADGES */
-.status-badge {
+/* TOP */
+.card-top {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.avatar {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background: #5454ff;
+  color: white;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 600;
+}
+
+/* BADGE */
+.badge {
+  font-size: 11px;
   padding: 4px 10px;
   border-radius: 20px;
+  font-weight: 500;
+}
+
+/* MEMBER BADGE */
+.badge.member {
+  background: #eef2ff;
+  color: #4f46e5;
+}
+
+/* OPTIONAL OWNER BADGE (if needed later) */
+.badge.owner {
+  background: #ecfdf5;
+  color: #059669;
+}
+
+/* BODY */
+.card-body {
+  margin-top: 10px;
+}
+
+.name {
+  font-weight: 600;
+  color: #1f2937;
+}
+
+/* META */
+.meta {
   font-size: 12px;
-  font-weight: 500;
+  color: #6b7280;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin: 6px 0;
 }
 
-.pending {
-  background: #fff7e6;
-  color: #d48806;
+/* DESCRIPTION */
+.desc {
+  font-size: 12px;
+  color: #4b5563;
+  margin-top: 22px;
 }
 
-.accepted {
-  background: #e6fffb;
-  color: #08979c;
+/* ACTIONS */
+.card-actions {
+  display: flex;
+  gap: 6px;
+
+  button {
+    border: none;
+    background: transparent;
+    cursor: pointer;
+  }
 }
 
-.rejected {
-  background: #fff1f0;
-  color: #cf1322;
-}
-
-/* STATES */
-.joined {
-  color: #16a34a;
-  font-weight: 500;
+/* BUTTONS */
+.btn {
+  padding: 6px 12px;
+  border-radius: 8px;
   font-size: 13px;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
 }
 
-.rejected-text {
-  color: #cf1322;
-  font-size: 13px;
+.btn.primary {
+  background: var(--primary-color);
+  color: var(--white);
+  padding: 12px 18px;
+}
+
+img {
+  width: 20px;
+  height: 20px;
+  filter: invert(1);
 }

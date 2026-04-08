@@ -5,7 +5,7 @@ import { Member } from '../../interfaces/member.interface';
 import { ModalService } from '../../services/modal.service';
 import { InviteService } from '../../services/invite.service';
 import { MemberModal } from '../../components/member-modal/member-modal';
-import { WorkSpaceService } from '../../services/workspace.service';
+import { GroupService } from '../../services/group.service';
 import { Workspace } from '../../interfaces/workspace.interface';
 import { Router } from '@angular/router';
 import { WorkspaceModalComponent } from '../../components/workspace-modal/workspace-modal';
@@ -26,7 +26,7 @@ export class Members {
     private appUiStateService: AppUiStateService,
     private modal: ModalService,
     private inviteService: InviteService,
-    private workspaceService: WorkSpaceService,
+    private groupService: GroupService,
     private router: Router
   ) { }
 
@@ -49,7 +49,7 @@ export class Members {
 
   async getWorkSpaces() {
     try {
-      const res = await this.workspaceService.getWorkspaces();
+      const res = await this.groupService.getGroups();
 
       this.workspaces.set(res.workspaces || []);
     } catch (err: any) {
@@ -117,7 +117,7 @@ export class Members {
 
       this.appUiStateService.startLoader();
 
-      const res = await this.workspaceService.createWorkspace(result);
+      const res = await this.groupService.createGroup(result);
 
       await this.getWorkSpaces();
 

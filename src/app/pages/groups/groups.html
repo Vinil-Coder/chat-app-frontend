@@ -1,48 +1,77 @@
-<div class="groups-container">
+<div class="workspace-page">
 
+  <!-- HEADER -->
   <div class="header">
-    <h2>Groups</h2>
-  </div>
-
-  <div class="table-wrapper">
-
-    <table class="groups-table">
-      <thead>
-        <tr>
-          <th>Group</th>
-          <th>Invited By</th>
-          <th>Type</th>
-          <th>Members</th>
-          <th>Status</th>
-        </tr>
-      </thead>
-    </table>
-  
-    <div class="table-body-wrapper">
-      <table class="groups-table">
-        <tbody>
-          @if (groups.length === 0) {
-            <tr>
-              <td colspan="5">No groups found</td>
-            </tr>
-          } @else {
-            @for (group of groups; track group.id) {
-              <tr>
-                <td>{{ group.name }}</td>
-                <td>{{ group.invitedBy }}</td>
-                <td>{{ group.type }}</td>
-                <td>{{ group.members }}</td>
-                <td>
-                  <span class="status-badge" [ngClass]="group.status.toLowerCase()">
-                    {{ group.status }}
-                  </span>
-                </td>
-              </tr>
-            }
-          }
-        </tbody>
-      </table>
+    <div class="header-left">
+      <h2>Groups</h2>
     </div>
+
+    @if(groups().length > 0) {
+    <button class="btn primary" (click)="createGroup()">
+      <img src="assets/plus.svg" alt="Plus Icon">New Group
+    </button>
+    }
   </div>
+
+  <div class="content">
+    <!-- MAIN CONTENT -->
+    @if (groups().length === 0) {
+
+      <div class="empty-state">
+        <h3>No groups yet</h3>
+        <p>Start building your team by creating a group and inviting members to collaborate with you.</p>
+
+        <button class="btn primary" (click)="createGroup()">
+          Create your first group
+        </button>
+
+      </div>
+
+      } @else {
+
+      <!-- GRID -->
+      <div class="workspace-grid">
+
+        @for (group of groups(); track group._id) {
+
+        <div class="workspace-card" (click)="selectGroup($event, group)">
+
+          <div class="card-top">
+            <div class="avatar">
+              {{ group.name[0] }}
+            </div>
+
+            @if(group.createdBy === appUiStateService.currentUser()._id) {
+              <div class="card-actions">
+                <button (click)="editGroup($event, group)">✏️</button>
+                <button (click)="deleteGroup($event, group)">🗑</button>
+              </div>
+            } @else {
+              <div class="badge member">Member</div>
+            }
+          </div>
+
+          <div class="card-body">
+            <div class="name">{{ group.name }}</div>
+
+            <!-- FUTURE FIELDS -->
+            <div class="meta">
+              <span>Created {{ group.createdAt | date: "MMM d, yyyy" }}</span>
+              <span>Members: {{ group.members.length }}</span>
+            </div>
+
+            <div class="desc">
+              {{ group.description || "No description"}}
+            </div>
+          </div>
+
+        </div>
+
+        }
+
+      </div>
+
+      }
+    </div>
 
 </div>

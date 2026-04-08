@@ -5,12 +5,6 @@
     <div class="header-left">
       <h2>Invites</h2>
     </div>
-
-    @if(workspaces().length > 0) {
-    <button class="btn primary" (click)="inviteMember()">
-      Invite Member
-    </button>
-    }
   </div>
 
   <!-- TABS -->
@@ -45,14 +39,13 @@
 
           <div class="invite-header">
             <div class="workspace-icon">
-              {{ invite.workspaceId.name.charAt(0) }}
+              {{ invite.invitedBy.name.charAt(0) }}
             </div>
 
             <div>
               <div class="workspace-name">
-                {{ invite.workspaceId.name }}
+                {{ invite.invitedBy.name }}
               </div>
-              <div class="invite-type">Workspace Invite</div>
             </div>
           </div>
 
@@ -69,7 +62,7 @@
 
             <div class="info-row">
               <span class="label">Contact: </span>
-              <span class="value">{{ invite.contact }}</span>
+              <span class="value">{{ invite.invitedBy.contact }}</span>
             </div>
           </div>
 
@@ -78,17 +71,7 @@
         <!-- RIGHT SECTION -->
         <div class="invite-action" (click)="$event.stopPropagation()">
 
-          @if (invite.status === 'pending') {
-
-          <button class="btn accept" (click)="updateInviteStatus(invite._id, 'accepted')">
-            Accept
-          </button>
-
-          <button class="btn reject" (click)="updateInviteStatus(invite._id, 'rejected')">
-            Decline
-          </button>
-
-          } @else if (invite.status === 'accepted') {
+          @if (invite.status === 'accepted') {
 
           <span class="status accepted">Accepted</span>
 
@@ -112,12 +95,6 @@
     @if (sentInvites().length === 0) {
     <div class="empty-state">
       <h3>No invitations yet</h3>
-      <p>Start building your team by inviting members to collaborate with you.</p>
-
-      <button class="btn primary" (click)="workspaces().length ? inviteMember() : createWorkspace()">
-        {{ workspaces().length ? 'Invite your first member' : 'Create your first workspace' }}
-      </button>
-
     </div>
     } @else {
     <div class="invite-list">
@@ -128,18 +105,17 @@
         <!-- LEFT SECTION -->
         <div class="invite-left">
 
-          <div class="invite-header">
+          <!-- <div class="invite-header">
             <div class="workspace-icon">
-              {{ invite.workspaceId.name.charAt(0) }}
+              {{ invite.invitedBy.name.charAt(0) }}
             </div>
 
             <div>
               <div class="workspace-name">
-                {{ invite.workspaceId.name }}
+                {{ invite.invitedBy.name }}
               </div>
-              <div class="invite-type">Workspace Invite</div>
             </div>
-          </div>
+          </div> -->
 
           <div class="invite-body">
             <div class="info-row">
@@ -155,19 +131,9 @@
         </div>
 
         <!-- RIGHT SECTION -->
-        <div class="invite-action" (click)="$event.stopPropagation()">
+        <div class="invite-action">
 
-          @if (invite.status === 'pending') {
-
-          <button class="btn accept" (click)="updateInviteStatus(invite._id, 'accepted')">
-            Resend
-          </button>
-
-          <button class="btn reject" (click)="updateInviteStatus(invite._id, 'rejected')">
-            Cancel
-          </button>
-
-          } @else if (invite.status === 'accepted') {
+          @if (invite.status === 'accepted') {
 
           <span class="status accepted">Accepted</span>
 
@@ -176,7 +142,7 @@
           <span class="status rejected">Declined</span>
 
           } @else {
-            <span class="status rejected">Expired</span>
+            <span class="status rejected">Pending</span>
           }
 
         </div>

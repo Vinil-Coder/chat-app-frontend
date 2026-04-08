@@ -1,7 +1,7 @@
-.workspace-page {
+.members-page {
+  height: 100%;
   display: flex;
   flex-direction: column;
-  height: 100%;
 }
 
 /* HEADER */
@@ -22,6 +22,15 @@
       color: #6b7280;
     }
   }
+}
+
+
+/* CONTENT */
+.content {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  height: 100%;
 }
 
 /* EMPTY STATE */
@@ -49,34 +58,21 @@
   }
 }
 
-.content {
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-  height: 100%;
-}
-
 /* GRID */
-.workspace-grid {
+.members-grid {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
   gap: 16px;
-  overflow-y: auto;
-
-  &::-webkit-scrollbar {
-    width: 8px;
-  }
-
-  &::-webkit-scrollbar-track {
-    background: #f1f5f9;
-  }
 }
 
 /* CARD */
-.workspace-card {
+.member-card {
   background: white;
   border-radius: 12px;
   padding: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
   transition: 0.2s;
   cursor: pointer;
@@ -87,12 +83,21 @@
 }
 
 /* TOP */
-.card-top {
+.top {
   display: flex;
-  justify-content: space-between;
   align-items: center;
+  justify-content: space-between;
+  gap: 10px;
 }
 
+.top-left {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+/* AVATAR */
 .avatar {
   width: 42px;
   height: 42px;
@@ -105,77 +110,80 @@
   font-weight: 600;
 }
 
-/* BADGE */
-.badge {
-  font-size: 11px;
-  padding: 4px 10px;
-  border-radius: 20px;
-  font-weight: 500;
-}
-
-/* MEMBER BADGE */
-.badge.member {
-  background: #eef2ff;
-  color: #4f46e5;
-}
-
-/* OPTIONAL OWNER BADGE (if needed later) */
-.badge.owner {
-  background: #ecfdf5;
-  color: #059669;
-}
-
-/* BODY */
-.card-body {
-  margin-top: 10px;
-}
-
+/* NAME */
 .name {
   font-weight: 600;
   color: #1f2937;
 }
 
-/* META */
-.meta {
-  font-size: 12px;
-  color: #6b7280;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin: 6px 0;
+/* ROLE */
+.role {
+  font-size: 11px;
+  padding: 3px 8px;
+  border-radius: 20px;
+  width: fit-content;
+  margin-top: 2px;
 }
 
-/* DESCRIPTION */
-.desc {
+.admin {
+  background: #ffe7e7;
+  color: #d10000;
+}
+
+.member {
+  background: #e8f0ff;
+  color: #1a4fff;
+}
+
+.status-badge {
+  padding: 4px 10px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* STATES */
+.online {
+  color: #16a34a;
+  background-color: #dcfce7; /* light green */
+}
+
+.offline {
+  color: #9ca3af;
+  background-color: #f3f4f6; /* light gray */
+}
+
+/* DETAILS */
+.details {
   font-size: 12px;
   color: #4b5563;
-  margin-top: 22px;
+  line-height: 1.6;
 }
 
-/* ACTIONS */
-.card-actions {
+/* STATUS */
+.bottom {
   display: flex;
-  gap: 6px;
-
-  button {
-    border: none;
-    background: transparent;
-    cursor: pointer;
-  }
+  justify-content: flex-end;
 }
 
 /* BUTTONS */
 .btn {
-  padding: 6px 12px;
+  padding: 6px 14px;
   border-radius: 8px;
-  font-size: 13px;
   border: none;
+  font-size: 12px;
+  font-weight: 500;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: 0.2s;
 }
 
-.btn.primary {
-  background: var(--primary-color);
-  color: var(--white);
-  padding: 12px 18px;
+.primary {
+  background: #4f46e5;
+  color: white;
+  padding: 12px 16px;
+  font-size: 14px;
+
+  &:hover {
+    background: #4338ca;
+  }
 }
