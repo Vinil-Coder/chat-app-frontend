@@ -27,7 +27,7 @@ export class AuthGuard implements CanActivate {
             _id: res.user.id
           });
           console.log('user', this.appState.getUser());
-          this.socket.connect();
+          // this.socket.connect();
           return true;
         } else {
           this.router.navigate(['/landing']);
