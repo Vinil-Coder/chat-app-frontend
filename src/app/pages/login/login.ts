@@ -1,14 +1,22 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
+import {
+  FormControl,
+  FormGroup,
+  FormsModule,
+  ReactiveFormsModule,
+  Validators
+} from '@angular/forms';
 import { Router, RouterModule } from '@angular/router';
+import { switchMap, tap, finalize, catchError, of } from 'rxjs';
+
 import { AuthService } from '../../services/auth.service';
-import { firstValueFrom } from 'rxjs';
 import { AppStateService } from '../../services/appstate.service';
 import { User } from '../../interfaces/user.interface';
 
 @Component({
   selector: 'app-login',
+  standalone: true,
   imports: [RouterModule, FormsModule, ReactiveFormsModule, CommonModule],
   templateUrl: './login.html',
   styleUrl: './login.scss',
@@ -21,38 +29,54 @@ export class Login implements OnInit {
     private router: Router,
     private authService: AuthService,
     private appState: AppStateService,
-  ) { }
+  ) {}
+
+  /* ================= INIT ================= */
 
   ngOnInit(): void {
-    this.initializeForm();
+    this.initForm();
   }
 
-  initializeForm() {
+  initForm() {
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
-    })
+    });
   }
 
   get fc() {
     return this.form.controls;
   }
 
-  async onFormSubmit() {
-    this.form.markAllAsTouched();
+  /* ================= SUBMIT ================= */
 
+  onFormSubmit() {
+
+    this.form.markAllAsTouched();
     if (this.form.invalid) return;
 
-    try {
-      await firstValueFrom(this.authService.loginUser(this.form.value));
+    this.appState.startLoader();
 
-      const res = await firstValueFrom(this.authService.isUserAuthenticated());
-      this.appState.setUser(res.user as User);
+    const payload = this.form.value;
 
-      this.router.navigate(['']);
+    this.authService.loginUser(payload)
+      .pipe(
+        switchMap(() => this.authService.isUserAuthenticated()),
+        tap((res: any) => {
+          this.appState.setUser(res.user as User);
+          this.appState.success('Login successful');
+          this.router.navigate(['']);
+        }),
+        finalize(() => this.appState.stopLoader()),
+        catchError(err => this.handleError(err))
+      )
+      .subscribe();
+  }
 
-    } catch (err) {
-  
-    }
+  /* ================= ERROR ================= */
+
+  private handleError(err: any) {
+    this.appState.error(err?.error?.message || 'Invalid credentials');
+    return of(null);
   }
 }

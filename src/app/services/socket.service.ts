@@ -8,14 +8,20 @@ export class SocketService {
   private socket!: Socket;
 
   connect() {
+    if (this.socket?.connected) return;
+
     this.socket = io('http://localhost:5000', {
       transports: ['websocket', 'polling'],
       withCredentials: true
     });
   }
 
-  joinConversation(conversationId: string, userId: string) {
-    this.socket.emit('join_conversation', { conversationId, userId });
+  isConnected(): boolean {
+    return !!this.socket && this.socket.connected;
+  }
+
+  joinConversation(conversationId: string) {
+    this.socket.emit('join_conversation', { conversationId });
   }
 
   sendMessage(data: any) {
@@ -30,12 +36,12 @@ export class SocketService {
     });
   }
 
-  onTypingStart(conversationId: string, userId: string) {
-    this.socket.emit("typing_starts", { conversationId, userId });
+  onTypingStart(conversationId: string) {
+    this.socket.emit("typing_starts", { conversationId });
   }
 
-  onTypingStop(conversationId: string, userId: string) {
-    this.socket.emit("typing_stops", { conversationId, userId });
+  onTypingStop(conversationId: string) {
+    this.socket.emit("typing_stops", { conversationId });
   }
 
   onTypingStatus() {
@@ -56,21 +62,9 @@ export class SocketService {
     });
   }
 
-  typing(data: any) {
-    this.socket.emit('typing', data);
-  }
-
-  onTyping() {
-    return new Observable<any>((observer) => {
-      this.socket.on('typing', observer.next);
-    });
-  }
-
-  stopTyping(data: any) {
-    this.socket.emit('stop_typing', data);
-  }
-
   disconnect() {
-    this.socket.emit('disconnect');
+    if (this.socket) {
+      this.socket.disconnect();
+    }
   }
 }

@@ -9,10 +9,10 @@
     </button>
 
     <!-- SEARCH -->
-    <div class="search-box">
+    <!-- <div class="search-box">
       <input type="text" placeholder="Search..." />
       <img src="assets/search.svg" />
-    </div>
+    </div> -->
   </div>
 
   <!-- RIGHT -->
@@ -24,14 +24,14 @@
     </button>
 
     <!-- NOTIFICATIONS -->
-    <div class="icon-dropdown" (click)="toggleNotifications()">
+    <div class="icon-dropdown" (click)="toggleDropdown('notifications')">
 
       <button class="icon-btn">
         <img src="assets/bell.svg" />
         <span class="badge">3</span>
       </button>
 
-      @if(showNotifications) {
+      @if(activeDropdown === 'notifications') {
         <div class="dropdown-panel">
           <p>🔔 New message received</p>
           <p>📢 System update available</p>
@@ -41,7 +41,7 @@
     </div>
 
     <!-- PROFILE -->
-    <div class="icon-dropdown" (click)="toggleProfile()">
+    <div class="icon-dropdown" (click)="toggleDropdown('profile')">
 
      
       <div class="profile-info">
@@ -49,7 +49,7 @@
         <span>{{ appState.getUser()?.name }}</span>
       </div>
 
-      @if(showProfile) {
+      @if(activeDropdown === 'profile') {
       <div class="dropdown-panel profile">
         <p routerLink="/chats">Chats</p>
         <p routerLink="/groups">Groups</p>

@@ -38,9 +38,8 @@
               </span>
               }
 
-
-              @if (user['unreadCount'] > 0) {
-              <span class="badge">{{ user['unreadCount'] }}</span>
+              @if (user.unreadCount > 0) {
+              <span class="badge">{{ user.unreadCount }}</span>
               }
             </div>
           </div>
@@ -87,16 +86,12 @@
 
           <div class="user-info">
             <div class="name">{{ selectedChat().name }}</div>
-            @if(isTyping()) {
-            <div class="status-text typing">Typing...</div>
-            } @else {
             <div class="status-text online">Online</div>
-            }
 
           </div>
         </div>
 
-        <button class="back-btn" (click)="selectedChat().set(null)">
+        <button class="back-btn" (click)="selectedChat.set(null)">
           Back
         </button>
 
@@ -121,6 +116,11 @@
             <div class="meta">
               <span class="msg-time">
                 {{ msg.createdAt | date:'shortTime' }}
+              </span>
+              <span *ngIf="msg.senderId === currentUserId">
+                ✔
+                <span *ngIf="msg.deliveredTo.length">✔</span>
+                <span *ngIf="msg.readBy.length" class="blue">✔✔</span>
               </span>
             </div>
           </div>

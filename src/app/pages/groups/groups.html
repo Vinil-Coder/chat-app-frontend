@@ -19,8 +19,7 @@
 
       <div class="empty-state">
         <h3>No groups yet</h3>
-        <p>Start building your team by creating a group and inviting members to collaborate with you.</p>
-
+        <p>Start building your team by creating a group.</p>
         <button class="btn primary" (click)="createGroup()">
           Create your first group
         </button>
@@ -41,7 +40,7 @@
               {{ group.name[0] }}
             </div>
 
-            @if(group.createdBy === app.getUser()?._id) {
+            @if(group.createdBy === appState.getUser()?._id) {
               <div class="card-actions">
                 <button (click)="editGroup($event, group)">✏️</button>
                 <button (click)="deleteGroup($event, group)">🗑</button>

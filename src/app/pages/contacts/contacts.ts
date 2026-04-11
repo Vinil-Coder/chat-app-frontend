@@ -1,21 +1,25 @@
-import { Component, signal } from '@angular/core';
-import { Router } from '@angular/router';
-import { UserService } from '../../services/user.service';
-import { User } from '../../interfaces/user.interface';
+import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { ConversationService } from '../../services/chat.service';
-import { ModalService } from '../../services/modal.service';
-import { MemberModal } from '../../components/member-modal/member-modal';
+import { Router } from '@angular/router';
+import { from, switchMap, tap, finalize, filter, EMPTY, catchError } from 'rxjs';
+
+import { UserService } from '../../services/user.service';
+import { ConversationService } from '../../services/conversation.service';
 import { InviteService } from '../../services/invite.service';
+import { ModalService } from '../../services/modal.service';
 import { AppStateService } from '../../services/appstate.service';
+
+import { MemberModal } from '../../components/member-modal/member-modal';
+import { User } from '../../interfaces/user.interface';
 
 @Component({
   selector: 'app-contacts',
+  standalone: true,
   imports: [CommonModule],
   templateUrl: './contacts.html',
   styleUrl: './contacts.scss',
 })
-export class Contacts {
+export class Contacts implements OnInit {
 
   users = signal<User[]>([]);
   currentUserId = '';
@@ -27,69 +31,77 @@ export class Contacts {
     private inviteService: InviteService,
     private modal: ModalService,
     private router: Router
-  ) { }
+  ) {}
+
+  /* ================= INIT ================= */
 
   ngOnInit() {
     this.currentUserId = this.appState.getUser()?._id || '';
-    this.loadData();
+    this.loadUsers();
   }
 
-  async loadData() {
+  /* ================= LOAD USERS ================= */
+
+  loadUsers() {
     this.appState.startLoader();
 
-    try {
-      await Promise.all([
-        this.getUsers()
-      ]);
-    } finally {
-      this.appState.stopLoader();
-    }
+    this.userService.getRegisteredUsers()
+      .pipe(
+        tap(res => this.users.set(res.users || [])),
+        finalize(() => this.appState.stopLoader()),
+        catchError(err => this.handleError(err))
+      )
+      .subscribe();
   }
 
-  async getUsers() {
-    try {
-      const res = await this.userService.getRegisteredUsers();
-      this.users.set(res.users || []);
-    } catch (err: any) {
-      this.appState.error(err?.error?.message || 'Something went wrong')
-    }
+  /* ================= CREATE CONVERSATION ================= */
+
+  createConversation(user: User) {
+
+    const payload = {
+      type: 'direct',
+      receiverId: user._id,
+      participants: [this.currentUserId, user._id]
+    };
+
+    this.conversationService.createConversation(payload)
+      .pipe(
+        tap(() => {
+          this.router.navigate(['/chats'], {
+            queryParams: { userId: user._id }
+          });
+        }),
+        catchError(err => this.handleError(err))
+      )
+      .subscribe();
   }
 
-  async createConversation(user: User) {
-    try {
-      const paylod = {
-        type: 'direct',
-        receiverId: user._id,
-        participants: [this.currentUserId, user._id]
-      }
-      const res = await this.conversationService.createConversation(paylod);
+  /* ================= INVITE MEMBER ================= */
 
-      this.router.navigate(['/chats'], {
-        queryParams: {
-          userId: user._id
-        }
-      });
-    } catch (err: any) {
-      this.appState.error(err?.error?.message || 'Something went wrong')
-    }
+  inviteMember() {
+
+    from(this.modal.open(MemberModal))
+      .pipe(
+        filter(Boolean),
+        tap(() => this.appState.startLoader()),
+        switchMap(result =>
+          this.inviteService.sendInvite(result).pipe(
+            finalize(() => this.appState.stopLoader())
+          )
+        ),
+        tap(() => {
+          this.appState.success('Member invited successfully');
+          this.router.navigate(['/invites']);
+        }),
+        catchError(err => this.handleError(err))
+      )
+      .subscribe();
   }
 
-  async inviteMember() {
-    const result = await this.modal.open(MemberModal);
-    if(!result) return;
+  /* ================= COMMON ================= */
 
-    try {
-      this.appState.startLoader();
-
-      const res = await this.inviteService.sendInvite(result);
-
-      this.appState.success(
-        'Member invited successfully'
-      );
-      
-      this.router.navigate(['/invites']);
-    } catch (err: any) {
-            this.appState.error(err?.error?.message || 'Something went wrong')
-    }
+  private handleError(err: any) {
+    this.appState.error(err?.error?.message || 'Something went wrong');
+    return EMPTY;
   }
 }

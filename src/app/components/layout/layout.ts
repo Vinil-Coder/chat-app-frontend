@@ -44,6 +44,10 @@ export class Layout {
     } else {
       this.isSidebarHidden = false;
       this.isContentFull = false;
+       const sideBar = document.getElementById('side-bar');
+      if (sideBar) {
+        sideBar.style.boxShadow = '0 10px 25px rgba(0, 0, 0, 0.05)'
+      }
     }
   }
 

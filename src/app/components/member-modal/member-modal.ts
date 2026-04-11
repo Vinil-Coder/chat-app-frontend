@@ -1,7 +1,6 @@
 import { Component, Input } from '@angular/core';
 import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { ModalRef } from '../../services/modal-ref.service';
-import { Member } from '../../interfaces/member.interface';
 import { CommonModule } from '@angular/common';
 
 @Component({
@@ -12,7 +11,7 @@ import { CommonModule } from '@angular/common';
 })
 export class MemberModal {
 
-  @Input() formData: Member = {} as Member;
+  @Input() formData: { email: string, contact: string } = {} as any;
 
   modalRef!: ModalRef;
 

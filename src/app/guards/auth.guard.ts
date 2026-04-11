@@ -1,9 +1,9 @@
 import { Injectable } from "@angular/core";
 import { CanActivate, Router } from "@angular/router";
 import { AuthService } from "../services/auth.service";
-import { catchError, map, of } from "rxjs";
 import { AppStateService } from "../services/appstate.service";
 import { SocketService } from "../services/socket.service";
+import { catchError, map, of, tap } from "rxjs";
 
 @Injectable({
   providedIn: 'root'
@@ -15,30 +15,38 @@ export class AuthGuard implements CanActivate {
     private authService: AuthService,
     private appState: AppStateService,
     private socket: SocketService
-  ) {}
+  ) { }
 
   canActivate() {
 
+    // If already in state, skip API call
+    const existingUser = this.appState.getUser();
+    if (existingUser) {
+      console.log('user already in state');
+      return of(true);
+    }
+
     return this.authService.isUserAuthenticated().pipe(
-      map((res: any) => {
+
+      tap((res: any) => {
         if (res.authenticated) {
           this.appState.setUser({
             ...res.user,
             _id: res.user.id
           });
-          console.log('user', this.appState.getUser());
-          // this.socket.connect();
-          return true;
-        } else {
-          this.router.navigate(['/landing']);
-          return false;
+          this.socket.connect();
         }
       }),
-      catchError(() => {
-        this.router.navigate(['/landing']);
-        return of(false);
-      })
-    );
 
+      map((res: any) =>
+        res.authenticated
+          ? true
+          : this.router.createUrlTree(['/landing'])
+      ),
+
+      catchError(() =>
+        of(this.router.createUrlTree(['/landing']))
+      )
+    );
   }
 }
