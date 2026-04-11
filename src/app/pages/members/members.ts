@@ -1,6 +1,5 @@
 import { Component, signal } from '@angular/core';
 import { MemberService } from '../../services/member.service';
-import { AppUiStateService, ToastrType } from '../../services/ui-state.service';
 import { Member } from '../../interfaces/member.interface';
 import { ModalService } from '../../services/modal.service';
 import { InviteService } from '../../services/invite.service';
@@ -9,6 +8,7 @@ import { GroupService } from '../../services/group.service';
 import { Workspace } from '../../interfaces/workspace.interface';
 import { Router } from '@angular/router';
 import { WorkspaceModalComponent } from '../../components/workspace-modal/workspace-modal';
+import { AppStateService } from '../../services/appstate.service';
 
 @Component({
   selector: 'app-members',
@@ -23,7 +23,7 @@ export class Members {
 
   constructor(
     private membersService: MemberService,
-    private appUiStateService: AppUiStateService,
+    private appState: AppStateService,
     private modal: ModalService,
     private inviteService: InviteService,
     private groupService: GroupService,
@@ -35,7 +35,7 @@ export class Members {
   }
 
   async loadData() {
-    this.appUiStateService.startLoader();
+    this.appState.startLoader();
 
     try {
       await Promise.all([
@@ -43,7 +43,7 @@ export class Members {
         this.getMembers()
       ]);
     } finally {
-      this.appUiStateService.stopLoader();
+      this.appState.stopLoader();
     }
   }
 
@@ -53,12 +53,8 @@ export class Members {
 
       this.workspaces.set(res.workspaces || []);
     } catch (err: any) {
-      this.appUiStateService.showToastr(
-        err.error?.message || 'Failed to get workspaces',
-        ToastrType.ERROR
-      );
     } finally {
-      this.appUiStateService.stopLoader();
+      this.appState.stopLoader();
     }
   }
 
@@ -69,11 +65,6 @@ export class Members {
       this.members.set(res.members);
 
     } catch (err: any) {
-      console.log(err);
-      this.appUiStateService.showToastr(
-        err.error?.message || 'Failed to get members',
-        ToastrType.ERROR
-      );
     }
   }
 
@@ -86,24 +77,19 @@ export class Members {
 
       if (result) {
 
-        this.appUiStateService.startLoader();
+        this.appState.startLoader();
 
         const res = await this.inviteService.sendInvite(result);
 
-        this.appUiStateService.showToastr(
-          res.message || 'Member invited successfully',
-          ToastrType.SUCCESS
+        this.appState.success(
+          res.message || 'Member invited successfully'
         );
 
         this.router.navigate(['/invites']);
       }
     } catch (err: any) {
-      this.appUiStateService.showToastr(
-        err.error?.message || 'Failed to create workspace',
-        ToastrType.ERROR
-      );
     } finally {
-      this.appUiStateService.stopLoader();
+      this.appState.stopLoader();
     }
   }
 
@@ -115,24 +101,19 @@ export class Members {
 
       if (!result) return;
 
-      this.appUiStateService.startLoader();
+      this.appState.startLoader();
 
       const res = await this.groupService.createGroup(result);
 
       await this.getWorkSpaces();
 
-      this.appUiStateService.showToastr(
-        res.message || 'Workspace created successfully',
-        ToastrType.SUCCESS
+      this.appState.success(
+        res.message || 'Workspace created successfully'
       );
 
     } catch (err: any) {
-      this.appUiStateService.showToastr(
-        err.error?.message || 'Failed to create workspace',
-        ToastrType.ERROR
-      );
     } finally {
-      this.appUiStateService.stopLoader();
+      this.appState.stopLoader();
     }
   }
 }

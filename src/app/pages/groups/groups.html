@@ -41,7 +41,7 @@
               {{ group.name[0] }}
             </div>
 
-            @if(group.createdBy === appUiStateService.currentUser()._id) {
+            @if(group.createdBy === app.getUser()?._id) {
               <div class="card-actions">
                 <button (click)="editGroup($event, group)">✏️</button>
                 <button (click)="deleteGroup($event, group)">🗑</button>

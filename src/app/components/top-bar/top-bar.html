@@ -43,21 +43,19 @@
     <!-- PROFILE -->
     <div class="icon-dropdown" (click)="toggleProfile()">
 
+     
       <div class="profile-info">
         <img src="assets/avatar.svg" />
-        <span>{{ userName() }}</span>
+        <span>{{ appState.getUser()?.name }}</span>
       </div>
 
       @if(showProfile) {
       <div class="dropdown-panel profile">
-        <p routerLink="/profile">View Profile</p>
         <p routerLink="/chats">Chats</p>
         <p routerLink="/groups">Groups</p>
         <p routerLink="/invites">Requests</p>
         <p routerLink="/contacts">Contacts</p>
-        <p routerLink="/settings">Settings</p>
-        <p routerLink="/resetpassword">Reset Password</p>
-        <p routerLink="/settings">Logout</p>
+        <p (click)="logoutUser()">Logout</p>
       </div>
       }
 

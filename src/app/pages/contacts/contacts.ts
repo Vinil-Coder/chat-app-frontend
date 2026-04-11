@@ -1,5 +1,4 @@
 import { Component, signal } from '@angular/core';
-import { AppUiStateService, ToastrType } from '../../services/ui-state.service';
 import { Router } from '@angular/router';
 import { UserService } from '../../services/user.service';
 import { User } from '../../interfaces/user.interface';
@@ -8,6 +7,7 @@ import { ConversationService } from '../../services/chat.service';
 import { ModalService } from '../../services/modal.service';
 import { MemberModal } from '../../components/member-modal/member-modal';
 import { InviteService } from '../../services/invite.service';
+import { AppStateService } from '../../services/appstate.service';
 
 @Component({
   selector: 'app-contacts',
@@ -21,7 +21,7 @@ export class Contacts {
   currentUserId = '';
 
   constructor(
-    private appUiStateService: AppUiStateService,
+    private appState: AppStateService,
     private userService: UserService,
     private conversationService: ConversationService,
     private inviteService: InviteService,
@@ -30,19 +30,19 @@ export class Contacts {
   ) { }
 
   ngOnInit() {
-    this.currentUserId = this.appUiStateService.currentUser()._id;
+    this.currentUserId = this.appState.getUser()?._id || '';
     this.loadData();
   }
 
   async loadData() {
-    this.appUiStateService.startLoader();
+    this.appState.startLoader();
 
     try {
       await Promise.all([
         this.getUsers()
       ]);
     } finally {
-      this.appUiStateService.stopLoader();
+      this.appState.stopLoader();
     }
   }
 
@@ -51,10 +51,7 @@ export class Contacts {
       const res = await this.userService.getRegisteredUsers();
       this.users.set(res.users || []);
     } catch (err: any) {
-      this.appUiStateService.showToastr(
-        err.error?.message || 'Failed to get users',
-        ToastrType.ERROR
-      );
+      this.appState.error(err?.error?.message || 'Something went wrong')
     }
   }
 
@@ -73,10 +70,7 @@ export class Contacts {
         }
       });
     } catch (err: any) {
-      this.appUiStateService.showToastr(
-        err.error?.message || 'Failed to get users',
-        ToastrType.ERROR
-      );
+      this.appState.error(err?.error?.message || 'Something went wrong')
     }
   }
 
@@ -85,21 +79,17 @@ export class Contacts {
     if(!result) return;
 
     try {
-      this.appUiStateService.startLoader();
+      this.appState.startLoader();
 
       const res = await this.inviteService.sendInvite(result);
 
-      this.appUiStateService.showToastr(
-        'Member invited successfully',
-        ToastrType.SUCCESS
+      this.appState.success(
+        'Member invited successfully'
       );
       
       this.router.navigate(['/invites']);
     } catch (err: any) {
-      this.appUiStateService.showToastr(
-        err.error?.message || 'Failed to invite member',
-        ToastrType.ERROR
-      )
+            this.appState.error(err?.error?.message || 'Something went wrong')
     }
   }
 }

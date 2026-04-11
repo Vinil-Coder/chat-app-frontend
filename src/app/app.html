@@ -1,7 +1,7 @@
 <div>
     <router-outlet></router-outlet>
     <app-toastr></app-toastr>
-    @if(appUIStateService.isLoading()) {
+    @if(app.isLoading()) {
     <div class="loading-overlay">
         <div class="loader-container">
             <div class="loader"></div>

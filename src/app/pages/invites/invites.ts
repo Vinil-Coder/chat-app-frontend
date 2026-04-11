@@ -1,8 +1,8 @@
 import { Component, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { InviteService } from '../../services/invite.service';
-import { AppUiStateService, ToastrType } from '../../services/ui-state.service';
 import { Invite } from '../../interfaces/invite.interface';
+import { AppStateService } from '../../services/appstate.service';
 
 @Component({
   selector: 'app-invites',
@@ -18,7 +18,7 @@ export class Invites {
 
   constructor(
     private inviteService: InviteService,
-    private appUiStateService: AppUiStateService,
+    private appState: AppStateService,
   ) { }
 
   ngOnInit() {
@@ -34,12 +34,9 @@ export class Invites {
       this.sentInvites.set(sentInvites.invites);
 
     } catch (err: any) {
-      this.appUiStateService.showToastr(
-        err.error?.message || 'Failed to get invites',
-        ToastrType.ERROR
-      );
+     
     } finally {
-      this.appUiStateService.stopLoader();
+      this.appState.stopLoader();
     }
   }
 }

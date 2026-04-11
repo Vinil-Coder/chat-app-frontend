@@ -6,10 +6,13 @@ import { Router } from "@angular/router";
 import { ConversationService } from "../../services/chat.service";
 import { UserService } from "../../services/user.service";
 import { ModalService } from "../../services/modal.service";
-import { AppUiStateService, ToastrType } from "../../services/ui-state.service";
 
 import { ContactModal } from "../../components/contact-modal/contact-modal";
 import { User } from "../../interfaces/user.interface";
+import { SocketService } from "../../services/socket.service";
+import { Observable } from "rxjs";
+import { Conversation } from "../../interfaces/conversation.interface";
+import { AppStateService } from "../../services/appstate.service";
 
 @Component({
   selector: 'app-chat',
@@ -30,6 +33,8 @@ export class Chat implements OnInit {
 
   newMessage = signal('');
   isLoadingMessages = signal(false);
+  isTyping = signal<boolean>(false);
+  listOfUsersTyping = signal<{ userId: string, typing: boolean }[]>([]);
 
   currentUserId = '';
 
@@ -42,13 +47,32 @@ export class Chat implements OnInit {
   constructor(
     private conversationService: ConversationService,
     private userService: UserService,
-    private appUiStateService: AppUiStateService,
+    private appState: AppStateService,
     private modal: ModalService,
-    private router: Router
-  ) {}
+    private router: Router,
+    private socketService: SocketService
+  ) { }
 
   async ngOnInit() {
-    this.currentUserId = this.appUiStateService.currentUser()._id;
+    this.currentUserId = '';
+    
+    this.socketService.onTypingStatus().subscribe(
+      (res: { userId: string; conversationId: string, typing: boolean }) => {
+        console.log('typing status', res);
+        this.conversations.update((conversations) => {
+          const index = conversations.findIndex(con => con._id === res.conversationId);
+
+          if (index == -1) return conversations;
+
+          const conversation = conversations[index];
+          conversation.isTyping = res.typing;
+
+          return [...conversations, conversation];
+        });
+
+        console.log('updated conversations', this.conversations())
+      }
+    );
 
     await Promise.all([
       this.loadUsers(),
@@ -67,7 +91,9 @@ export class Chat implements OnInit {
         name: c.type === 'group' ? c.name : this.getChatUserName(c.participants),
         isOnline: c.type === 'group' ? c.participants?.some((p: any) => p.isOnline) : this.checkIsUserOnline(c.participants),
         lastMessage: c.lastMessage?.content || '',
-        time: c.updatedAt
+        participants: c.participants,
+        time: c.updatedAt,
+        isTyping: false
       }));
 
       this.conversations.set(mapped);
@@ -95,28 +121,26 @@ export class Chat implements OnInit {
       this.users.set(res.users || []);
     } catch (err: any) {
       this.users.set([]);
-      this.appUiStateService.showToastr(
-        err.message || 'Failed to load users',
-        ToastrType.ERROR
-      );
     }
   }
 
   /* ================= SELECT CHAT ================= */
 
-  async selectChat(chat: any) {
+  async selectChat(conversation: any) {
 
-    if (!chat?._id) return;
+    if (!conversation?._id) return;
 
     // Prevent unnecessary reload
-    if (this.selectedChat()?._id === chat._id) return;
+    if (this.selectedChat()?._id === conversation._id) return;
 
-    this.selectedChat.set(chat);
+    this.socketService.joinConversation(conversation._id, this.currentUserId);
+
+    this.selectedChat.set(conversation);
     this.messages.set([]);
     this.isLoadingMessages.set(true);
 
     try {
-      const res = await this.conversationService.getMessages(chat._id);
+      const res = await this.conversationService.getMessages(conversation._id);
 
       this.messages.set(res || []);
 
@@ -130,59 +154,81 @@ export class Chat implements OnInit {
   }
 
   /* ================= SEND MESSAGE ================= */
+  typingTimeout: any;
+
+  onTyping() {
+    const conversationId = this.selectedChat()?._id;
+
+    if (!conversationId) return;
+
+    // Start typing
+    this.socketService.onTypingStart(conversationId, this.currentUserId);
+
+    // Clear previous timeout
+    clearTimeout(this.typingTimeout);
+
+    // Stop typing after 1 second of no input
+    this.typingTimeout = setTimeout(() => {
+      this.socketService.onTypingStop(conversationId, this.currentUserId);
+    }, 50000000000000000);
+  }
+
+ isUserTyping(conversation: any) {
+  const typingUsers = this.listOfUsersTyping();
+
+  return conversation.participants.some((p: any) =>
+    typingUsers.some(u => u.userId === p._id && u.typing)
+  );
+}
 
   async onSendMessage() {
 
-    // const content = this.newMessage().trim();
-    // const chat = this.selectedChat();
+    const content = this.newMessage().trim();
+    const conversation = this.selectedChat();
 
-    // if (!content || !chat?._id) return;
+    if (!content || !conversation?._id) return;
 
-    // try {
-    //   const payload = {
-    //     conversationId: chat._id,
-    //     senderId: this.currentUserId,
-    //     content
-    //   };
+    try {
+      const payload = {
+        conversationId: conversation._id,
+        senderId: this.currentUserId,
+        content
+      };
 
-    //   const res = await this.conversationService.sendMessage(payload);
+      this.socketService.sendMessage(payload);
+      this.socketService.receiveMessage().subscribe({
+        next: (res) => this.messages.update(prev => [...prev, res]),
+        error: (error) => console.log(error)
+      })
 
-    //   // Append message locally
-    //   this.messages.update(prev => [...prev, res.message]);
+      this.newMessage.set('');
+      this.scrollToBottom();
 
-    //   // Update chat preview
-    //   this.updateChatPreview(chat._id, content);
+      this.updateChatPreview(conversation._id, content);
 
-    //   this.newMessage.set('');
-    //   this.scrollToBottom();
-
-    // } catch (err) {
-    //   console.error("Send message error:", err);
-    //   this.appUiStateService.showToastr(
-    //     'Failed to send message',
-    //     ToastrType.ERROR
-    //   );
-    // }
+    } catch (err) {
+      console.error("Send message error:", err);
+    }
   }
 
   /* ================= UPDATE CHAT LIST ================= */
 
   updateChatPreview(conversationId: string, message: string) {
 
-    this.conversations.update(prev => {
+    this.conversations.update(conversation => {
 
-      const index = prev.findIndex(c => c._id === conversationId);
-      if (index === -1) return prev;
+      const index = conversation.findIndex(c => c._id === conversationId);
+      if (index === -1) return conversation;
 
       const updated = {
-        ...prev[index],
+        ...conversation[index],
         lastMessage: message,
         time: new Date()
       };
 
       return [
         updated,
-        ...prev.filter(c => c._id !== conversationId)
+        ...conversation.filter(c => c._id !== conversationId)
       ];
     });
   }

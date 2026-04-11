@@ -4,7 +4,7 @@ import { TopBar } from '../top-bar/top-bar';
 import { RouterModule, RouterOutlet } from '@angular/router';
 import { ModalHost } from '../modal-host/modal-host';
 import { CommonModule } from '@angular/common';
-import { AppUiStateService } from '../../services/ui-state.service';
+import { AppStateService } from '../../services/appstate.service';
 
 @Component({
   selector: 'app-layout',
@@ -19,7 +19,7 @@ export class Layout {
   isMobile = false;
 
   constructor(
-    public appUIStateService: AppUiStateService
+    public app: AppStateService
   ) { }
 
   ngOnInit() {

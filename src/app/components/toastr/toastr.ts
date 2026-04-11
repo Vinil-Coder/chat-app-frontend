@@ -1,6 +1,6 @@
 import { Component, inject } from '@angular/core';
-import { AppUiStateService } from '../../services/ui-state.service';
 import { CommonModule } from '@angular/common';
+import { AppStateService } from '../../services/appstate.service';
 
 @Component({
   selector: 'app-toastr',
@@ -10,5 +10,5 @@ import { CommonModule } from '@angular/common';
 })
 export class Toastr {
 
-  appUistate = inject(AppUiStateService);
+  app = inject(AppStateService);
 }

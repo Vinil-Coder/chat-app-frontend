@@ -11,13 +11,13 @@
       </div>
 
       <div class="chat-items">
-        @for (user of conversations(); track user['id']) {
+        @for (user of conversations(); track user._id) {
         <div class="chat-item" (click)="selectChat(user)" [class.active]="selectedChat()?._id === user?._id">
 
           <div class="avatar">
             {{ user.name.charAt(0) }}
             @if(user.isOnline) {
-              <span class="status online"></span>
+            <span class="status online"></span>
             }
           </div>
 
@@ -25,14 +25,19 @@
             <div class="top">
               <span class="name">{{ user.name }}</span>
               <span class="time">
-                {{ user.time | date: 'shortTime' }}
+                {{ user.timxe | date: 'shortTime' }}
               </span>
             </div>
 
             <div class="bottom">
+              @if(user.isTyping) {
+              <div class="status-text typing">Typing...</div>
+              } @else {
               <span class="message">
                 {{ user.lastMessage || 'Start conversation...' }}
               </span>
+              }
+
 
               @if (user['unreadCount'] > 0) {
               <span class="badge">{{ user['unreadCount'] }}</span>
@@ -75,14 +80,17 @@
           <div class="avatar">
             {{ selectedChat().name.charAt(0) }}
             @if(selectedChat().isOnline) {
-              <span class="status online"></span>
+            <span class="status online"></span>
             }
+
           </div>
 
           <div class="user-info">
             <div class="name">{{ selectedChat().name }}</div>
-             @if(selectedChat().isOnline) {
-              <div class="status-text">Online</div>
+            @if(isTyping()) {
+            <div class="status-text typing">Typing...</div>
+            } @else {
+            <div class="status-text online">Online</div>
             }
 
           </div>
@@ -133,7 +141,7 @@
             <img src="assets/attachment.svg">
           </button>
 
-          <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage">
+          <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage" (input)="onTyping()">
 
           <button class="icon-btn send" (click)="onSendMessage()">
             <img src="assets/telegram.png">

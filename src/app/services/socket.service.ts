@@ -7,12 +7,11 @@ export class SocketService {
 
   private socket!: Socket;
 
-  connect(userId: string) {
+  connect() {
     this.socket = io('http://localhost:5000', {
-      transports: ['websocket', 'polling']
+      transports: ['websocket', 'polling'],
+      withCredentials: true
     });
-
-    this.socket.emit('join_user', userId);
   }
 
   joinConversation(conversationId: string, userId: string) {
@@ -20,7 +19,6 @@ export class SocketService {
   }
 
   sendMessage(data: any) {
-    console.log('sending message', data);
     this.socket.emit('send_message', data);
   }
 
@@ -28,6 +26,22 @@ export class SocketService {
     return new Observable<any>((observer) => {
       this.socket.on('receive_message', (msg) => {
         observer.next(msg);
+      });
+    });
+  }
+
+  onTypingStart(conversationId: string, userId: string) {
+    this.socket.emit("typing_starts", { conversationId, userId });
+  }
+
+  onTypingStop(conversationId: string, userId: string) {
+    this.socket.emit("typing_stops", { conversationId, userId });
+  }
+
+  onTypingStatus() {
+    return new Observable<any>((observer) => {
+      this.socket.on("is_typing", (data) => {
+        observer.next(data);
       });
     });
   }
@@ -57,6 +71,6 @@ export class SocketService {
   }
 
   disconnect() {
-    this.socket.disconnect();
+    this.socket.emit('disconnect');
   }
 }

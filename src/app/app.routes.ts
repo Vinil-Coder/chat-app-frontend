@@ -1,5 +1,5 @@
 import { Routes } from '@angular/router';
-import { AuthGuard } from './guards/route.guard';
+import { AuthGuard } from './guards/auth.guard';
 
 export const routes: Routes = [
     {
@@ -42,14 +42,6 @@ export const routes: Routes = [
             {
                 path: 'contacts',
                 loadComponent: () => import('./pages/contacts/contacts').then(c => c.Contacts)
-            },
-            {
-                path: 'profile',
-                loadComponent: () => import('./pages/profile/profile').then(c => c.Profile)
-            },
-            {
-                path: 'settings',
-                loadComponent: () => import('./pages/settings/settings').then(c => c.Settings)
             },
             {
                 path: '',

@@ -4,8 +4,8 @@ import { FormControl, FormGroup, FormsModule, ReactiveFormsModule, Validators } 
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth.service';
 import { InviteService } from '../../services/invite.service';
-import { AppUiStateService, ToastrType } from '../../services/ui-state.service';
 import { Toastr } from '../../components/toastr/toastr';
+import { AppStateService } from '../../services/appstate.service';
 
 @Component({
   selector: 'app-signup',
@@ -23,7 +23,7 @@ export class Signup {
     private authService: AuthService,
     private inviteService: InviteService,
     private activatedRoute: ActivatedRoute,
-    private appUiStateService: AppUiStateService
+    private appState: AppStateService
   ) {
     this.form = new FormGroup({
       name: new FormControl('', [Validators.required]),
@@ -56,10 +56,6 @@ export class Signup {
       await this.authService.loginUser(this.form.value);
       this.router.navigate(['/']);
     } catch(err: any) {
-      this.appUiStateService.showToastr(
-        err.message,
-        ToastrType.ERROR
-      )
     }
   }
 
@@ -71,10 +67,6 @@ export class Signup {
         token: this.token
       });
     } catch (err: any) {
-      this.appUiStateService.showToastr(
-        err.message,
-        ToastrType.ERROR
-      )
     }
   }
 }
