@@ -13,12 +13,17 @@ app-sidemenu {
     width: 250px;
     z-index: 1;
     background: var(--white);
-    transition: left 0.3s ease-in-out;
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }
 
 app-sidemenu.hide {
     left: -250px;
+    transition: all 0.3s ease-in-out
+}
+
+app-sidemenu.mobile-view {
+    z-index: 9999;
+    transition: all 0.3s ease-in-out;
 }
 
 /* Header */

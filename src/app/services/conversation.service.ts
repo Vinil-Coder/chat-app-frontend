@@ -23,4 +23,8 @@ export class ConversationService {
     return this.http.get(`${this.ChatApi}messages/${conversationId}`);
   }
 
+  getUnreadMessages(): Observable<any> {
+    return this.http.get(`${this.ChatApi}unread-messages`);
+  }
+
 }

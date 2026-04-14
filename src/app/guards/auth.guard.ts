@@ -13,8 +13,7 @@ export class AuthGuard implements CanActivate {
   constructor(
     private router: Router,
     private authService: AuthService,
-    private appState: AppStateService,
-    private socket: SocketService
+    private appState: AppStateService
   ) { }
 
   canActivate() {
@@ -30,11 +29,7 @@ export class AuthGuard implements CanActivate {
 
       tap((res: any) => {
         if (res.authenticated) {
-          this.appState.setUser({
-            ...res.user,
-            _id: res.user.id
-          });
-          this.socket.connect();
+          this.appState.setUser(res.user);
         }
       }),
 

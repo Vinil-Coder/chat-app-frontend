@@ -11,8 +11,8 @@
       </div>
 
       <div class="chat-items">
-        @for (user of conversations(); track user._id) {
-        <div class="chat-item" (click)="selectChat(user)" [class.active]="selectedChat()?._id === user?._id">
+        @for (user of conversations(); track user.id) {
+        <div class="chat-item" (click)="selectChat(user)" [class.active]="selectedChat()?.id === user?.id">
 
           <div class="avatar">
             {{ user.name.charAt(0) }}
@@ -25,7 +25,7 @@
             <div class="top">
               <span class="name">{{ user.name }}</span>
               <span class="time">
-                {{ user.timxe | date: 'shortTime' }}
+                {{ user.time | date: 'shortTime' }}
               </span>
             </div>
 
@@ -86,7 +86,14 @@
 
           <div class="user-info">
             <div class="name">{{ selectedChat().name }}</div>
+
+            @if (selectedChat()?.isTyping) {
+            <div class="status-text typing">Typing...</div>
+            } @else if (selectedChat()?.isOnline) {
             <div class="status-text online">Online</div>
+            } @else {
+            <div class="status-text offline"></div>
+            }
 
           </div>
         </div>
@@ -111,18 +118,22 @@
           [class.received]="msg.senderId !== currentUserId">
 
           <div class="bubble">
-            {{ msg.content }}
 
-            <div class="meta">
-              <span class="msg-time">
-                {{ msg.createdAt | date:'shortTime' }}
-              </span>
-              <span *ngIf="msg.senderId === currentUserId">
-                ✔
-                <span *ngIf="msg.deliveredTo.length">✔</span>
-                <span *ngIf="msg.readBy.length" class="blue">✔✔</span>
-              </span>
-            </div>
+            <span class="text">{{ msg.content }}</span>
+
+            <!-- ticks -->
+            @if(msg.senderId === currentUserId) {
+            <span class="ticks" [ngClass]="msg.status">
+              <span class="tick tick-1">✓</span>
+              <span class="tick tick-2">✓</span>
+            </span>
+            }
+
+          </div>
+
+          <!-- time outside -->
+          <div class="msg-time">
+            {{ msg.createdAt | date:'shortTime' }}
           </div>
 
         </div>

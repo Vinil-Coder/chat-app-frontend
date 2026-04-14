@@ -9,7 +9,7 @@ export class AppStateService {
 
   /* ================= GLOBAL USER ================= */
 
-  currentUser = signal<User | null>(null);
+  currentUser = signal<any | null>(null);
 
   setUser(user: User) {
     this.currentUser.set(user);
@@ -25,6 +25,27 @@ export class AppStateService {
 
   isLoggedIn() {
     return this.currentUser() !== null;
+  }
+
+  /* ================= ONLINE USERS =================== */
+
+  onlineUsers = signal<string[]>([]);
+
+  setOnlineUsers(users: string[]) {
+    this.onlineUsers.set(users);
+  }
+
+  clearOnlineUsers() {
+    this.onlineUsers.set([]);
+  }
+
+  isUserOnline(participants: any[]) {
+    const currentUserId = this.currentUser()?.id;
+    const onlineSet = new Set(this.onlineUsers());
+
+    return participants.some(
+      p => p._id !== currentUserId && onlineSet.has(p._id)
+    );
   }
 
   /* ================= LOADER ================= */

@@ -7,8 +7,8 @@ import {
 } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
-import { Router } from "@angular/router";
-import { Subject, from, takeUntil, switchMap, tap, filter } from "rxjs";
+import { ActivatedRoute, Router } from "@angular/router";
+import { Subject, from, takeUntil, switchMap, tap, filter, combineLatest, EMPTY } from "rxjs";
 
 import { ConversationService } from "../../services/conversation.service";
 import { UserService } from "../../services/user.service";
@@ -52,7 +52,8 @@ export class Chat implements OnInit, OnDestroy {
     private modal: ModalService,
     private router: Router,
     private socketService: SocketService,
-    private appState: AppStateService
+    private appState: AppStateService,
+    private route: ActivatedRoute
   ) { }
 
   /* ================= INIT ================= */
@@ -64,7 +65,9 @@ export class Chat implements OnInit, OnDestroy {
       this.socketService.connect();
     }
 
-    this.currentUserId = this.appState.getUser()?._id || '';
+    this.currentUserId = this.appState.getUser()?.id || '';
+
+    console.log('online users on app state', this.appState.onlineUsers());
 
     this.initData();
     this.listenToSocketEvents();
@@ -78,140 +81,80 @@ export class Chat implements OnInit, OnDestroy {
   /* ================= INIT DATA ================= */
 
   initData() {
-    this.userService.getRegisteredUsers()
+    combineLatest([
+      this.userService.getRegisteredUsers(),
+      this.conversationService.getConversations(),
+      this.conversationService.getUnreadMessages()
+    ])
       .pipe(
-        tap(res => this.users.set(res.users || [])),
-        switchMap(() => this.conversationService.getConversations()),
-        tap(res => this.mapConversations(res.conversations || [])),
+        tap(([usersRes, convoRes, unreadMessages]) => {
+          this.users.set(usersRes.users || []);
+          this.mapConversations(convoRes.conversations || [], unreadMessages.unreadCountMap);
+        }),
         takeUntil(this.destroy$)
       )
       .subscribe();
   }
 
-  mapConversations(conversations: any[]) {
+  mapConversations(conversations: any[], unreadMessages: any) {
     const mapped = conversations.map(c => ({
-      _id: c._id,
+      id: c._id,
       name: c.type === 'group'
         ? c.name
         : this.getChatUserName(c.participants),
-      isOnline: this.checkIsUserOnline(c.participants),
+      type: c.type,
+      isOnline: c.type === 'group'
+        ? false
+        : this.appState.isUserOnline(c.participants),
+
       lastMessage: c.lastMessage?.content || '',
       participants: c.participants,
       time: c.updatedAt,
       isTyping: false,
-      unreadCount: 0
+
+      unreadCount:
+        unreadMessages?.[c._id]?.senderId !== this.currentUserId
+          ? unreadMessages?.[c._id]?.count || 0
+          : 0
     }));
 
+    console.log('conversations mapped', conversations, unreadMessages);
     this.conversations.set(mapped);
-  }
 
-  /* ================= SOCKET LISTENERS ================= */
-  listenToSocketEvents() {
-
-    this.socketService.receiveMessage()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(res => {
-        this.handleSocketEvent('message', res);
-      });
-
-    this.socketService.onTypingStatus()
-      .pipe(takeUntil(this.destroy$))
-      .subscribe(res => {
-        this.handleSocketEvent('typing', res);
-      });
-  }
-
-  private handleSocketEvent(eventType: 'message' | 'typing', payload: any) {
-
-    switch (eventType) {
-
-      case 'message':
-        this.handleIncomingMessage(payload);
-        break;
-
-      case 'typing':
-        this.handleTyping(payload);
-        break;
-    }
-  }
-  private handleIncomingMessage(res: any) {
-
-    const activeChatId = this.selectedChat()?._id;
-    const isActiveChat = activeChatId === res.conversationId;
-    const isSender = res.senderId === this.currentUserId;
-
-    // 1. Always update preview (safe)
-    this.updateChatPreview(res.conversationId, res.content);
-
-    // 2. If sender → ONLY update UI if chat is open
-    if (isSender) {
-      if (isActiveChat) {
-        this.messages.update(prev => [...prev, res]);
-        this.scrollToBottom();
-      }
-      return; // IMPORTANT STOP HERE
-    }
-
-    // 3. Receiver logic
-    if (isActiveChat) {
-      this.messages.update(prev => [...prev, res]);
-      this.scrollToBottom();
-      return;
-    }
-
-    // 4. Receiver not in chat → unread
-    this.incrementUnreadCount(res.conversationId);
-  }
-
-  private handleTyping(res: any) {
-
-    this.conversations.update(convos =>
-      convos.map(c =>
-        c._id === res.conversationId
-          ? { ...c, isTyping: res.typing }
-          : c
-      )
-    );
-  }
-
-
-
-  incrementUnreadCount(conversationId: string) {
-
-    this.conversations.update(convos =>
-      convos.map(c =>
-        c._id === conversationId
-          ? { ...c, unreadCount: (c.unreadCount || 0) + 1 }
-          : c
-      )
-    );
-
-    console.log('count', this.conversations());
+    this.route.queryParamMap.subscribe(params => {
+      const conversationId = params.get('conversationId');
+      const conversation = this.conversations().find(c => c.id === conversationId);
+      this.selectChat(conversation);
+    });
   }
 
   /* ================= SELECT CHAT ================= */
 
   selectChat(conversation: any) {
 
-    if (!conversation?._id) return;
-    if (this.selectedChat()?._id === conversation._id) return;
+    if (!conversation?.id) return;
+    if (this.selectedChat()?.id === conversation.id) return;
 
-    this.socketService.joinConversation(conversation._id);
+    this.socketService.joinConversation(conversation.id);
 
     this.selectedChat.set(conversation);
 
+    this.messages.set([]);
+    this.isLoadingMessages.set(true);
+
+    const unreadMessagesExists = this.selectedChat()?.unreadCount > 0;
+
+    if (unreadMessagesExists) this.socketService.readMessage(this.selectedChat().id);
+
     this.conversations.update(convos =>
       convos.map(c =>
-        c._id === conversation._id
+        c.id === conversation.id
           ? { ...c, unreadCount: 0 }
           : c
       )
     );
 
-    this.messages.set([]);
-    this.isLoadingMessages.set(true);
-
-    this.conversationService.getMessages(conversation._id)
+    this.conversationService.getMessages(conversation.id)
       .pipe(takeUntil(this.destroy$))
       .subscribe({
         next: (res: any) => {
@@ -221,23 +164,8 @@ export class Chat implements OnInit, OnDestroy {
         error: () => this.messages.set([]),
         complete: () => this.isLoadingMessages.set(false)
       });
-  }
 
-  /* ================= TYPING ================= */
-
-  private typingTimeout: any;
-
-  onTyping() {
-    const conversationId = this.selectedChat()?._id;
-    if (!conversationId) return;
-
-    this.socketService.onTypingStart(conversationId);
-
-    clearTimeout(this.typingTimeout);
-
-    this.typingTimeout = setTimeout(() => {
-      this.socketService.onTypingStop(conversationId);
-    }, 5000); // FIXED
+    console.log('selected chat messages', this.messages());
   }
 
   /* ================= SEND MESSAGE ================= */
@@ -247,40 +175,232 @@ export class Chat implements OnInit, OnDestroy {
     const content = this.newMessage().trim();
     const convo = this.selectedChat();
 
-    if (!content || !convo?._id) return;
+    if (!content || !convo?.id) return;
 
     this.socketService.sendMessage({
-      conversationId: convo._id,
+      conversationId: convo.id,
       senderId: this.currentUserId,
+      receiverIds: convo.participants.map((p: any) => p._id),
       content
     });
 
     this.newMessage.set('');
   }
 
+
+  /* ================= SOCKET LISTENERS ================= */
+  listenToSocketEvents() {
+
+    this.socketService.onUserOnline()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => this.handleUserOnlineStatus(res));
+
+    this.socketService.onUserOffline()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((res: any) => this.handleUserOnlineStatus(res));
+
+    this.socketService.onMessageReceived()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(message => this.handleIncomingMessage(message));
+
+    this.socketService.onMessageDelivered()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => this.handleDeliveredMessage(res));
+
+    this.socketService.onMessagesRead()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => this.handleMessageRead(res));
+
+    this.socketService.onTypingStatus()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe(res => this.handleTyping(res));
+  }
+
+  private handleIncomingMessage(message: any) {
+
+    console.log('received message', message);
+
+    // update conversation preview
+    this.updateConversationPreview(message);
+
+    // update message preview
+    this.updateMessages(message);
+
+    this.scrollToBottom();
+
+    if (message.senderId === this.currentUserId) return;
+
+    console.log('message sender and logged user are not same');
+
+    this.socketService.deliverMessage(message._id)
+
+    if (this.selectedChat()?.id === message.conversationId) {
+      this.socketService.readMessage(message.conversationId)
+    } else {
+      this.incrementUnread(message.conversationId);
+    }
+  }
+
+  private updateConversationPreview(message: any) {
+    this.conversations.update(conversations =>
+      conversations.map(c =>
+        c.id === message.conversationId
+          ? {
+            ...c,
+            lastMessage: message.content,
+            time: message.createdAt
+          }
+          : c
+      )
+    );
+  }
+
+  private updateMessages(message: any) {
+    this.messages.update(prev => [...prev, message]);
+  }
+
+  private incrementUnread(conversationId: string) {
+    this.conversations.update(conversations =>
+      conversations.map(c =>
+        c.id === conversationId
+          ? {
+            ...c,
+            unreadCount: (c.unreadCount || 0) + 1,
+          }
+          : c
+      )
+    );
+  }
+
+  private handleDeliveredMessage(event: any) {
+
+    console.log('delivered event', event);
+
+    const { ids, userId } = event;
+
+    // Update all messages that are read
+    this.messages.update(messages =>
+      messages.map(msg =>
+        ids.includes(msg._id)
+          ? {
+            ...msg,
+            status: 'delivered',
+            deliversTo: [...(msg.deliversTo || []), userId]
+          }
+          : msg
+      )
+    );
+
+    console.log('after message delivered update', this.messages());
+
+    this.scrollToBottom();
+  }
+
+  private handleMessageRead(event: any) {
+
+    console.log('read event', event);
+
+    const { ids, userId } = event;
+
+    // Update message status only
+    this.messages.update(messages =>
+      messages.map(msg =>
+        ids.includes(msg._id)
+          ? {
+            ...msg,
+            status: 'read',
+            isRead: true,
+            readBy: msg.readBy?.includes(userId)
+              ? msg.readBy
+              : [...(msg.readBy || []), userId]
+          }
+          : msg
+      )
+    );
+
+    console.log('after read update', this.messages());
+
+    this.scrollToBottom();
+  }
+
+  private handleTyping(event: any) {
+
+    const { conversationId, typing } = event;
+
+    this.conversations.update(conversations =>
+      conversations.map(c =>
+        c.id === conversationId
+          ? {
+            ...c,
+            isTyping: typing
+          } : c
+      )
+    )
+
+    if (this.selectedChat()) {
+      this.selectedChat().isTyping = typing;
+    }
+  }
+
+  private handleUserOnlineStatus(users: string[]) {
+    console.log('user online event', users);
+    this.appState.setOnlineUsers(users);
+    console.log('online users on online event', this.appState.onlineUsers())
+    this.updateUserOnlineStatus(users);
+  }
+
+  private updateUserOnlineStatus(users: string[]) {
+    const currentUserId = this.currentUserId;
+
+    this.conversations.update(conversations =>
+      conversations.map(c => {
+
+        if (c.type !== 'direct') return c;
+
+        const participants = c.participants.filter((p: any) => p._id !== currentUserId);
+
+        console.log('participants', participants);
+
+        const isOnline = participants?.some(
+          (p: any) => users.includes(p._id)
+        );
+
+        return isOnline ? { ...c, isOnline } : { ...c, isOnline: false };
+      })
+    );
+
+    console.log('after status update', this.conversations());
+  }
+
+  /* ================= TYPING ================= */
+
+  private typingTimeout: any;
+
+  onTyping() {
+    const conversationId = this.selectedChat()?.id;
+    if (!conversationId) return;
+
+    this.socketService.typingStart(conversationId);
+
+    clearTimeout(this.typingTimeout);
+
+    this.typingTimeout = setTimeout(() => {
+      this.socketService.typingStop(conversationId);
+    }, 1000); // FIXED
+  }
+
   /* ================= HELPERS ================= */
+
+  private findExistingConversation(userId: string) {
+    return this.conversations().find(conv =>
+      conv.type !== 'group' &&
+      conv.participants.map((p: any) => p._id).includes(this.currentUserId) &&
+      conv.participants.map((p: any) => p._id).includes(userId)
+    );
+  }
 
   getChatUserName(participants: any[]) {
     return participants.find(p => p._id !== this.currentUserId)?.name || '';
-  }
-
-  checkIsUserOnline(participants: any[]) {
-    return participants.some(p => p._id !== this.currentUserId && p.isOnline);
-  }
-
-  updateChatPreview(conversationId: string, message: string) {
-    this.conversations.update(convos => {
-      const index = convos.findIndex(c => c._id === conversationId);
-      if (index === -1) return convos;
-
-      const updated = {
-        ...convos[index],
-        lastMessage: message,
-        time: new Date()
-      };
-
-      return [updated, ...convos.filter(c => c._id !== conversationId)];
-    });
   }
 
   scrollToBottom() {
@@ -298,34 +418,58 @@ export class Chat implements OnInit, OnDestroy {
     }))
       .pipe(
         filter(Boolean),
-        switchMap((user: any) =>
-          this.conversationService.createConversation({
-            type: 'direct',
-            receiverId: user._id,
-            name: user.name
-          })
-        ),
-        tap((res: any) => {
-          this.addConversationIfMissing(res.conversation);
-          this.selectChat(res.conversation);
+
+        switchMap((user: any) => {
+          const existing = this.findExistingConversation(user._id);
+
+          // If already exists → return it as observable
+          if (existing) {
+            this.selectChat(existing);
+            return EMPTY; // stop pipeline
+          }
+
+          // Else create new
+          return this.conversationService.createConversation({
+            participants: [this.currentUserId, user._id]
+          });
         }),
+
+        tap((res: any) => {
+          if (res?.conversation) {
+            this.addConversationIfMissing(res.conversation);
+          }
+        }),
+
         takeUntil(this.destroy$)
       )
       .subscribe();
   }
 
-  addConversationIfMissing(convo: any) {
-    if (this.conversations().some(c => c._id === convo._id)) return;
+  addConversationIfMissing(c: any) {
+    if (this.conversations().some(conv => conv.id === c._id)) return;
 
     this.conversations.update(prev => [
       {
-        _id: convo._id,
-        name: convo.name,
-        lastMessage: '',
-        time: convo.updatedAt
+        id: c._id,
+        name: c.type === 'group'
+          ? c.name
+          : this.getChatUserName(c.participants),
+        type: c.type,
+        isOnline: c.type === 'group'
+          ? false
+          : this.appState.isUserOnline(c.participants),
+
+        lastMessage: c.lastMessage?.content || '',
+        participants: c.participants,
+        time: c.updatedAt,
+        isTyping: false,
+
+        unreadCount: 0
       },
       ...prev
     ]);
+
+    this.selectChat(this.conversations().find(conv => conv.id === c._id));
   }
 
   openCreateGroup() {

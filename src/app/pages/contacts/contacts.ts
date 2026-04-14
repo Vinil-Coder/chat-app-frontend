@@ -1,7 +1,7 @@
 import { Component, OnInit, signal } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { Router } from '@angular/router';
-import { from, switchMap, tap, finalize, filter, EMPTY, catchError } from 'rxjs';
+import { from, switchMap, tap, finalize, filter, EMPTY, catchError, map } from 'rxjs';
 
 import { UserService } from '../../services/user.service';
 import { ConversationService } from '../../services/conversation.service';
@@ -31,7 +31,7 @@ export class Contacts implements OnInit {
     private inviteService: InviteService,
     private modal: ModalService,
     private router: Router
-  ) {}
+  ) { }
 
   /* ================= INIT ================= */
 
@@ -47,28 +47,38 @@ export class Contacts implements OnInit {
 
     this.userService.getRegisteredUsers()
       .pipe(
-        tap(res => this.users.set(res.users || [])),
+        tap(res => this.users.set(res.users)),
+        map(res => this.mapRegisteredUsers()),
         finalize(() => this.appState.stopLoader()),
         catchError(err => this.handleError(err))
       )
       .subscribe();
   }
 
+  mapRegisteredUsers() {
+    this.users.update(users =>
+      users.map(user =>
+        this.appState.onlineUsers().includes(user._id)
+          ? { ...user, isOnline: true }
+          : { ...user, isOnline: false }
+      )
+    )
+  }
+
   /* ================= CREATE CONVERSATION ================= */
 
   createConversation(user: User) {
 
-    const payload = {
-      type: 'direct',
-      receiverId: user._id,
-      participants: [this.currentUserId, user._id]
-    };
-
-    this.conversationService.createConversation(payload)
+    this.conversationService.createConversation(
+      {
+        type: 'direct',
+        participants: [this.appState.getUser()?.id, user._id]
+      }
+    )
       .pipe(
-        tap(() => {
+        tap((res: any) => {
           this.router.navigate(['/chats'], {
-            queryParams: { userId: user._id }
+            queryParams: { conversationId: res.conversation._id }
           });
         }),
         catchError(err => this.handleError(err))

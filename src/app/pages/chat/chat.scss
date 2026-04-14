@@ -146,7 +146,7 @@
   .bottom {
     display: flex;
     justify-content: space-between;
-    margin-top: 8px;
+    margin-top: 5px;
   }
 
   .message {
@@ -155,11 +155,17 @@
   }
 
   .badge {
+    min-width: 20px;
+    height: 20px;
+    padding: 0 6px; // allows 2+ digits
     background: #6366f1;
-    color: white;
+    color: #fff;
     font-size: 11px;
-    padding: 2px 6px;
-    border-radius: 12px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
   }
 }
 
@@ -257,42 +263,119 @@
   }
 }
 
-/* MESSAGE */
 .message {
   display: flex;
+  flex-direction: column;
+  max-width: 75%;
 
   &.sent {
-    justify-content: flex-end;
+    align-self: flex-end;
+    align-items: flex-end;
 
     .bubble {
-      background: #6366f1;
-      color: white;
+      background: #eef2ff;
       border-radius: 14px 14px 0 14px;
+    }
+
+    .msg-time {
+      text-align: right;
     }
   }
 
   &.received {
-    justify-content: flex-start;
+    align-self: flex-start;
+    align-items: flex-start;
 
     .bubble {
       background: #f3f4f6;
+      color: #111;
       border-radius: 14px 14px 14px 0;
+    }
+
+    .msg-time {
+      text-align: left;
     }
   }
 }
 
+/* bubble */
 .bubble {
   padding: 10px 14px;
-  max-width: 75%;
   font-size: 14px;
+  word-wrap: break-word;
+  display: flex;
+  gap: 5px;
+  align-items: baseline;
+}
+
+/* time BELOW bubble (clean look) */
+.msg-time {
+  margin-top: 10px;
+  opacity: 0.6;
+}
+
+.ticks {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 6px;
   position: relative;
 }
 
-.msg-time {
-  display: block;
-  font-size: 10px;
-  margin-top: 4px;
-  opacity: 0.6;
+/* base ticks */
+.tick {
+  font-size: 12px;
+  opacity: 0;
+  transform: scale(0.8);
+  transition: all 0.2s ease;
+}
+
+/* first tick position */
+.tick-1 {
+  position: relative;
+}
+
+/* second tick overlaps slightly */
+.tick-2 {
+  margin-left: -3px;
+}
+
+/* SENT */
+.ticks.sent .tick-1 {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* DELIVERED */
+.ticks.delivered .tick-1,
+.ticks.delivered .tick-2 {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* READ (final state) */
+.ticks.read .tick-1,
+.ticks.read .tick-2 {
+  opacity: 1;
+  transform: scale(1);
+  color: var(--primary-color);
+  font-weight: bold;
+}
+
+/* subtle pop animation when state changes */
+.ticks.delivered .tick,
+.ticks.read .tick {
+  animation: tickPop 0.2s ease;
+}
+
+@keyframes tickPop {
+  0% {
+    transform: scale(0.6);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 /* INPUT */
@@ -317,6 +400,7 @@ input {
   border: none;
   background: transparent;
   padding: 10px;
+  font-size: 16px;
 
   &:focus {
     outline: none;
