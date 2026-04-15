@@ -32,7 +32,7 @@ export class Signup implements OnInit {
     private inviteService: InviteService,
     private activatedRoute: ActivatedRoute,
     private appState: AppStateService
-  ) {}
+  ) { }
 
   /* ================= INIT ================= */
 
@@ -46,10 +46,13 @@ export class Signup implements OnInit {
       name: new FormControl('', [Validators.required]),
       email: new FormControl('', [Validators.required, Validators.email]),
       contact: new FormControl('', [
-        Validators.required,
-        Validators.pattern("^[0-9]{10}$")
+        Validators.required, Validators.pattern(/^[0-9]{10}$/)
       ]),
-      password: new FormControl('', [Validators.required]),
+      password: new FormControl('', [
+        Validators.required,
+        Validators.minLength(8),
+        Validators.maxLength(10),
+        Validators.pattern(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d).+$/)]),
     });
   }
 
@@ -70,13 +73,13 @@ export class Signup implements OnInit {
 
     const register$ = this.token
       ? this.inviteService.verifyInvite(this.token).pipe(
-          switchMap(() =>
-            this.inviteService.registerWithInvite({
-              ...formValue,
-              token: this.token
-            })
-          )
+        switchMap(() =>
+          this.inviteService.registerWithInvite({
+            ...formValue,
+            token: this.token
+          })
         )
+      )
       : this.authService.registerUser(formValue);
 
     register$

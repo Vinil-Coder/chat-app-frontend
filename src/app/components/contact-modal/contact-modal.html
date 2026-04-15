@@ -17,7 +17,9 @@
       <!-- Avatar -->
       <div class="avatar">
         {{ user.name.charAt(0) }}
-        <span class="status" [class.online]="user.isOnline"></span>
+        @if(user.isOnline) {
+          <span class="status online"></span>
+        }
       </div>
 
       <!-- Info -->

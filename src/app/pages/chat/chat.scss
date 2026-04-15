@@ -145,12 +145,20 @@
 
   .bottom {
     display: flex;
+    align-items: center;
     justify-content: space-between;
+    gap: 5px;
     margin-top: 5px;
+
+    .info {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+    }
   }
 
   .message {
-    font-size: 13px;
+    font-size: 14px;
     color: #6b7280;
   }
 
@@ -317,7 +325,6 @@
 .ticks {
   display: inline-flex;
   align-items: center;
-  margin-left: 6px;
   position: relative;
 }
 

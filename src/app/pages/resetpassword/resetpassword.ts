@@ -3,6 +3,8 @@ import { Component } from '@angular/core';
 import { FormControl, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router, RouterModule } from "@angular/router";
 import { AuthService } from '../../services/auth.service';
+import { catchError, EMPTY, take, tap } from 'rxjs';
+import { AppStateService } from '../../services/appstate.service';
 
 @Component({
   selector: 'app-resetpassword',
@@ -14,7 +16,11 @@ export class Resetpassword {
 
   form!: FormGroup;
 
-  constructor(private authService: AuthService, private router: Router) {
+  constructor(
+    private authService: AuthService,
+    private router: Router,
+    private appState: AppStateService
+  ) {
     this.form = new FormGroup({
       email: new FormControl('', [Validators.required, Validators.email]),
       password: new FormControl('', [Validators.required]),
@@ -29,10 +35,21 @@ export class Resetpassword {
     this.form.markAllAsTouched();
     if (this.form.invalid) return;
     try {
-      await this.authService.changePassword(this.form.value);
-      this.router.navigate(['/login']);
-    } catch (error) {
-      console.log(error);
-    }
+      this.authService.changePassword(this.form.value)
+        .pipe(
+          tap(() => this.appState.success('Password changed successfully')),
+          take(1),
+          tap(() => this.router.navigate(['/login'])),
+          catchError((err) => this.handleError(err))
+        )
+        .subscribe()
+    } catch (err: any) {}
+  }
+
+  /* ================= COMMON ================= */
+
+  private handleError(err: any) {
+    this.appState.error(err?.error?.message || 'Something went wrong');
+    return EMPTY;
   }
 }

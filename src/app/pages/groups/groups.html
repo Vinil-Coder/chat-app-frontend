@@ -40,7 +40,7 @@
               {{ group.name[0] }}
             </div>
 
-            @if(group.createdBy === appState.getUser()?._id) {
+            @if(group.createdBy === appState.getUser()?.id) {
               <div class="card-actions">
                 <button (click)="editGroup($event, group)">✏️</button>
                 <button (click)="deleteGroup($event, group)">🗑</button>
@@ -55,7 +55,7 @@
 
             <!-- FUTURE FIELDS -->
             <div class="meta">
-              <span>Created {{ group.createdAt | date: "MMM d, yyyy" }}</span>
+              <span>Created  {{ group.createdAt | date: "MMM d, yyyy" }}</span>
               <span>Members: {{ group.members.length }}</span>
             </div>
 

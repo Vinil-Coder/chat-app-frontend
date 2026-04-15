@@ -7,26 +7,47 @@
         <label for="email">Email</label>
         <input type="email" id="email" name="email" placeholder="Email" formControlName="email">
         @if(fc['email']?.dirty || fc['email']?.touched) {
-          <div class="validation-error-message">
-            @if(fc['email']?.errors?.['required']) {
-              <span>Email is required</span>
-            }
-            @if(fc['email']?.errors?.['email']) {
-              <span>Invalid email format</span>
-            }
-          </div>
+        @if(fc['email']?.invalid) {
+        <div class="validation-error-message">
+          @if(fc['email']?.errors?.['required']) {
+          <span>Email is required</span>
+          }
+          @if(fc['email']?.errors?.['email']) {
+          <span>Invalid email format</span>
+          }
+        </div>
+        } @else {
+        <div class="success-message">
+          <span>Looks good!</span>
+        </div>
+        }
         }
       </div>
 
       <div class="form-field">
         <label for="password">Password</label>
         <input type="password" id="password" name="password" placeholder="Password" formControlName="password">
-         @if(fc['password']?.dirty || fc['password']?.touched) {
-          <div class="validation-error-message">
-            @if(fc['password']?.errors?.['required']) {
+        @if(fc['password']?.dirty || fc['password']?.touched) {
+          @if(fc['password']?.invalid) {
+            <div class="validation-error-message">
+
+              @if(fc['password']?.errors?.['required']) {
               <span>Password is required</span>
-            }
-          </div>
+              }
+
+              @if(fc['password']?.errors?.['minlength']) {
+              <span>Password must be at least 8 characters</span>
+              }
+
+              @if(fc['password']?.errors?.['maxlength']) {
+              <span>Password should not exceed 10 characters</span>
+              }
+            </div>
+          } @else {
+            <div class="success-message">
+              <span>Looks good!</span>
+            </div>
+          }
         }
       </div>
 

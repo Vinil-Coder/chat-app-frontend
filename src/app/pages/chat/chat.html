@@ -30,17 +30,26 @@
             </div>
 
             <div class="bottom">
-              @if(user.isTyping) {
-              <div class="status-text typing">Typing...</div>
-              } @else {
-              <span class="message">
-                {{ user.lastMessage || 'Start conversation...' }}
-              </span>
-              }
-
-              @if (user.unreadCount > 0) {
-              <span class="badge">{{ user.unreadCount }}</span>
-              }
+              <div class="info">
+                @if(user.isTyping) {
+                  <div class="status-text typing">Typing...</div>
+                } @else {
+                    @if(user.lastMessage?.status) {
+                      <span class="ticks" [ngClass]="user.lastMessage?.status">
+                        <span class="tick tick-1">✓</span>
+                        <span class="tick tick-2">✓</span>
+                      </span>
+                    }
+                    <span class="message">
+                      {{ user.lastMessage?.content || 'No messages yet' }}
+                    </span>
+                }
+              </div>
+              <div class="unread-count">
+                @if (user.unreadCount > 0) {
+                  <span class="badge">{{ user.unreadCount }}</span>
+                }
+              </div>
             </div>
           </div>
 
@@ -152,7 +161,8 @@
             <img src="assets/attachment.svg">
           </button>
 
-          <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage" (input)="onTyping()">
+          <input type="text" placeholder="Type a message..." [(ngModel)]="newMessage" (input)="onTyping()"
+            (keydown.enter)="onSendMessage()">
 
           <button class="icon-btn send" (click)="onSendMessage()">
             <img src="assets/telegram.png">

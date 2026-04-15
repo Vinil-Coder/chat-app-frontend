@@ -107,7 +107,7 @@ export class Chat implements OnInit, OnDestroy {
         ? false
         : this.appState.isUserOnline(c.participants),
 
-      lastMessage: c.lastMessage?.content || '',
+      lastMessage: c.lastMessage,
       participants: c.participants,
       time: c.updatedAt,
       isTyping: false,
@@ -131,6 +131,8 @@ export class Chat implements OnInit, OnDestroy {
   /* ================= SELECT CHAT ================= */
 
   selectChat(conversation: any) {
+
+    console.log('selected chat', conversation);
 
     if (!conversation?.id) return;
     if (this.selectedChat()?.id === conversation.id) return;
@@ -247,7 +249,7 @@ export class Chat implements OnInit, OnDestroy {
         c.id === message.conversationId
           ? {
             ...c,
-            lastMessage: message.content,
+            lastMessage: message,
             time: message.createdAt
           }
           : c
@@ -276,7 +278,7 @@ export class Chat implements OnInit, OnDestroy {
 
     console.log('delivered event', event);
 
-    const { ids, userId } = event;
+    const { ids, message, userId } = event;
 
     // Update all messages that are read
     this.messages.update(messages =>
@@ -290,6 +292,22 @@ export class Chat implements OnInit, OnDestroy {
           : msg
       )
     );
+
+    // Update conversation preview
+    const lastMessageId = ids[ids.length - 1];
+    const lastMessage = this.messages().find(msg => msg._id === lastMessageId);
+
+    if (lastMessage) {
+      this.updateConversationPreview(lastMessage);
+    } else {
+      const conversation = this.conversations().find(c => c.lastMessage._id === lastMessageId);
+      if (conversation) {
+        const message = conversation.lastMessage;
+        message.status = 'delivered';
+        message.deliversTo = [...(message.deliversTo || []), userId];
+        this.updateConversationPreview(conversation.lastMessage);
+      }
+    }
 
     console.log('after message delivered update', this.messages());
 
@@ -317,6 +335,14 @@ export class Chat implements OnInit, OnDestroy {
           : msg
       )
     );
+
+    // Update conversation preview
+    const lastMessageId = ids[ids.length - 1];
+    const lastMessage = this.messages().find(msg => msg._id === lastMessageId);
+
+    if (lastMessage) {
+      this.updateConversationPreview(lastMessage);
+    }
 
     console.log('after read update', this.messages());
 
@@ -369,6 +395,13 @@ export class Chat implements OnInit, OnDestroy {
       })
     );
 
+    if (this.selectedChat()) {
+      const participants = this.selectedChat().participants.filter((p: any) => p._id !== currentUserId);
+      this.selectedChat().isOnline = participants?.some(
+          (p: any) => users.includes(p._id)
+        );
+    }
+  
     console.log('after status update', this.conversations());
   }
 

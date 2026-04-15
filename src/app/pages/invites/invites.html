@@ -75,10 +75,12 @@
 
           <span class="status accepted">Accepted</span>
 
-          } @else {
+          } @else if (invite.status === 'rejected') {
 
           <span class="status rejected">Declined</span>
 
+          } @else {
+            <span class="status pending">Pending</span>
           }
 
         </div>
@@ -133,7 +135,7 @@
         <!-- RIGHT SECTION -->
         <div class="invite-action">
 
-          @if (invite.status === 'accepted') {
+         @if (invite.status === 'accepted') {
 
           <span class="status accepted">Accepted</span>
 
@@ -142,7 +144,7 @@
           <span class="status rejected">Declined</span>
 
           } @else {
-            <span class="status rejected">Pending</span>
+            <span class="status pending">Pending</span>
           }
 
         </div>

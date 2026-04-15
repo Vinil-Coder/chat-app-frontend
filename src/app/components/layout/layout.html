@@ -1,10 +1,10 @@
 <div class="layout-container">
 
   <app-sidemenu 
-  id="side-bar"
-  [class.mobile-view]="isMobile"
-  [class.hide]="isSidebarHidden" 
-  (toggleSidebar)="toggleSidebar()">
+    id="side-bar"
+    [class.mobile-view]="isMobile"
+    [class.hide]="isSidebarHidden" 
+    (toggleSidebar)="toggleSidebar()">
   </app-sidemenu>
 
   <app-top-bar id="top-bar" (toggleSidebar)="toggleSidebar()" [class.full-screen]="isContentFull">

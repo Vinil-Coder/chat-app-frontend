@@ -1,47 +1,108 @@
 <div class="page-container">
-    <div class="login-container">
-        <h2>Sign Up</h2>
+  <div class="login-container">
+    <h2>Sign Up</h2>
 
-        <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
-            <div class="form-field">
-                <label for="name">Name</label>
-                <input type="text" id="name" name="name" placeholder="Name" formControlName="name">
-                <div *ngIf="fc['name']?.dirty || fc['name']?.touched" class="validation-error-message">
-                    <span *ngIf="fc['name']?.errors?.['required']">Name is required</span>
-                </div>
+    <form [formGroup]="form" (ngSubmit)="onFormSubmit()">
+
+      <!-- NAME -->
+      <div class="form-field">
+        <label for="name">Name</label>
+        <input type="text" id="name" placeholder="Name" formControlName="name">
+
+        @if(fc['name']?.dirty || fc['name']?.touched) {
+          @if(fc['name']?.invalid) {
+            <div class="validation-error-message">
+              @if(fc['name']?.errors?.['required']) {
+                <span>Name is required</span>
+              }
             </div>
+          } @else {
+            <div class="success-message">Looks good!</div>
+          }
+        }
+      </div>
 
-            <div class="form-field">
-                <label for="email">Email</label>
-                <input type="email" id="email" name="email" placeholder="Email" formControlName="email">
-                <div *ngIf="fc['email']?.dirty || fc['email']?.touched" class="validation-error-message">
-                    <span *ngIf="fc['email']?.errors?.['required']">Email is required</span>
-                    <span *ngIf="fc['email']?.errors?.['email']">Invalid email format</span>
-                </div>
+      <!-- EMAIL -->
+      <div class="form-field">
+        <label for="email">Email</label>
+        <input type="email" id="email" placeholder="Email" formControlName="email">
+
+        @if(fc['email']?.dirty || fc['email']?.touched) {
+          @if(fc['email']?.invalid) {
+            <div class="validation-error-message">
+              @if(fc['email']?.errors?.['required']) {
+                <span>Email is required</span>
+              }
+              @if(fc['email']?.errors?.['email']) {
+                <span>Invalid email format</span>
+              }
             </div>
+          } @else {
+            <div class="success-message">Looks good!</div>
+          }
+        }
+      </div>
 
-            <div class="form-field">
-                <label for="contact">Contact</label>
-                <input type="text" id="contact" name="contact" placeholder="Contact" formControlName="contact">
-                <div *ngIf="fc['contact']?.dirty || fc['contact']?.touched" class="validation-error-message">
-                    <span *ngIf="fc['contact']?.errors?.['required']">Contact is required</span>
-                    <span *ngIf="fc['contact']?.errors?.['pattern']">Should be 10 numbers only</span>
-                </div>
+      <!-- CONTACT -->
+      <div class="form-field">
+        <label for="contact">Contact</label>
+        <input type="text" id="contact" placeholder="Contact" formControlName="contact">
+
+        @if(fc['contact']?.dirty || fc['contact']?.touched) {
+          @if(fc['contact']?.invalid) {
+            <div class="validation-error-message">
+              @if(fc['contact']?.errors?.['required']) {
+                <span>Contact is required</span>
+              }
+              @if(fc['contact']?.errors?.['pattern']) {
+                <span>Enter valid 10-digit number</span>
+              }
             </div>
+          } @else {
+            <div class="success-message">Looks good!</div>
+          }
+        }
+      </div>
 
-            <div class="form-field">
-                <label for="password">Password</label>
-                <input type="password" id="password" name="password" placeholder="Password" formControlName="password">
-                <div *ngIf="fc['password']?.dirty || fc['password']?.touched" class="validation-error-message">
-                    <span *ngIf="fc['password']?.errors?.['required']">Password is required</span>
-                </div>
+      <!-- PASSWORD -->
+      <div class="form-field">
+        <label for="password">Password</label>
+        <input type="password" id="password" placeholder="Password" formControlName="password">
+
+        <small class="hint">
+          8 - 10 characters long, include uppercase, lowercase & number
+        </small>
+
+        @if(fc['password']?.dirty || fc['password']?.touched) {
+          @if(fc['password']?.invalid) {
+            <div class="validation-error-message">
+              @if(fc['password']?.errors?.['required']) {
+                <span>Password is required</span>
+              }
+              @if(fc['password']?.errors?.['minlength']) {
+                <span>Minimum 8 characters</span>
+              }
+              @if(fc['password']?.errors?.['maxlength']) {
+                <span>Maximum 10 characters</span>
+              }
+              @if(fc['password']?.errors?.['pattern']) {
+                <span>Must include uppercase, lowercase & number</span>
+              }
             </div>
+          } @else {
+            <div class="success-message">Looks good!</div>
+          }
+        }
+      </div>
 
-            <button type="submit" class="primary-btn">Create Account</button>
-        </form>
+      <button type="submit" class="primary-btn">
+        Create Account
+      </button>
 
-        <p class="signup-text">
-            Already have an account? <span routerLink="/login">Sign in</span>
-        </p>
-    </div>
+    </form>
+
+    <p class="signup-text">
+      Already have an account? <span routerLink="/login">Sign in</span>
+    </p>
+  </div>
 </div>
