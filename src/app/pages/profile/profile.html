@@ -1,0 +1,62 @@
+<div class="profile-page">
+
+  <!-- TOP PROFILE HEADER -->
+  <div class="profile-banner"></div>
+
+  <div class="profile-main">
+
+    <!-- LEFT SIDE -->
+    <div class="profile-left">
+
+      <div class="avatar-wrapper">
+        <div class="avatar">
+          @if(user()?.profileImage) {
+            <img [src]="user()?.profileImage" />
+          } @else {
+            {{ user()?.name?.charAt(0) }}
+          }
+        </div>
+
+        <span class="status-badge online"></span>
+      </div>
+
+      <h2>{{ user()?.name }}</h2>
+      <p>{{ user()?.email }}</p>
+
+      <div class="profile-actions">
+        <button class="primary-btn">Edit Profile</button>
+        <button class="secondary-btn">Change Password</button>
+        <button class="logout-btn">Logout</button>
+      </div>
+
+    </div>
+
+    <!-- RIGHT SIDE -->
+    <div class="profile-right">
+
+      <h3>Profile Information</h3>
+
+      <div class="info-grid">
+
+        <div class="info-box">
+          <label>Name</label>
+          <p>{{ user()?.name }}</p>
+        </div>
+
+        <div class="info-box">
+          <label>Email</label>
+          <p>{{ user()?.email }}</p>
+        </div>
+
+        <div class="info-box">
+          <label>Contact</label>
+          <p>{{ user()?.contact }}</p>
+        </div>
+
+      </div>
+
+    </div>
+
+  </div>
+
+</div>

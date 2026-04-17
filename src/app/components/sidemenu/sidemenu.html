@@ -27,6 +27,11 @@
         <span class="menu__icon"><img src="assets/contact-book.png" alt="Users"></span>
         <span class="menu__label">Contacts</span>
       </div>
+
+      <div class="menu__item" routerLink="/profile" routerLinkActive="active" (click)="isMobile ? closeSidenav() : null">
+        <span class="menu__icon"><img src="assets/avatar.svg" alt="Users"></span>
+        <span class="menu__label">Profile</span>
+      </div>
     </div>
 
     <!-- <div class="workspace-switcher">

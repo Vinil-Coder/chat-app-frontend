@@ -6,9 +6,11 @@
     <!-- LEFT PANEL -->
     <aside class="chat-list" [class.hide]="selectedChat() && isMobile">
 
-      <div class="search-box">
+      <!-- <div class="search-box">
         <input type="search" placeholder="Search chats..." />
-      </div>
+      </div> -->
+
+      <h3>Conversations</h3>
 
       <div class="chat-items">
         @for (user of conversations(); track user.id) {
@@ -41,7 +43,7 @@
                       </span>
                     }
                     <span class="message">
-                      {{ user.lastMessage?.content || 'No messages yet' }}
+                      {{ (user.lastMessage?.content.length > 20 ? user.lastMessage?.content.substring(0, 20) + '...' : user.lastMessage?.content) || 'No messages yet' }}
                     </span>
                 }
               </div>

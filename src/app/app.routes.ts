@@ -44,6 +44,10 @@ export const routes: Routes = [
                 loadComponent: () => import('./pages/contacts/contacts').then(c => c.Contacts)
             },
             {
+                path: 'profile',
+                loadComponent: () => import('./pages/profile/profile').then(c => c.Profile)
+            },
+            {
                 path: '',
                 pathMatch: 'full',
                 redirectTo: 'chats'

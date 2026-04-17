@@ -43,10 +43,16 @@
 
 /* LEFT PANEL */
 .chat-list {
-  width: 320px;
+  width: 400px;
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  padding: 22px;
+
+  h3 {
+    color: lightgray;
+    margin-bottom: 20px;
+  }
 }
 
 /* SEARCH */
@@ -83,15 +89,22 @@
   padding: 12px;
   cursor: pointer;
   transition: 0.2s;
-  margin: 0 15px;
+  border-radius: 10px;
+
 
   &:hover {
     background: #eef2ff;
+    .info .name {
+      font-weight: 600;
+    }
   }
 
   &.active {
     background: #eef2ff;
-    border-radius: 10px;
+
+    .info .name {
+      font-weight: 600;
+    }
   }
 }
 
@@ -135,7 +148,7 @@
   }
 
   .name {
-    font-weight: 600;
+    font-weight: 500;
   }
 
   .time {
@@ -153,7 +166,6 @@
     .info {
       display: flex;
       align-items: center;
-      gap: 5px;
     }
   }
 
@@ -379,6 +391,7 @@
     transform: scale(0.6);
     opacity: 0;
   }
+
   100% {
     transform: scale(1);
     opacity: 1;
